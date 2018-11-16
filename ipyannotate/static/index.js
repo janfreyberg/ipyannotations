@@ -96,8 +96,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ExampleModel = exports.ExampleModel = function (_widgets$WidgetModel) {
-  _inherits(ExampleModel, _widgets$WidgetModel);
+var ExampleModel = exports.ExampleModel = function (_widgets$DOMWidgetMod) {
+  _inherits(ExampleModel, _widgets$DOMWidgetMod);
 
   function ExampleModel() {
     _classCallCheck(this, ExampleModel);
@@ -116,10 +116,14 @@ var ExampleModel = exports.ExampleModel = function (_widgets$WidgetModel) {
   }]);
 
   return ExampleModel;
-}(widgets.WidgetModel);
+}(widgets.DOMWidgetModel);
 
-var ExampleView = exports.ExampleView = function (_widgets$WidgetView) {
-  _inherits(ExampleView, _widgets$WidgetView);
+ExampleModel.serializers = _extends({}, widgets.DOMWidgetModel.serializers, {
+  source: { deserialize: widgets.unpack_models }
+});
+
+var ExampleView = exports.ExampleView = function (_widgets$DOMWidgetVie) {
+  _inherits(ExampleView, _widgets$DOMWidgetVie);
 
   function ExampleView() {
     _classCallCheck(this, ExampleView);
@@ -131,11 +135,12 @@ var ExampleView = exports.ExampleView = function (_widgets$WidgetView) {
     key: "render",
     value: function render() {
       console.log("hello example view");
+      console.log(this.model.get("source"));
     }
   }]);
 
   return ExampleView;
-}(widgets.WidgetView);
+}(widgets.DOMWidgetView);
 
 /***/ }),
 /* 1 */

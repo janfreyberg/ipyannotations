@@ -3,8 +3,8 @@ var version = require('./package.json').version;
 // Custom webpack loaders are generally the same for all webpack bundles, hence
 // stored in a separate local variable.
 var loaders = [
-  { test: /\.css$/, loader: 'style-loader!css-loader' },
-  { test: /\.js$/, loader: 'babel-loader', query: {presets: ['env'], plugins: ['transform-object-rest-spread']}, exclude: /node_modules/ }
+    { test: /\.css$/, loader: 'style-loader!css-loader' },
+    { test: /\.js$/, loader: 'babel-loader', query: { presets: ['env'], plugins: ['transform-object-rest-spread'] }, exclude: /node_modules/ }
 ];
 
 
