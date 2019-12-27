@@ -1,8 +1,2 @@
-
-def _jupyter_nbextension_paths():
-    return [{
-        'section': 'notebook',
-        'src': 'static',
-        'dest': 'ipyannotate',
-        'require': 'ipyannotate/extension'
-    }]
+"""Annotate images in jupyter notebook."""
+__version__ = "0.0.1"
