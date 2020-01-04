@@ -27,3 +27,4 @@ __pycache__
 .pytest_cache
 
 changelog.tmp
+.mypy_cache/
