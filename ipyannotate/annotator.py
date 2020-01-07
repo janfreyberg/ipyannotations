@@ -31,6 +31,11 @@ class PolygonAnnotator(widgets.VBox):
         )
         self.submit_button.on_click(self.submit)
 
+        self.opacity_slider = widgets.FloatSlider(
+            value=0.4, min=0, max=1, step=0.025
+        )
+        widgets.link((self.opacity_slider, "value"), (self.canvas, "opacity"))
+
         self.edit_button = widgets.ToggleButton(
             description="Adjust", icon="pencil"
         )
@@ -43,7 +48,12 @@ class PolygonAnnotator(widgets.VBox):
         self.undo_callbacks: List[Callable[[]]] = []
 
         super().__init__(
-            children=(self.canvas, self.control_box, self.submit_button)
+            children=(
+                self.canvas,
+                self.control_box,
+                self.opacity_slider,
+                self.submit_button,
+            )
         )
 
     def on_submit(self, callback):

@@ -3,7 +3,7 @@ import ipywidgets as widgets
 from typing import Tuple, Optional, Sequence
 from collections import deque, defaultdict
 import abc
-from traitlets import Unicode, observe
+from traitlets import Unicode, Float, observe
 
 from .utils import set_colors, fit_image
 
@@ -11,6 +11,7 @@ from .utils import set_colors, fit_image
 class AbstractAnnotationCanvas(MultiCanvas):
 
     current_class = Unicode()
+    opacity = Float(default_value=0.4)
 
     def __init__(
         self, size: Tuple[int, int], classes: Optional[Sequence[str]] = None
@@ -25,6 +26,11 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.interaction_canvas = self[2]
 
         self.interaction_canvas.on_mouse_down(self._on_click)
+
+        # register re_draw as handler for obacity changes
+        # note this is done here rather than as a decorator as re_draw is
+        # an abstract method for now.
+        self.observe(lambda *x: self.re_draw(), names=["opacity", "editing"])
 
         if classes is not None:
             self.colormap = {

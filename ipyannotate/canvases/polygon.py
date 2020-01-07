@@ -109,10 +109,10 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
 
         if tentative:
             canvas.set_line_dash([10, 5])
-            canvas.fill_style = rgba_to_html_string(rgb + (0.4,))
+            canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
         else:
             canvas.set_line_dash([])
-            canvas.fill_style = rgba_to_html_string(rgb + (0.6,))
+            canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
 
         canvas.begin_path()
         current_point = polygon.points[0]
