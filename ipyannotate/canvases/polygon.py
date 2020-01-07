@@ -1,4 +1,5 @@
 from ipycanvas import hold_canvas
+from traitlets import Bool
 
 from typing import List, Tuple, Optional
 from dataclasses import dataclass, field
@@ -54,29 +55,67 @@ class Polygon:
 
 
 class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
+
+    editing = Bool(default_value=False)
+
     def __init__(self, size, classes=None):
 
         super().__init__(size=size, classes=classes)
         self.polygons: List[Polygon] = []
         self.current_polygon: Polygon = Polygon(label=self.current_class)
+        self.dragging = None
 
     @trigger_redraw
+    @only_inside_image
+    def on_click(self, x: float, y: float):
 
-        if not self.image_extent[0] <= x <= self.image_extent[2]:
+        if not self.editing:
+
+            self.current_polygon.append((int(x), int(y)))
+
+            if self.current_polygon.closed:
+                self.polygons.append(
+                    self.current_polygon
+                )  # store current poly
+                # make new
+                self.current_polygon = Polygon(label=self.current_class)
+                self._undo_queue.append(
+                    self._undo_new_polygon
+                )  # allow undoing
+            else:
+                self._undo_queue.append(self._undo_new_point)
+
+        elif self.editing:
+            # see if the x / y is near any points
+            for polygon in self.polygons + [self.current_polygon]:
+                for index, point in enumerate(polygon.points):
+                    if dist(point, (x, y)) < self.point_size:
+                        self.dragging = lambda x, y: polygon.move_point(
+                            index, (x, y)
+                        )
+
+                        def undo_move():
+                            polygon.move_point(index, point)
+                            self.re_draw()
+
+                        self._undo_queue.append(undo_move)
+                        return
+
+    @trigger_redraw
+    @only_inside_image
+    def on_drag(self, x: float, y: float):
+
+        x, y = int(x), int(y)
+        if self.dragging is None:
             return
-        if not self.image_extent[1] <= y <= self.image_extent[3]:
-            return
-
-        self.current_polygon.append((int(x), int(y)))
-
-        if self.current_polygon.closed:
-            self.polygons.append(self.current_polygon)  # store current poly
-            # make new
-            self.current_polygon = Polygon(label=self.current_class)
-            self._undo_queue.append(self._undo_new_polygon)  # allow undoing
         else:
-            self._undo_queue.append(self._undo_new_point)
+            self.dragging(x, y)
 
+    @trigger_redraw
+    def on_release(self, x: float, y: float):
+        self.dragging = None
+
+    @trigger_redraw
     def set_class(self, name):
         self.current_polygon.label = name
 
@@ -111,6 +150,7 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         if tentative:
             canvas.set_line_dash([10, 5])
             canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
+            canvas.stroke_style = rgba_to_html_string((0, 0, 0) + (1.0,))
         else:
             canvas.set_line_dash([])
             canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
@@ -126,6 +166,8 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         canvas.stroke()
         canvas.fill()
 
+        # if the polygon isn't closed, draw all points and draw the first
+        # point special
         if tentative:
             canvas.fill_style = rgba_to_html_string(rgb + (1.0,))
             canvas.fill_arcs(xs, ys, self.point_size, 0, 2 * pi)
@@ -134,6 +176,11 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
             canvas.set_line_dash([5, 2])
             canvas.fill_arc(xs[0], ys[0], self.point_size, 0, 2 * pi)
             canvas.stroke_arc(xs[0], ys[0], self.point_size, 0, 2 * pi)
+
+        # if the user is editing, draw all points, always:
+        if not tentative and self.editing:
+            canvas.fill_style = rgba_to_html_string(rgb + (1.0,))
+            canvas.fill_arcs(xs, ys, self.point_size, 0, 2 * pi)
 
     @property
     def data(self):

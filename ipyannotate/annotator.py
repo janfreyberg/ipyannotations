@@ -39,6 +39,7 @@ class PolygonAnnotator(widgets.VBox):
         self.edit_button = widgets.ToggleButton(
             description="Adjust", icon="pencil"
         )
+        widgets.link((self.edit_button, "value"), (self.canvas, "editing"))
 
         self.control_box = widgets.HBox(
             children=(self.class_selector, self.edit_button, self.undo_button)
