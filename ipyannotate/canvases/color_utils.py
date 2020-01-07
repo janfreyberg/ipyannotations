@@ -25,4 +25,4 @@ def rgb_to_html_string(rgb: Tuple[int, int, int]) -> str:
 
 
 def rgba_to_html_string(rgba: Tuple[int, int, int, float]) -> str:
-    return f"rgba({rgba[0]}, {rgba[1]}, {rgba[2]}, {rgba[3]})"
+    return f"rgba({rgba[0]}, {rgba[1]}, {rgba[2]}, {rgba[3]:.3f})"
