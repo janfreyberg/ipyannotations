@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 
 from math import pi
 
+from .utils import dist, trigger_redraw, only_inside_image
 from .color_utils import hex_to_rgb, rgba_to_html_string
 from ._abstract import AbstractAnnotationCanvas
 
@@ -37,12 +38,7 @@ class Polygon:
         if len(self) < 3:
             return False
 
-        x_start, y_start = self.points[0]
-        x_end, y_end = self.points[-1]
-
-        distance = ((x_end - x_start) ** 2 + (y_end - y_start) ** 2) ** 0.5
-
-        return distance < self.close_threshold
+        return dist(self.points[0], self.points[-1]) < self.close_threshold
 
     def __len__(self) -> int:
         return len(self.points)
