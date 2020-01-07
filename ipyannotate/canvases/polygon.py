@@ -55,7 +55,7 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         self.polygons: List[Polygon] = []
         self.current_polygon: Polygon = Polygon(label=self.current_class)
 
-    def add_point(self, x: float, y: float):
+    @trigger_redraw
 
         if not self.image_extent[0] <= x <= self.image_extent[2]:
             return
@@ -75,13 +75,13 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     def set_class(self, name):
         self.current_polygon.label = name
 
+    @trigger_redraw
     def _undo_new_point(self):
         self.current_polygon.points.pop()
-        self.re_draw()
 
+    @trigger_redraw
     def _undo_new_polygon(self):
         self.current_polygon = self.polygons.pop()
-        self.re_draw()
 
     def re_draw(self):
 

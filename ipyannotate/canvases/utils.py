@@ -60,3 +60,28 @@ def dist(q: Sequence[float], p: Sequence[float]) -> float:
     """
     return (sum((px - qx) ** 2.0 for px, qx in zip(p, q))) ** 0.5
 
+
+def trigger_redraw(fn: Callable) -> Callable:
+    """Method decorator for functions that need to trigger a re-draw.
+
+    Parameters
+    ----------
+    fn : Callable
+        The function that needs to trigger a re-draw, e.g. because it changes
+        the appearance of the canvas.
+
+    Returns
+    -------
+    Callable
+        A wrapped function that, when called, calls the input function and then
+        calls the re-draw method on the class.
+    """
+
+    @wraps(fn)
+    def wrapped_fn(*args, **kwargs):
+        outp = fn(*args, **kwargs)
+        args[0].re_draw()
+        return outp
+
+    return wrapped_fn
+
