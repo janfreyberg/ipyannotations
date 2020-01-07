@@ -41,3 +41,22 @@ def set_colors() -> Iterator[str]:
     """
     while True:
         yield from Set2_8.hex_colors
+
+
+def dist(q: Sequence[float], p: Sequence[float]) -> float:
+    """Euclidian distance between two points.
+
+    Parameters
+    ----------
+    q : Sequence[float]
+        Point q
+    p : Sequence[float]
+        Point p
+
+    Returns
+    -------
+    float
+        The distance between point q and p.
+    """
+    return (sum((px - qx) ** 2.0 for px, qx in zip(p, q))) ** 0.5
+
