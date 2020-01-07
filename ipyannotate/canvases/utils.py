@@ -1,5 +1,5 @@
 import io
-from typing import Tuple
+from typing import Tuple, Callable, Sequence, Iterator, Optional, Any
 import ipywidgets as widgets
 from ipycanvas import Canvas
 from PIL import Image
@@ -31,6 +31,13 @@ def fit_image(img: widgets.Image, canvas: Canvas) -> Tuple[int, int, int, int]:
     return x, y, width, height
 
 
-def set_colors():
+def set_colors() -> Iterator[str]:
+    """An infinite iterator over the Set2 hex colors.
+
+    Yields
+    -------
+    str
+        A valid hex-string from the Set2 colors. 8 unique colors available.
+    """
     while True:
         yield from Set2_8.hex_colors
