@@ -1,6 +1,7 @@
 import io
 from typing import Tuple, Callable, Sequence, Iterator, Optional, Any
 import ipywidgets as widgets
+from functools import wraps
 from ipycanvas import Canvas
 from PIL import Image
 from palettable.colorbrewer.qualitative import Set2_8
@@ -85,3 +86,32 @@ def trigger_redraw(fn: Callable) -> Callable:
 
     return wrapped_fn
 
+
+def only_inside_image(
+    fn: Callable[[Any, float, float], Optional[Any]]
+) -> Callable:
+    """Method decorator for function that needs to only work inside the image.
+
+    The input should be a method that accepts x and y.
+
+    Parameters
+    ----------
+    fn : Callable
+        The method that accepts self, x and y.
+
+    Returns
+    -------
+    Callable
+        A wrapped function that, when called, returns None if x and y are not
+        inside the image (indicated by self.image_extent)
+    """
+
+    @wraps(fn)
+    def wrapped_fn(self, x, y):
+        if not self.image_extent[0] <= x <= self.image_extent[2]:
+            return
+        if not self.image_extent[1] <= y <= self.image_extent[3]:
+            return
+        return fn(self, x, y)
+
+    return wrapped_fn
