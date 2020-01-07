@@ -105,6 +105,22 @@ class Annotator(widgets.Box):
                 (self.point_size_slider, "value"), (self.canvas, "point_size")
             )
             viz_controls.append(self.point_size_slider)
+        self.brightness_slider = widgets.FloatLogSlider(
+            description="Brightness", value=1, min=-1, max=1
+        )
+        widgets.link(
+            (self.brightness_slider, "value"),
+            (self.canvas, "image_brightness"),
+        )
+        viz_controls.append(self.brightness_slider)
+        self.contrast_slider = widgets.FloatLogSlider(
+            description="Contrast", value=1, min=-1, max=1
+        )
+        widgets.link(
+            (self.contrast_slider, "value"), (self.canvas, "image_contrast")
+        )
+        viz_controls.append(self.contrast_slider)
+
         self.visualisation_controls = widgets.VBox(
             children=(widgets.HTML("Visualisation settings"), *viz_controls),
             layout={"flex": "1 1 auto"},
@@ -147,7 +163,7 @@ class Annotator(widgets.Box):
         if self.data_postprocessor is not None:
             return self.data_postprocessor(self.canvas.data)
         else:
-            self.canvas.data
+            return self.canvas.data
 
 
 class PolygonAnnotator(Annotator):

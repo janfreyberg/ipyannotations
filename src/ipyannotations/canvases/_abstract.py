@@ -1,4 +1,4 @@
-from ipycanvas import MultiCanvas
+from ipycanvas import MultiCanvas, hold_canvas
 import ipywidgets as widgets
 from typing import Tuple, Optional, Sequence, Deque, Callable
 from collections import deque, defaultdict
@@ -6,6 +6,7 @@ import abc
 from traitlets import Unicode, Float, Integer, observe
 
 from .utils import set_colors, fit_image
+from .image_utils import adjust
 
 
 class AbstractAnnotationCanvas(MultiCanvas):
@@ -13,6 +14,9 @@ class AbstractAnnotationCanvas(MultiCanvas):
     current_class = Unicode()
     opacity = Float(default_value=0.4)
     point_size = Integer(default_value=5, min=1, max=20)
+
+    image_contrast = Float(default_value=1, min=0, max=10)
+    image_brightness = Float(default_value=1, min=0, max=10)
 
     def __init__(
         self, size: Tuple[int, int], classes: Optional[Sequence[str]] = None
@@ -28,6 +32,8 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.interaction_canvas.on_mouse_down(self.on_click)
         self.interaction_canvas.on_mouse_move(self.on_drag)
         self.interaction_canvas.on_mouse_up(self.on_release)
+
+        self.current_image = None
 
         # register re_draw as handler for obacity changes
         # note this is done here rather than as a decorator as re_draw is
@@ -45,10 +51,8 @@ class AbstractAnnotationCanvas(MultiCanvas):
             self.colormap = defaultdict(lambda: "#000000")
 
     def load_image(self, image: widgets.Image):
-        image_canvas = self[0]
-        x, y, width, height = fit_image(image, image_canvas)
-        image_canvas.draw_image(image, x=x, y=y, width=width, height=height)
-        self.image_extent = (x, y, x + width, y + height)
+        self.current_image = image
+        self._display_image()
 
     @observe("current_class")
     def _set_class(self, change):
@@ -77,3 +81,23 @@ class AbstractAnnotationCanvas(MultiCanvas):
     @abc.abstractmethod
     def set_class(self, class_name: str):
         pass
+
+    @observe("image_contrast", "image_brightness")
+    def _display_image(self, *change):
+        if self.current_image is not None:
+            if self.image_brightness != 1 or self.image_contrast != 1:
+                image = adjust(
+                    self.current_image,
+                    contrast_factor=self.image_contrast,
+                    brightness_factor=self.image_brightness,
+                )
+            else:
+                image = self.current_image
+
+            image_canvas = self[0]
+            with hold_canvas(image_canvas):
+                x, y, width, height = fit_image(image, image_canvas)
+                image_canvas.draw_image(
+                    image, x=x, y=y, width=width, height=height
+                )
+                self.image_extent = (x, y, x + width, y + height)

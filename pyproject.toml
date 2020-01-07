@@ -3,7 +3,7 @@ requires = ["flit"]
 build-backend = "flit.buildapi"
 
 [tool.flit.metadata]
-module = "ipyannotate"
+module = "ipyannotations"
 author = "Jan Freyberg"
 author-email = "jan.freyberg@gmail.com"
 home-page = "https://github.com/janfreyberg/ipyannotate"
