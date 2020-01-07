@@ -3,6 +3,7 @@ from typing import List, Callable, Any
 import ipywidgets as widgets
 
 from .canvases.polygon import PolygonAnnotationCanvas
+from .canvases.point import PointAnnotationCanvas
 
 
 class Annotator(widgets.Box):
@@ -146,3 +147,10 @@ class PolygonAnnotator(Annotator):
 
         super().__init__(canvas, classes)
 
+
+class PointAnnotator(Annotator):
+    def __init__(self, canvas_size=(500, 500), classes=None):
+
+        canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
+
+        super().__init__(canvas, classes)
