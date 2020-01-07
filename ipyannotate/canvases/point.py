@@ -75,9 +75,6 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
 
     @trigger_redraw
     def on_release(self, x: float, y: float):
-        if self.dragging is None:
-            return
-        self.dragging((x, y))
         self.dragging = None
 
     @trigger_redraw
