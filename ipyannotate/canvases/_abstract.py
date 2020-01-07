@@ -1,6 +1,6 @@
 from ipycanvas import MultiCanvas
 import ipywidgets as widgets
-from typing import Tuple, Optional, Sequence
+from typing import Tuple, Optional, Sequence, Deque, Callable
 from collections import deque, defaultdict
 import abc
 from traitlets import Unicode, Float, observe
@@ -18,14 +18,16 @@ class AbstractAnnotationCanvas(MultiCanvas):
     ):
         super().__init__(n_canvases=3, size=size)
         self.point_size = 5
-        self._undo_queue = deque([])
+        self._undo_queue: Deque[Callable] = deque([])
         self.image_extent = (0, 0, *size)
 
         self.image_canvas = self[0]
         self.annotation_canvas = self[1]
         self.interaction_canvas = self[2]
 
-        self.interaction_canvas.on_mouse_down(self._on_click)
+        self.interaction_canvas.on_mouse_down(self.on_click)
+        self.interaction_canvas.on_mouse_move(self.on_drag)
+        self.interaction_canvas.on_mouse_up(self.on_release)
 
         # register re_draw as handler for obacity changes
         # note this is done here rather than as a decorator as re_draw is
@@ -48,15 +50,22 @@ class AbstractAnnotationCanvas(MultiCanvas):
     @observe("current_class")
     def _set_class(self, change):
         self.set_class(change["new"])
-        self.re_draw()
 
     @abc.abstractmethod
-    def re_draw(self):
+    def re_draw(self, *args, **kwargs):
         pass
 
-    def _on_click(self, x: float, y: float):
-        self.add_point(x, y)
-        self.re_draw()
+    @abc.abstractmethod
+    def on_click(self, x: float, y: float):
+        pass
+
+    @abc.abstractmethod
+    def on_drag(self, x: float, y: float):
+        pass
+
+    @abc.abstractmethod
+    def on_release(self, x: float, y: float):
+        pass
 
     @abc.abstractmethod
     def add_point(self, x: float, y: float):
