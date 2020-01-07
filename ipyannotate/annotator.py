@@ -1,4 +1,4 @@
-from typing import List, Callable, Any
+from typing import List, Callable, Any, Optional
 
 import ipywidgets as widgets
 
@@ -8,8 +8,14 @@ from .canvases.point import PointAnnotationCanvas
 
 
 class Annotator(widgets.Box):
-    def __init__(self, canvas: AbstractAnnotationCanvas, classes: List[str]):
+    def __init__(
+        self,
+        canvas: AbstractAnnotationCanvas,
+        classes: List[str],
+        data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
+    ):
         self.canvas = canvas
+        self.data_postprocessor = data_postprocessor
 
         # controls for the data entry:
         data_controls = []
@@ -138,7 +144,10 @@ class Annotator(widgets.Box):
 
     @property
     def data(self):
-        return self.canvas.data
+        if self.data_postprocessor is not None:
+            return self.data_postprocessor(self.canvas.data)
+        else:
+            self.canvas.data
 
 
 class PolygonAnnotator(Annotator):
