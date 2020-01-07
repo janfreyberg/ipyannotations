@@ -23,7 +23,7 @@ class Polygon:
         # if self.closed:
         #     raise ValueError("Can't append to a closed polygon.")
         # else:
-        point = tuple(map(round, point))
+        point = (round(point[0]), round(point[1]))
         self.points.append(point)
         if self._is_closed():
             self.points.pop(-1)
@@ -46,7 +46,7 @@ class Polygon:
         return len(self.points)
 
     def move_point(self, point_index: int, point: Tuple[int, int]):
-        point = tuple(map(round, point))
+        point = (round(point[0]), round(point[1]))
         self.points[point_index] = point
 
     @property

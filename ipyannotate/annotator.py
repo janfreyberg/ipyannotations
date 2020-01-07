@@ -2,12 +2,13 @@ from typing import List, Callable, Any
 
 import ipywidgets as widgets
 
+from .canvases._abstract import AbstractAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
 
 
 class Annotator(widgets.Box):
-    def __init__(self, canvas, classes):
+    def __init__(self, canvas: AbstractAnnotationCanvas, classes: List[str]):
         self.canvas = canvas
 
         # controls for the data entry:
@@ -111,8 +112,8 @@ class Annotator(widgets.Box):
             },
         )
 
-        self.submit_callbacks: List[Callable[[Any]]] = []
-        self.undo_callbacks: List[Callable[[]]] = []
+        self.submit_callbacks: List[Callable[[Any], None]] = []
+        self.undo_callbacks: List[Callable[[], None]] = []
 
         super().__init__()
         self.children = (widgets.VBox((self.canvas, self.all_controls)),)

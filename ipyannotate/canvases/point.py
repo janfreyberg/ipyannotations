@@ -20,7 +20,7 @@ class Point:
         self.coordinates = tuple(map(round, self.coordinates))
 
     def move(self, coordinates: Tuple[int, int]):
-        self.coordinates = tuple(map(round, coordinates))
+        self.coordinates = (round(coordinates[0]), round(coordinates[1]))
 
     @property
     def data(self):
@@ -46,7 +46,9 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     def on_click(self, x: float, y: float):
 
         if not self.editing:
-            self.points.append(Point((x, y), label=self.current_class))
+            self.points.append(
+                Point((round(x), round(y)), label=self.current_class)
+            )
             self._undo_queue.append(self._undo_new_point)
         elif self.editing:
             for point in self.points:
