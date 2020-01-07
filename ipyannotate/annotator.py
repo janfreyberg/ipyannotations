@@ -5,13 +5,9 @@ import ipywidgets as widgets
 from .canvases.polygon import PolygonAnnotationCanvas
 
 
-class PolygonAnnotator(widgets.Box):
-    # TODO: add buttons and in-sync traitlets to class
-    def __init__(self, canvas_size=(500, 500), classes=None):
-
-        self.canvas = PolygonAnnotationCanvas(
-            size=canvas_size, classes=classes
-        )
+class Annotator(widgets.Box):
+    def __init__(self, canvas, classes):
+        self.canvas = canvas
 
         # controls for the data entry:
         data_controls = []
@@ -109,7 +105,7 @@ class PolygonAnnotator(widgets.Box):
         self.all_controls = widgets.HBox(
             children=(self.visualisation_controls, self.data_controls),
             layout={
-                "width": f"{canvas_size[0]}px",
+                "width": f"{canvas.size[0]}px",
                 "justify_content": "space-between",
             },
         )
@@ -141,3 +137,12 @@ class PolygonAnnotator(widgets.Box):
     @property
     def data(self):
         return self.canvas.data
+
+
+class PolygonAnnotator(Annotator):
+    def __init__(self, canvas_size=(500, 500), classes=None):
+
+        canvas = PolygonAnnotationCanvas(size=canvas_size, classes=classes)
+
+        super().__init__(canvas, classes)
+
