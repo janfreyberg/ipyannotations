@@ -85,7 +85,7 @@ class Annotator(widgets.Box):
         viz_controls = []
         if hasattr(self.canvas, "opacity"):
             self.opacity_slider = widgets.FloatSlider(
-                description="Opacity", value=0.4, min=0, max=1, step=0.025
+                description="Opacity", value=1, min=0, max=1, step=0.025
             )
             widgets.link(
                 (self.opacity_slider, "value"), (self.canvas, "opacity")
