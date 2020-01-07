@@ -1,9 +1,8 @@
+baboon.png
 
 *pyc
 *swp
 *~
-gmaps/static/*
-gmaps/labextension/*
 
 *egg-info
 *.ipynb_checkpoints*
