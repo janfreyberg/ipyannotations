@@ -1,5 +1,5 @@
 from ipycanvas import hold_canvas
-from traitlets import Bool
+from traitlets import Bool, observe
 
 from typing import List, Tuple, Optional
 from dataclasses import dataclass, field
@@ -136,6 +136,10 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
                 self.draw_polygon(polygon)
             # draw the current polygon:
             self.draw_polygon(self.current_polygon, tentative=True)
+
+    @observe("point_size")
+    def _update_polygon_closing_threshold(self, change):
+        self.current_polygon.close_threshold = change.new
 
     def draw_polygon(self, polygon, tentative=False):
 

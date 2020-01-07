@@ -3,7 +3,7 @@ import ipywidgets as widgets
 from typing import Tuple, Optional, Sequence, Deque, Callable
 from collections import deque, defaultdict
 import abc
-from traitlets import Unicode, Float, observe
+from traitlets import Unicode, Float, Integer, observe
 
 from .utils import set_colors, fit_image
 
@@ -12,12 +12,12 @@ class AbstractAnnotationCanvas(MultiCanvas):
 
     current_class = Unicode()
     opacity = Float(default_value=0.4)
+    point_size = Integer(default_value=5, min=1, max=20)
 
     def __init__(
         self, size: Tuple[int, int], classes: Optional[Sequence[str]] = None
     ):
         super().__init__(n_canvases=3, size=size)
-        self.point_size = 5
         self._undo_queue: Deque[Callable] = deque([])
         self.image_extent = (0, 0, *size)
 
@@ -32,7 +32,10 @@ class AbstractAnnotationCanvas(MultiCanvas):
         # register re_draw as handler for obacity changes
         # note this is done here rather than as a decorator as re_draw is
         # an abstract method for now.
-        self.observe(lambda *x: self.re_draw(), names=["opacity", "editing"])
+        self.observe(
+            lambda *x: self.re_draw(),
+            names=["opacity", "editing", "point_size", "nothing"],
+        )
 
         if classes is not None:
             self.colormap = {
