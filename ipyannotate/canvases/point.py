@@ -1,7 +1,7 @@
 from ipycanvas import hold_canvas
 from traitlets import Bool
 
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 from dataclasses import dataclass
 
 from math import pi
@@ -14,7 +14,7 @@ from ._abstract import AbstractAnnotationCanvas
 @dataclass
 class Point:
     coordinates: Tuple[int, int]
-    label: Optional[str] = None
+    label: str = ""
 
     def __post_init__(self):
         self.coordinates = tuple(map(round, self.coordinates))
@@ -90,7 +90,7 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
             for point in self.points:
                 self.draw_point(point)
 
-    def draw_point(self, point):
+    def draw_point(self, point: Point):
         canvas = self[1]
         color = self.colormap.get(point.label, "#000000")
         rgba = hex_to_rgb(color) + (self.opacity,)
