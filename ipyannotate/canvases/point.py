@@ -27,7 +27,7 @@ class Point:
         return {
             "type": "point",
             "label": self.label,
-            "coordinates": (self.x, self.y),
+            "coordinates": self.coordinates,
         }
 
 
@@ -99,7 +99,9 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
         rgba = hex_to_rgb(color) + (self.opacity,)
         # canvas.stroke_style = rgba_to_html_string(rgba)
         canvas.fill_style = rgba_to_html_string(rgba)
+        canvas.stroke_style = rgba_to_html_string((0, 0, 0, 1.0))
         canvas.fill_arc(*point.coordinates, self.point_size, 0, 2 * pi)
+        canvas.stroke_arc(*point.coordinates, self.point_size, 0, 2 * pi)
 
     @property
     def data(self):
