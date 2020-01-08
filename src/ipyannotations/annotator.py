@@ -140,7 +140,7 @@ class Annotator(widgets.Box):
         super().__init__()
         self.children = (widgets.VBox((self.canvas, self.all_controls)),)
 
-    def on_submit(self, callback):
+    def on_submit(self, callback: Callable[[Any], None]):
         """Register a callback to handle data when the user clicks "Submit".
 
         Parameters
@@ -157,7 +157,7 @@ class Annotator(widgets.Box):
         for callback in self.submit_callbacks:
             callback(self.data)
 
-    def on_undo(self, callback):
+    def on_undo(self, callback: Callable[[], None]):
         self.undo_callbacks.append(callback)
 
     def undo(self, button):
