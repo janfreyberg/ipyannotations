@@ -145,11 +145,11 @@ class Annotator(widgets.Box):
 
         Parameters
         ----------
-        callback : function
-            A function that takes in data Usually, this data is a list of
+        callback : Callable[[Any], None]
+            A function that takes in data. Usually, this data is a list of
             dictionaries, but you are able to define data post-processors when
             you create an annotator that get called before this callback is
-            called.
+            called. Any return values are ignored.
         """
         self.submit_callbacks.append(callback)
 
@@ -158,6 +158,19 @@ class Annotator(widgets.Box):
             callback(self.data)
 
     def on_undo(self, callback: Callable[[], None]):
+        """Register a callback to handle when the user clicks "Undo".
+
+        Note that any callback registered here is only called when the canvas
+        is empty - while there are annotations on the canvas, "Undo" actually
+        undoes the annotations, until the canvas is empty.
+
+        Parameters
+        ----------
+        callback : Callable[[], None]
+            A function to be called when users press "Undo". This should be
+            a function that takes in no arguments; any return values are
+            ignored.
+        """
         self.undo_callbacks.append(callback)
 
     def undo(self, button):
