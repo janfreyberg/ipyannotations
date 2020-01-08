@@ -112,7 +112,7 @@ class Annotator(widgets.Box):
             )
             viz_controls.append(self.point_size_slider)
         self.brightness_slider = widgets.FloatLogSlider(
-            description="Brightness", value=1, min=-1, max=1, step=0.01
+            description="Brightness", value=1, min=-1, max=1, step=0.0001
         )
         widgets.link(
             (self.brightness_slider, "value"),
@@ -120,7 +120,7 @@ class Annotator(widgets.Box):
         )
         viz_controls.append(self.brightness_slider)
         self.contrast_slider = widgets.FloatLogSlider(
-            description="Contrast", value=1, min=-1, max=1, step=0.01
+            description="Contrast", value=1, min=-1, max=1, step=0.0001
         )
         widgets.link(
             (self.contrast_slider, "value"), (self.canvas, "image_contrast")
