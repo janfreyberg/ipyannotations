@@ -1,6 +1,6 @@
 import pathlib
 from typing import List, Callable, Any, Optional, Union, Tuple
-
+import traitlets
 import ipywidgets as widgets
 
 from .canvases._abstract import AbstractAnnotationCanvas
@@ -11,10 +11,12 @@ from .canvases.point import PointAnnotationCanvas
 class Annotator(widgets.Box):
     """A generic image annotation widget."""
 
+    options = traitlets.List(list(), allow_none=False)
+
     def __init__(
         self,
         canvas: AbstractAnnotationCanvas,
-        classes: Optional[List[str]] = None,
+        options: Optional[List[str]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
     ):
         """Create an annotation widget for images.
@@ -24,7 +26,7 @@ class Annotator(widgets.Box):
         canvas : AbstractAnnotationCanvas
             An annotation canvas that implements displaying & annotating
             images.
-        classes : List[str]
+        options : List[str], optional
             The list of classes you'd like to annotate.
         data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
             A function that transforms the annotation data. By default None.
@@ -34,18 +36,18 @@ class Annotator(widgets.Box):
 
         # controls for the data entry:
         data_controls = []
-        if classes is not None:
-            self.class_selector = widgets.Dropdown(
-                description="Class:",
-                options=classes,
-                layout=widgets.Layout(flex="1 1 auto"),
-            )
-            widgets.link(
-                (self.class_selector, "value"), (self.canvas, "current_class")
-            )
-            data_controls.append(self.class_selector)
-        else:
-            self.canvas.current_class = ""
+        self.options = options or []
+
+        self.class_selector = widgets.Dropdown(
+            description="Class:",
+            options=options,
+            layout=widgets.Layout(flex="1 1 auto"),
+        )
+        widgets.link((self, "options"), (self.class_selector, "options"))
+        widgets.link(
+            (self.class_selector, "value"), (self.canvas, "current_class")
+        )
+        data_controls.append(self.class_selector)
 
         extra_buttons = []
         button_layout = widgets.Layout(

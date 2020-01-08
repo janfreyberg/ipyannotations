@@ -12,7 +12,7 @@ from .image_utils import adjust
 
 class AbstractAnnotationCanvas(MultiCanvas):
 
-    current_class = Unicode()
+    current_class = Unicode(allow_none=True)
     opacity = Float(default_value=0.4)
     point_size = Integer(default_value=5, min=1, max=20)
 
