@@ -1,9 +1,10 @@
 from ipycanvas import MultiCanvas, hold_canvas
 import ipywidgets as widgets
-from typing import Tuple, Optional, Sequence, Deque, Callable
+from typing import Tuple, Optional, Sequence, Deque, Callable, Union
 from collections import deque, defaultdict
 import abc
 from traitlets import Unicode, Float, Integer, observe
+import pathlib
 
 from .utils import set_colors, fit_image
 from .image_utils import adjust
@@ -50,7 +51,19 @@ class AbstractAnnotationCanvas(MultiCanvas):
         else:
             self.colormap = defaultdict(lambda: "#000000")
 
-    def load_image(self, image: widgets.Image):
+    def load_image(self, image: Union[widgets.Image, str, pathlib.Path]):
+        """Display an image on the annotation canvas.
+
+        Parameters
+        ----------
+        image : Union[widgets.Image, str, pathlib.Path]
+            The image, or the path to the image.
+        """
+        if not isinstance(image, widgets.Image):
+            # convert to path:
+            image = pathlib.Path(image)
+            # read bytes and make widget:
+            image = widgets.Image(value=image.read_bytes())
         self.current_image = image
         self._display_image()
 
