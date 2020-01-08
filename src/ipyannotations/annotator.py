@@ -44,6 +44,12 @@ class Annotator(widgets.Box):
         self.undo_button.on_click(self.undo)
         extra_buttons.append(self.undo_button)
 
+        self.skip_button = widgets.Button(
+            description="Skip", icon="fast-forward", layout=button_layout
+        )
+        self.skip_button.on_click(self.skip)
+        extra_buttons.append(self.skip_button)
+
         if hasattr(self.canvas, "editing"):
             self.edit_button = widgets.ToggleButton(
                 description="Edit", icon="pencil", layout=button_layout
@@ -136,6 +142,7 @@ class Annotator(widgets.Box):
 
         self.submit_callbacks: List[Callable[[Any], None]] = []
         self.undo_callbacks: List[Callable[[], None]] = []
+        self.skip_callbacks: List[Callable[[], None]] = []
 
         super().__init__()
         self.children = (widgets.VBox((self.canvas, self.all_controls)),)
@@ -180,6 +187,25 @@ class Annotator(widgets.Box):
         else:
             for callback in self.undo_callbacks:
                 callback()
+
+    def on_skip(self, callback: Callable[[], None]):
+        """Register a callback to handle when the user clicks "Skip".
+
+        .. note::
+            Callbacks are called in order of registration - first registered,
+            first called.
+
+        Parameters
+        ----------
+        callback : Callable[[], None]
+            The function to be called when the user clicks "Skip". It should
+            take no arguments, and any return values are ignored.
+        """
+        self.skip_callbacks.append(callback)
+
+    def skip(self, button):
+        for callback in self.skip_callbacks:
+            callback()
 
     @property
     def data(self):
