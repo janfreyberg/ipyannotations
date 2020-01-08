@@ -1,5 +1,5 @@
 import pathlib
-from typing import List, Callable, Any, Optional, Union
+from typing import List, Callable, Any, Optional, Union, Tuple
 
 import ipywidgets as widgets
 
@@ -9,12 +9,26 @@ from .canvases.point import PointAnnotationCanvas
 
 
 class Annotator(widgets.Box):
+    """A generic image annotation widget."""
+
     def __init__(
         self,
         canvas: AbstractAnnotationCanvas,
         classes: Optional[List[str]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
     ):
+        """Create an annotation widget for images.
+
+        Parameters
+        ----------
+        canvas : AbstractAnnotationCanvas
+            An annotation canvas that implements displaying & annotating
+            images.
+        classes : List[str]
+            The list of classes you'd like to annotate.
+        data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
+            A function that transforms the annotation data. By default None.
+        """
         self.canvas = canvas
         self.data_postprocessor = data_postprocessor
 
@@ -174,7 +188,16 @@ class Annotator(widgets.Box):
         """
         self.submit_callbacks.append(callback)
 
-    def submit(self, button):
+    def submit(self, button: Optional[Any] = None):
+        """Trigger the "Submit" callbacks.
+
+        This function is called when users click "Submit".
+
+        Parameters
+        ----------
+        button : optional
+            Ignored argument. Supplied when invoked due to a button click.
+        """
         for callback in self.submit_callbacks:
             callback(self.data)
 
@@ -194,7 +217,16 @@ class Annotator(widgets.Box):
         """
         self.undo_callbacks.append(callback)
 
-    def undo(self, button):
+    def undo(self, button: Optional[Any] = None):
+        """Trigger the "Undo" callbacks.
+
+        This function is called when users click "Undo".
+
+        Parameters
+        ----------
+        button : optional
+            Ignored argument. Supplied when invoked due to a button click.
+        """
         if self.canvas._undo_queue:
             undo = self.canvas._undo_queue.pop()
             undo()
@@ -217,7 +249,16 @@ class Annotator(widgets.Box):
         """
         self.skip_callbacks.append(callback)
 
-    def skip(self, button):
+    def skip(self, button: Optional[Any] = None):
+        """Trigger the "Skip" callbacks.
+
+        This function is called when users click "Skip".
+
+        Parameters
+        ----------
+        button : optional
+            Ignored argument. Supplied when invoked due to a button click.
+        """
         for callback in self.skip_callbacks:
             callback()
 
@@ -230,16 +271,42 @@ class Annotator(widgets.Box):
 
 
 class PolygonAnnotator(Annotator):
-    def __init__(self, canvas_size=(500, 500), classes=None):
+    """An annotator for drawing polygons on an image."""
 
+    def __init__(
+        self,
+        canvas_size: Tuple[int, int] = (500, 500),
+        classes: Optional[List[str]] = None,
+    ):
+        """Create an annotator for drawing polygons on an image.
+
+        Parameters
+        ----------
+        canvas_size : (int, int), optional
+            Size of the annotation canvas, by default (500, 500)
+        classes : List[str], optional
+            The list of classes you want to create annotations for, by default
+            None.
+        """
         canvas = PolygonAnnotationCanvas(size=canvas_size, classes=classes)
 
         super().__init__(canvas, classes)
 
 
 class PointAnnotator(Annotator):
-    def __init__(self, canvas_size=(500, 500), classes=None):
+    """An annotator for drawing points on an image."""
 
+    def __init__(self, canvas_size=(500, 500), classes=None):
+        """Create an annotator for drawing points on an image.
+
+        Parameters
+        ----------
+        canvas_size : (int, int), optional
+            Size of the annotation canvas, by default (500, 500)
+        classes : List[str], optional
+            The list of classes you want to create annotations for, by default
+            None.
+        """
         canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
         super().__init__(canvas, classes)
