@@ -30,6 +30,6 @@ def adjust(img, contrast_factor: float, brightness_factor: float):
     pil_image = ImageEnhance.Contrast(pil_image).enhance(contrast_factor)
     pil_image = ImageEnhance.Brightness(pil_image).enhance(brightness_factor)
     buffer = io.BytesIO()
-    pil_image.save(buffer, "PNG")
+    pil_image.save(buffer, "JPEG")
     buffer.seek(0)
-    return widgets.Image(value=buffer.read())
+    return widgets.Image(value=buffer.read(), format="jpg")
