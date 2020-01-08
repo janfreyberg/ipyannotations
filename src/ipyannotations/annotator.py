@@ -1,4 +1,5 @@
-from typing import List, Callable, Any, Optional
+import pathlib
+from typing import List, Callable, Any, Optional, Union
 
 import ipywidgets as widgets
 
@@ -146,6 +147,17 @@ class Annotator(widgets.Box):
 
         super().__init__()
         self.children = (widgets.VBox((self.canvas, self.all_controls)),)
+
+    def display(self, image: Union[widgets.Image, str, pathlib.Path]):
+        """Display an image on the annotation canvas.
+
+        Parameters
+        ----------
+        image : Union[widgets.Image, str, pathlib.Path]
+            The image, or the path to the image.
+        """
+        self.canvas.clear()
+        self.canvas.load_image(image)
 
     def on_submit(self, callback: Callable[[Any], None]):
         """Register a callback to handle data when the user clicks "Submit".
