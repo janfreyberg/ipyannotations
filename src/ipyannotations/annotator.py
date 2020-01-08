@@ -12,7 +12,7 @@ class Annotator(widgets.Box):
     def __init__(
         self,
         canvas: AbstractAnnotationCanvas,
-        classes: List[str],
+        classes: Optional[List[str]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
     ):
         self.canvas = canvas
@@ -30,6 +30,8 @@ class Annotator(widgets.Box):
                 (self.class_selector, "value"), (self.canvas, "current_class")
             )
             data_controls.append(self.class_selector)
+        else:
+            self.canvas.current_class = ""
 
         extra_buttons = []
         button_layout = widgets.Layout(
