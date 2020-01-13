@@ -1,5 +1,6 @@
-ipywidgets
-ipycanvas
+ipywidgets>=7.5.1
+ipycanvas>=0.4.1
+traitlets>=4.3.3
 palettable
 Pillow
 numpy
