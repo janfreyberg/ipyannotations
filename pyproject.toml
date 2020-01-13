@@ -12,7 +12,8 @@ requires = [
     "ipywidgets",
     "ipycanvas",
     "palettable",
-    "Pillow"
+    "Pillow",
+    "numpy"
 ]
 
 
@@ -28,6 +29,13 @@ dev = [
     "pre-commit",
     "jupyterlab",
     "rope"
+]
+doc = [
+    "sphinx>=2.3",
+    "m2r",
+    "sphinx_rtd_theme",
+    "nbsphinx",
+    "numpydoc"
 ]
 
 
