@@ -3,15 +3,19 @@ from typing import List, Callable, Any, Optional, Union, Tuple
 import traitlets
 import ipywidgets as widgets
 
+import IPython.display
+
 from .canvases._abstract import AbstractAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
 
 
-class Annotator(widgets.Box):
+class Annotator(traitlets.HasTraits):
     """A generic image annotation widget."""
 
-    options = traitlets.List(list(), allow_none=False)
+    options = traitlets.List(
+        list(), allow_none=False, help="The possible classes"
+    )
 
     def __init__(
         self,
@@ -163,15 +167,15 @@ class Annotator(widgets.Box):
         self.undo_callbacks: List[Callable[[], None]] = []
         self.skip_callbacks: List[Callable[[], None]] = []
 
-        super().__init__()
-        self.children = (widgets.VBox((self.canvas, self.all_controls)),)
+        self._layout = widgets.VBox((self.canvas, self.all_controls))
 
-    def display(self, image: Union[widgets.Image, str, pathlib.Path]):
-        """Display an image on the annotation canvas.
+    def display(self, image: Union[widgets.Image, pathlib.Path]):
+        """Clear the annotations and display an image
+
 
         Parameters
         ----------
-        image : Union[widgets.Image, str, pathlib.Path]
+        image : widgets.Image, pathlib.Path, np.ndarray
             The image, or the path to the image.
         """
         self.canvas.clear()
@@ -179,6 +183,10 @@ class Annotator(widgets.Box):
 
     def on_submit(self, callback: Callable[[Any], None]):
         """Register a callback to handle data when the user clicks "Submit".
+
+        .. note::
+            Callbacks are called in order of registration - first registered,
+            first called.
 
         Parameters
         ----------
@@ -239,10 +247,6 @@ class Annotator(widgets.Box):
     def on_skip(self, callback: Callable[[], None]):
         """Register a callback to handle when the user clicks "Skip".
 
-        .. note::
-            Callbacks are called in order of registration - first registered,
-            first called.
-
         Parameters
         ----------
         callback : Callable[[], None]
@@ -266,49 +270,55 @@ class Annotator(widgets.Box):
 
     @property
     def data(self):
+        """The annotation data."""
         if self.data_postprocessor is not None:
             return self.data_postprocessor(self.canvas.data)
         else:
             return self.canvas.data
 
+    # TODO: allow setting the data
+
+    def _ipython_display_(self):
+        IPython.display.display(self._layout)
+
 
 class PolygonAnnotator(Annotator):
-    """An annotator for drawing polygons on an image."""
+    """An annotator for drawing polygons on an image.
+
+    Parameters
+    ----------
+    canvas_size : (int, int), optional
+        Size of the annotation canvas, by default (500, 500)
+    classes : List[str], optional
+        The list of classes you want to create annotations for, by default
+        None.
+    """
 
     def __init__(
         self,
-        canvas_size: Tuple[int, int] = (500, 500),
+        canvas_size: Tuple[int, int] = (700, 500),
         classes: Optional[List[str]] = None,
     ):
-        """Create an annotator for drawing polygons on an image.
-
-        Parameters
-        ----------
-        canvas_size : (int, int), optional
-            Size of the annotation canvas, by default (500, 500)
-        classes : List[str], optional
-            The list of classes you want to create annotations for, by default
-            None.
-        """
+        """Create an annotator for drawing polygons on an image."""
         canvas = PolygonAnnotationCanvas(size=canvas_size, classes=classes)
 
         super().__init__(canvas, classes)
 
 
 class PointAnnotator(Annotator):
-    """An annotator for drawing points on an image."""
+    """An annotator for drawing points on an image.
 
-    def __init__(self, canvas_size=(500, 500), classes=None):
-        """Create an annotator for drawing points on an image.
+    Parameters
+    ----------
+    canvas_size : (int, int), optional
+        Size of the annotation canvas, by default (500, 500)
+    classes : List[str], optional
+        The list of classes you want to create annotations for, by default
+        None.
+    """
 
-        Parameters
-        ----------
-        canvas_size : (int, int), optional
-            Size of the annotation canvas, by default (500, 500)
-        classes : List[str], optional
-            The list of classes you want to create annotations for, by default
-            None.
-        """
+    def __init__(self, canvas_size=(700, 500), classes=None):
+        """Create an annotator for drawing points on an image."""
         canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
         super().__init__(canvas, classes)
