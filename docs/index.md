@@ -9,7 +9,9 @@ integrate with `superintendent`, but does not need to.
    :maxdepth: 2
    :caption: Contents:
 
+   installation
    quick-start
+   api
 
 
 
