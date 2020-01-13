@@ -5,6 +5,10 @@ from collections import deque, defaultdict
 import abc
 from traitlets import Unicode, Float, Integer, observe
 import pathlib
+import io
+
+import numpy as np
+from PIL import Image
 
 from .utils import set_colors, fit_image
 from .image_utils import adjust
@@ -59,7 +63,16 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image : Union[widgets.Image, str, pathlib.Path]
             The image, or the path to the image.
         """
-        if not isinstance(image, widgets.Image):
+        if isinstance(image, np.ndarray):
+            image = Image.fromarray(np.ndarray.astype(np.uint8))
+            image_io = io.BytesIO()
+            image.save(image_io)
+            image = widgets.Image(value=image_io.getvalue())
+        if isinstance(image, Image.Image):
+            image_io = io.BytesIO()
+            image.save(image_io)
+            image = widgets.Image(value=image_io.getvalue())
+        if isinstance(image, (str, pathlib.Path)):
             # convert to path:
             image = pathlib.Path(image)
             # read bytes and make widget:
