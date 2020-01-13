@@ -25,15 +25,7 @@ release = version
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    "m2r",
-    "nbsphinx",
-    "m2r",
-    # "numpydoc",
-    # "jupyter_sphinx.execute",
-    "sphinx.ext.napoleon"
-    # "sphinx.ext.autodoc",
-]
+extensions = ["m2r", "nbsphinx", "sphinx.ext.napoleon"]
 
 source_suffix = [".rst", ".md"]
 
