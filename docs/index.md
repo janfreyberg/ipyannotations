@@ -5,6 +5,10 @@ for your data (currently, primarily images) inside jupyter notebooks. It lets
 you leverage the rich jupyter display system from python. It was designed to
 integrate with `superintendent`, but does not need to.
 
+Draw polygons onto images for your machine learning applications:
+
+![interface](img/interface.png)
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
