@@ -34,8 +34,7 @@ doc = [
     "sphinx>=2.3",
     "m2r",
     "sphinx_rtd_theme",
-    "nbsphinx",
-    "numpydoc"
+    "nbsphinx"
 ]
 
 

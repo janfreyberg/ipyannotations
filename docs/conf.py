@@ -30,7 +30,7 @@ extensions = [
     "nbsphinx",
     "m2r",
     # "numpydoc",
-    "jupyter_sphinx.execute",
+    # "jupyter_sphinx.execute",
     "sphinx.ext.napoleon"
     # "sphinx.ext.autodoc",
 ]
