@@ -1,0 +1,5 @@
+ipywidgets
+ipycanvas
+palettable
+Pillow
+numpy
