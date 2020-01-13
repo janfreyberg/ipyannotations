@@ -4,3 +4,4 @@ traitlets>=4.3.3
 palettable
 Pillow
 numpy
+flit
