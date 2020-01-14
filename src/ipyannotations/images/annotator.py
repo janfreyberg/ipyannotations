@@ -27,6 +27,7 @@ class Annotator(traitlets.HasTraits):
     options = traitlets.List(
         list(), allow_none=False, help="The possible classes"
     )
+    options.__doc__ = """The possible classes"""
 
     def __init__(
         self,
@@ -298,6 +299,11 @@ class PolygonAnnotator(Annotator):
     button. Simply drag a point you want to adjust. Again, if you have
     difficulty aiming at the points, you can increase the point size.
 
+    You can increase or decrease the contrast and brightness  of the image
+    using the sliders to make it easier to annotate. Sometimes you need to see
+    what's behind already-created annotations, and for this purpose you can
+    make them more see-through using the "Opacity" slider.
+
     Parameters
     ----------
     canvas_size : (int, int), optional
@@ -341,7 +347,13 @@ class PointAnnotator(Annotator):
 
     To add a point, select the class using the dropdown menu, and click
     anywhere on the image. You can undo adding points, and you can adjust the
-    point's position using the "Edit" button.
+    point's position using the "Edit" button. To make this easier, you may
+    want to adjust the point size using the appropriate slider.
+
+    You can increase or decrease the contrast and brightness  of the image
+    using the sliders to make it easier to annotate. Sometimes you need to see
+    what's behind already-created annotations, and for this purpose you can
+    make them more see-through using the "Opacity" slider.
 
     Parameters
     ----------
