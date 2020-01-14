@@ -126,7 +126,8 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
 
     @trigger_redraw
     def _undo_new_polygon(self):
-        self.current_polygon = self.polygons.pop()
+        self.current_polygon = self.polygons.pop(-1)
+        self.current_polygon.pop(-1)
 
     def re_draw(self):
 
