@@ -17,8 +17,6 @@ class Polygon:
     label: Optional[str] = None
     close_threshold: int = 5
 
-    closed = False
-
     def append(self, point: Tuple[int, int]):
         # if self.closed:
         #     raise ValueError("Can't append to a closed polygon.")
@@ -26,14 +24,19 @@ class Polygon:
         point = (round(point[0]), round(point[1]))
         self.points.append(point)
         if self._is_closed():
+            # ensure last point is identical to first:
             self.points.pop(-1)
-            self.closed = True
+            self.points.append(self.points[0])
 
     @property
     def xy_lists(self):
         if len(self.points) == 0:
             return [], []
         return map(list, zip(*self.points))
+
+    @property
+    def closed(self) -> bool:
+        return len(self.points) > 2 and self.points[0] == self.points[-1]
 
     def _is_closed(self) -> bool:
 
@@ -125,7 +128,8 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
 
     @trigger_redraw
     def _undo_new_polygon(self):
-        self.current_polygon = self.polygons.pop()
+        self.current_polygon = self.polygons.pop(-1)
+        self.current_polygon.points.pop(-1)
 
     def re_draw(self):
 

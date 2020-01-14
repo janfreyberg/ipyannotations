@@ -11,11 +11,23 @@ from .canvases.point import PointAnnotationCanvas
 
 
 class Annotator(traitlets.HasTraits):
-    """A generic image annotation widget."""
+    """A generic image annotation widget.
+
+    Parameters
+    ----------
+    canvas : AbstractAnnotationCanvas
+        An annotation canvas that implements displaying & annotating
+        images.
+    options : List[str], optional
+        The list of classes you'd like to annotate.
+    data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
+        A function that transforms the annotation data. By default None.
+    """
 
     options = traitlets.List(
         list(), allow_none=False, help="The possible classes"
     )
+    options.__doc__ = """The possible classes"""
 
     def __init__(
         self,
@@ -23,18 +35,7 @@ class Annotator(traitlets.HasTraits):
         options: Optional[List[str]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
     ):
-        """Create an annotation widget for images.
-
-        Parameters
-        ----------
-        canvas : AbstractAnnotationCanvas
-            An annotation canvas that implements displaying & annotating
-            images.
-        options : List[str], optional
-            The list of classes you'd like to annotate.
-        data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
-            A function that transforms the annotation data. By default None.
-        """
+        """Create an annotation widget for images."""
         self.canvas = canvas
         self.data_postprocessor = data_postprocessor
 
@@ -285,10 +286,28 @@ class Annotator(traitlets.HasTraits):
 class PolygonAnnotator(Annotator):
     """An annotator for drawing polygons on an image.
 
+    To draw a polygon, click anywhere you'd like to start. Continue to click
+    along the edge of the polygon until arrive back where you started. To
+    finish, simply click the first point (highlighted in red). It may be
+    helpful to increase the point size if you're struggling (using the slider).
+
+    You can change the class of a polygon using the dropdown menu while the
+    polygon is still "open", or unfinished. If you make a mistake, use the Undo
+    button until the point that's wrong has disappeared.
+
+    You can move, but not add / subtract polygon points, by clicking the "Edit"
+    button. Simply drag a point you want to adjust. Again, if you have
+    difficulty aiming at the points, you can increase the point size.
+
+    You can increase or decrease the contrast and brightness  of the image
+    using the sliders to make it easier to annotate. Sometimes you need to see
+    what's behind already-created annotations, and for this purpose you can
+    make them more see-through using the "Opacity" slider.
+
     Parameters
     ----------
     canvas_size : (int, int), optional
-        Size of the annotation canvas, by default (500, 500)
+        Size of the annotation canvas in pixels.
     classes : List[str], optional
         The list of classes you want to create annotations for, by default
         None.
@@ -304,14 +323,42 @@ class PolygonAnnotator(Annotator):
 
         super().__init__(canvas, classes)
 
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------+
+        |``'type'``        | ``'polygon'``           |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'points'``      | ``<list of xy-tuples>`` |
+        +------------------+-------------------------+
+        """
+        return super().data
+
 
 class PointAnnotator(Annotator):
     """An annotator for drawing points on an image.
 
+    To add a point, select the class using the dropdown menu, and click
+    anywhere on the image. You can undo adding points, and you can adjust the
+    point's position using the "Edit" button. To make this easier, you may
+    want to adjust the point size using the appropriate slider.
+
+    You can increase or decrease the contrast and brightness  of the image
+    using the sliders to make it easier to annotate. Sometimes you need to see
+    what's behind already-created annotations, and for this purpose you can
+    make them more see-through using the "Opacity" slider.
+
     Parameters
     ----------
     canvas_size : (int, int), optional
-        Size of the annotation canvas, by default (500, 500)
+        Size of the annotation canvas in pixels.
     classes : List[str], optional
         The list of classes you want to create annotations for, by default
         None.
@@ -322,3 +369,21 @@ class PointAnnotator(Annotator):
         canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
         super().__init__(canvas, classes)
+
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------+
+        |``'type'``        | ``'point'``             |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'coordinates'`` | ``<xy-tuple>``          |
+        +------------------+-------------------------+
+        """
+        return super().data
