@@ -285,6 +285,19 @@ class Annotator(traitlets.HasTraits):
 class PolygonAnnotator(Annotator):
     """An annotator for drawing polygons on an image.
 
+    To draw a polygon, click anywhere you'd like to start. Continue to click
+    along the edge of the polygon until arrive back where you started. To
+    finish, simply click the first point (highlighted in red). It may be
+    helpful to increase the point size if you're struggling (using the slider).
+
+    You can change the class of a polygon using the dropdown menu while the
+    polygon is still "open", or unfinished. If you make a mistake, use the Undo
+    button until the point that's wrong has disappeared.
+
+    You can move, but not add / subtract polygon points, by clicking the "Edit"
+    button. Simply drag a point you want to adjust. Again, if you have
+    difficulty aiming at the points, you can increase the point size.
+
     Parameters
     ----------
     canvas_size : (int, int), optional
@@ -304,9 +317,31 @@ class PolygonAnnotator(Annotator):
 
         super().__init__(canvas, classes)
 
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------+
+        |``'type'``        | ``'polygon'``           |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'points'``      | ``<list of xy-tuples>`` |
+        +------------------+-------------------------+
+        """
+        return super().data
+
 
 class PointAnnotator(Annotator):
     """An annotator for drawing points on an image.
+
+    To add a point, select the class using the dropdown menu, and click
+    anywhere on the image. You can undo adding points, and you can adjust the
+    point's position using the "Edit" button.
 
     Parameters
     ----------
@@ -322,3 +357,21 @@ class PointAnnotator(Annotator):
         canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
         super().__init__(canvas, classes)
+
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------+
+        |``'type'``        | ``'point'``             |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'coordinates'`` | ``<xy-tuple>``          |
+        +------------------+-------------------------+
+        """
+        return super().data
