@@ -25,6 +25,9 @@ release = version
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
+master_doc = "index"
+
 extensions = ["m2r", "nbsphinx", "sphinx.ext.napoleon"]
 
 source_suffix = [".rst", ".md"]
@@ -52,7 +55,7 @@ html_logo = "img/logo.png"
 # html_static_path = ["_static"]
 
 nbsphinx_prolog = r"""
-{% set docname = 'doc/' + env.doc2path(env.docname, base=None) %}
+{% set docname = 'docs/' + env.doc2path(env.docname, base=None) %}
 .. only:: html
 
     .. role:: raw-html(raw)
