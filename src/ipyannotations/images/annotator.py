@@ -11,7 +11,18 @@ from .canvases.point import PointAnnotationCanvas
 
 
 class Annotator(traitlets.HasTraits):
-    """A generic image annotation widget."""
+    """A generic image annotation widget.
+
+    Parameters
+    ----------
+    canvas : AbstractAnnotationCanvas
+        An annotation canvas that implements displaying & annotating
+        images.
+    options : List[str], optional
+        The list of classes you'd like to annotate.
+    data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
+        A function that transforms the annotation data. By default None.
+    """
 
     options = traitlets.List(
         list(), allow_none=False, help="The possible classes"
@@ -23,18 +34,7 @@ class Annotator(traitlets.HasTraits):
         options: Optional[List[str]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
     ):
-        """Create an annotation widget for images.
-
-        Parameters
-        ----------
-        canvas : AbstractAnnotationCanvas
-            An annotation canvas that implements displaying & annotating
-            images.
-        options : List[str], optional
-            The list of classes you'd like to annotate.
-        data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
-            A function that transforms the annotation data. By default None.
-        """
+        """Create an annotation widget for images."""
         self.canvas = canvas
         self.data_postprocessor = data_postprocessor
 
@@ -288,7 +288,7 @@ class PolygonAnnotator(Annotator):
     Parameters
     ----------
     canvas_size : (int, int), optional
-        Size of the annotation canvas, by default (500, 500)
+        Size of the annotation canvas in pixels.
     classes : List[str], optional
         The list of classes you want to create annotations for, by default
         None.
@@ -311,7 +311,7 @@ class PointAnnotator(Annotator):
     Parameters
     ----------
     canvas_size : (int, int), optional
-        Size of the annotation canvas, by default (500, 500)
+        Size of the annotation canvas in pixels.
     classes : List[str], optional
         The list of classes you want to create annotations for, by default
         None.
