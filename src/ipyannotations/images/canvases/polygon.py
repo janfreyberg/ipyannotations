@@ -27,6 +27,7 @@ class Polygon:
         self.points.append(point)
         if self._is_closed():
             self.points.pop(-1)
+            self.points.append(self.points[0])
             self.closed = True
 
     @property
