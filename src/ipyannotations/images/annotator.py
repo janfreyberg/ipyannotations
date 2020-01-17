@@ -1,16 +1,14 @@
 import pathlib
-from typing import List, Callable, Any, Optional, Union, Tuple
+from typing import List, Callable, Any, Optional, Union, Type
 import traitlets
 import ipywidgets as widgets
-
-import IPython.display
 
 from .canvases._abstract import AbstractAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
 
 
-class Annotator(traitlets.HasTraits):
+class Annotator(widgets.VBox):
     """A generic image annotation widget.
 
     Parameters
@@ -29,14 +27,17 @@ class Annotator(traitlets.HasTraits):
     )
     options.__doc__ = """The possible classes"""
 
+    CanvasClass: Type[AbstractAnnotationCanvas]
+
     def __init__(
         self,
-        canvas: AbstractAnnotationCanvas,
+        canvas_size=(700, 500),
         options: Optional[List[str]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
+        # **kwargs,
     ):
         """Create an annotation widget for images."""
-        self.canvas = canvas
+        self.canvas = self.CanvasClass(canvas_size, classes=options)
         self.data_postprocessor = data_postprocessor
 
         # controls for the data entry:
@@ -159,7 +160,7 @@ class Annotator(traitlets.HasTraits):
         self.all_controls = widgets.HBox(
             children=(self.visualisation_controls, self.data_controls),
             layout={
-                "width": f"{canvas.size[0]}px",
+                "width": f"{self.canvas.size[0]}px",
                 "justify_content": "space-between",
             },
         )
@@ -168,7 +169,8 @@ class Annotator(traitlets.HasTraits):
         self.undo_callbacks: List[Callable[[], None]] = []
         self.skip_callbacks: List[Callable[[], None]] = []
 
-        self._layout = widgets.VBox((self.canvas, self.all_controls))
+        super().__init__()
+        self.children = [self.canvas, self.all_controls]
 
     def display(self, image: Union[widgets.Image, pathlib.Path]):
         """Clear the annotations and display an image
@@ -277,10 +279,11 @@ class Annotator(traitlets.HasTraits):
         else:
             return self.canvas.data
 
-    # TODO: allow setting the data
+    @data.setter
+    def data(self, value):
+        self.canvas.data = value
 
-    def _ipython_display_(self):
-        IPython.display.display(self._layout)
+    # TODO: allow setting the data
 
 
 class PolygonAnnotator(Annotator):
@@ -313,33 +316,23 @@ class PolygonAnnotator(Annotator):
         None.
     """
 
-    def __init__(
-        self,
-        canvas_size: Tuple[int, int] = (700, 500),
-        classes: Optional[List[str]] = None,
-    ):
-        """Create an annotator for drawing polygons on an image."""
-        canvas = PolygonAnnotationCanvas(size=canvas_size, classes=classes)
+    CanvasClass = PolygonAnnotationCanvas
 
-        super().__init__(canvas, classes)
 
-    @property
-    def data(self):
-        """
-        The annotation data, as List[ Dict ].
+PolygonAnnotator.data.__doc__ = """
+The annotation data, as List[ Dict ].
 
-        The format is a list of dictionaries, with the following key / value
-        combinations:
+The format is a list of dictionaries, with the following key / value
+combinations:
 
-        +------------------+-------------------------+
-        |``'type'``        | ``'polygon'``           |
-        +------------------+-------------------------+
-        |``'label'``       | ``<class label>``       |
-        +------------------+-------------------------+
-        |``'points'``      | ``<list of xy-tuples>`` |
-        +------------------+-------------------------+
-        """
-        return super().data
++------------------+-------------------------+
+|``'type'``        | ``'polygon'``           |
++------------------+-------------------------+
+|``'label'``       | ``<class label>``       |
++------------------+-------------------------+
+|``'points'``      | ``<list of xy-tuples>`` |
++------------------+-------------------------+
+"""
 
 
 class PointAnnotator(Annotator):
@@ -364,26 +357,25 @@ class PointAnnotator(Annotator):
         None.
     """
 
-    def __init__(self, canvas_size=(700, 500), classes=None):
-        """Create an annotator for drawing points on an image."""
-        canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
+    CanvasClass = PointAnnotationCanvas
+    # def __init__(self, canvas_size=(700, 500), classes=None):
+    #     """Create an annotator for drawing points on an image."""
+    #     canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
-        super().__init__(canvas, classes)
+    #     super().__init__(canvas, classes)
 
-    @property
-    def data(self):
-        """
-        The annotation data, as List[ Dict ].
 
-        The format is a list of dictionaries, with the following key / value
-        combinations:
+PointAnnotator.data.__doc__ = """
+The annotation data, as List[ Dict ].
 
-        +------------------+-------------------------+
-        |``'type'``        | ``'point'``             |
-        +------------------+-------------------------+
-        |``'label'``       | ``<class label>``       |
-        +------------------+-------------------------+
-        |``'coordinates'`` | ``<xy-tuple>``          |
-        +------------------+-------------------------+
-        """
-        return super().data
+The format is a list of dictionaries, with the following key / value
+combinations:
+
++------------------+-------------------------+
+|``'type'``        | ``'point'``             |
++------------------+-------------------------+
+|``'label'``       | ``<class label>``       |
++------------------+-------------------------+
+|``'coordinates'`` | ``<xy-tuple>``          |
++------------------+-------------------------+
+"""
