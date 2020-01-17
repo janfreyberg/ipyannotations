@@ -19,8 +19,8 @@ class Point:
     def __post_init__(self):
         self.coordinates = tuple(map(round, self.coordinates))
 
-    def move(self, coordinates: Tuple[int, int]):
-        self.coordinates = (round(coordinates[0]), round(coordinates[1]))
+    def move(self, x: int, y: int):
+        self.coordinates = (round(x), round(y))
 
     @property
     def data(self):
@@ -30,6 +30,12 @@ class Point:
             "coordinates": self.coordinates,
         }
 
+    @classmethod
+    def from_data(cls, data: dict):
+        type_ = data.pop("type")
+        if type_ == "point":
+            return cls(**data)
+
 
 class PointAnnotationCanvas(AbstractAnnotationCanvas):
 
@@ -38,8 +44,6 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     def __init__(self, size, classes=None):
 
         super().__init__(size=size, classes=classes)
-        self.points: List[Point] = []
-        self.dragging = None
 
     @trigger_redraw
     @only_inside_image
@@ -71,7 +75,7 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
         if self.dragging is None:
             return
         else:
-            self.dragging((x, y))
+            self.dragging(int(x), int(y))
 
     @trigger_redraw
     def on_release(self, x: float, y: float):
@@ -103,3 +107,10 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     @property
     def data(self):
         return [point.data for point in self.points]
+
+    @data.setter
+    def data(self, value):
+        self.points = [Point.from_data(point) for point in self.points]
+
+    def _init_empty_data(self):
+        self.points: List[Point] = []

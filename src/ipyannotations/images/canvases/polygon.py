@@ -56,17 +56,23 @@ class Polygon:
     def data(self):
         return {"type": "polygon", "label": self.label, "points": self.points}
 
+    @classmethod
+    def from_data(cls, data: dict):
+        type_ = data.pop("type")
+        if type_ == "polygon":
+            return cls(**data)
+
 
 class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
 
     editing = Bool(default_value=False)
 
+    current_polygon: Polygon
+    polygons: List[Polygon]
+
     def __init__(self, size, classes=None):
 
         super().__init__(size=size, classes=classes)
-        self.polygons: List[Polygon] = []
-        self.current_polygon: Polygon = Polygon(label=self.current_class)
-        self.dragging = None
 
     @trigger_redraw
     @only_inside_image
@@ -193,3 +199,14 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     @property
     def data(self):
         return [polygon.data for polygon in self.polygons]
+
+    @data.setter
+    def data(self, value: List[dict]):
+        self._init_empty_data()
+        self.polygons = [
+            Polygon.from_data(polygon_dict) for polygon_dict in value
+        ]
+
+    def _init_empty_data(self):
+        self.polygons: List[Polygon] = []
+        self.current_polygon: Polygon = Polygon(label=self.current_class)
