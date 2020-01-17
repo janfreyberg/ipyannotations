@@ -1,5 +1,9 @@
 # `ipyannotations`: create rich annotations in jupyter notebooks.
 
+[![Documentation Status](https://readthedocs.org/projects/ipyannotations/badge/?version=latest)](https://ipyannotations.readthedocs.io/en/latest/?badge=latest)
+[![travis CI build](https://travis-ci.org/janfreyberg/ipyannotations.svg?branch=master)](https://travis-ci.org/janfreyberg/ipyannotations)
+[![Coverage Status](https://coveralls.io/repos/github/janfreyberg/ipyannotations/badge.svg?branch=master)](https://coveralls.io/github/janfreyberg/ipyannotations?branch=master)
+
 The `ipyannotations` library is designed to let you create rich annotations
 for your data (currently, primarily images) inside jupyter notebooks. It lets
 you leverage the rich jupyter display system from python. It was designed to
