@@ -8,6 +8,7 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: flake8
+        files: 'src/*.py'
 -   repo: https://github.com/ambv/black
     rev: stable
     hooks:
@@ -16,3 +17,4 @@ repos:
     rev: ''  # Use the sha / tag you want to point at
     hooks:
     -   id: mypy
+        files: 'src/*.py'
