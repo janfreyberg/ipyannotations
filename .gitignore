@@ -24,3 +24,6 @@ __pycache__
 changelog.tmp
 .mypy_cache/
 docs/_build/
+htmlcov/
+.hypothesis/
+.coverage
