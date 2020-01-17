@@ -1,49 +1,19 @@
 from ipycanvas import hold_canvas
 from traitlets import Bool
 
-from typing import List, Tuple
-from dataclasses import dataclass
+from typing import List
 
 from math import pi
 
 from .utils import dist, trigger_redraw, only_inside_image
 from .color_utils import hex_to_rgb, rgba_to_html_string
 from ._abstract import AbstractAnnotationCanvas
-
-
-@dataclass
-class Point:
-    coordinates: Tuple[int, int]
-    label: str = ""
-
-    def __post_init__(self):
-        self.coordinates = tuple(map(round, self.coordinates))
-
-    def move(self, x: int, y: int):
-        self.coordinates = (round(x), round(y))
-
-    @property
-    def data(self) -> dict:
-        return {
-            "type": "point",
-            "label": self.label,
-            "coordinates": self.coordinates,
-        }
-
-    @classmethod
-    def from_data(cls, data: dict):
-        type_ = data.pop("type")
-        if type_ == "point":
-            return cls(**data)
+from .shapes import Point
 
 
 class PointAnnotationCanvas(AbstractAnnotationCanvas):
 
     editing = Bool(default_value=False)
-
-    def __init__(self, size, classes=None):
-
-        super().__init__(size=size, classes=classes)
 
     @trigger_redraw
     @only_inside_image
@@ -111,7 +81,9 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     @data.setter  # type: ignore
     @trigger_redraw
     def data(self, value: List[dict]):
-        self.points = [Point.from_data(point) for point in value]
+        self.points = [
+            Point.from_data(point_dict.copy()) for point_dict in value
+        ]
 
     def _init_empty_data(self):
         self.points: List[Point] = []

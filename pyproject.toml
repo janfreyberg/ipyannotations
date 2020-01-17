@@ -21,7 +21,8 @@ requires = [
 test = [
     "pytest",
     "coverage",
-    "pytest-cov"
+    "pytest-cov",
+    "hypothesis"
 ]
 dev = [
     "black",

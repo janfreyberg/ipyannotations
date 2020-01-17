@@ -4,7 +4,9 @@ from PIL import Image, ImageEnhance
 import ipywidgets as widgets
 
 
-def adjust(img, contrast_factor: float, brightness_factor: float):
+def adjust(
+    img: widgets.Image, contrast_factor: float, brightness_factor: float
+) -> widgets.Image:
     # turn widgets.Image into Pillow Image
     pil_image = Image.open(io.BytesIO(img.value))
     # apply adjustments

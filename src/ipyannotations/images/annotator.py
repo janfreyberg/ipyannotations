@@ -1,5 +1,5 @@
 import pathlib
-from typing import List, Callable, Any, Optional, Union, Type
+from typing import List, Callable, Any, Optional, Union, Type, Sequence
 import traitlets
 import ipywidgets as widgets
 
@@ -32,7 +32,7 @@ class Annotator(widgets.VBox):
     def __init__(
         self,
         canvas_size=(700, 500),
-        options: Optional[List[str]] = None,
+        options: Sequence[str] = (),
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
         # **kwargs,
     ):
@@ -42,7 +42,7 @@ class Annotator(widgets.VBox):
 
         # controls for the data entry:
         data_controls = []
-        self.options = options or []
+        self.options = options
 
         self.class_selector = widgets.Dropdown(
             description="Class:",

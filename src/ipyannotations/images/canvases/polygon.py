@@ -1,66 +1,14 @@
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
 
-from typing import List, Tuple, Optional
-from dataclasses import dataclass, field
+from typing import List
 
 from math import pi
 
 from .utils import dist, trigger_redraw, only_inside_image
 from .color_utils import hex_to_rgb, rgba_to_html_string
 from ._abstract import AbstractAnnotationCanvas
-
-
-@dataclass
-class Polygon:
-    points: List[Tuple[int, int]] = field(default_factory=list)
-    label: Optional[str] = None
-    close_threshold: int = 5
-
-    def append(self, point: Tuple[int, int]):
-        # if self.closed:
-        #     raise ValueError("Can't append to a closed polygon.")
-        # else:
-        point = (round(point[0]), round(point[1]))
-        self.points.append(point)
-        if self._is_closed():
-            # ensure last point is identical to first:
-            self.points.pop(-1)
-            self.points.append(self.points[0])
-
-    @property
-    def xy_lists(self):
-        if len(self.points) == 0:
-            return [], []
-        return map(list, zip(*self.points))
-
-    @property
-    def closed(self) -> bool:
-        return len(self.points) > 2 and self.points[0] == self.points[-1]
-
-    def _is_closed(self) -> bool:
-
-        if len(self) < 3:
-            return False
-
-        return dist(self.points[0], self.points[-1]) < self.close_threshold
-
-    def __len__(self) -> int:
-        return len(self.points)
-
-    def move_point(self, point_index: int, point: Tuple[int, int]):
-        point = (round(point[0]), round(point[1]))
-        self.points[point_index] = point
-
-    @property
-    def data(self):
-        return {"type": "polygon", "label": self.label, "points": self.points}
-
-    @classmethod
-    def from_data(cls, data: dict):
-        type_ = data.pop("type")
-        if type_ == "polygon":
-            return cls(**data)
+from .shapes import Polygon
 
 
 class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
@@ -70,17 +18,14 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     current_polygon: Polygon
     polygons: List[Polygon]
 
-    def __init__(self, size, classes=None):
-
-        super().__init__(size=size, classes=classes)
-
     @trigger_redraw
     @only_inside_image
     def on_click(self, x: float, y: float):
 
         if not self.editing:
 
-            self.current_polygon.append((int(x), int(y)))
+            x, y = round(x), round(y)
+            self.current_polygon.append((x, y))
 
             if self.current_polygon.closed:
                 self.polygons.append(
@@ -137,7 +82,8 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         self.current_polygon = self.polygons.pop(-1)
         self.current_polygon.points.pop(-1)
 
-    def re_draw(self):
+    @observe("point_size", "editing")
+    def re_draw(self, change=None):
 
         with hold_canvas(self):
             self[1].clear()
@@ -205,7 +151,7 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     def data(self, value: List[dict]):
         self._init_empty_data()
         self.polygons = [
-            Polygon.from_data(polygon_dict) for polygon_dict in value
+            Polygon.from_data(polygon_dict.copy()) for polygon_dict in value
         ]
 
     def _init_empty_data(self):

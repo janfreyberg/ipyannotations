@@ -24,9 +24,12 @@ class AbstractAnnotationCanvas(MultiCanvas):
     image_brightness = Float(default_value=1, min=0, max=10)
 
     def __init__(
-        self, size: Tuple[int, int], classes: Optional[Sequence[str]] = None
+        self,
+        size: Tuple[int, int] = (700, 500),
+        classes: Optional[Sequence[str]] = None,
+        **kwargs
     ):
-        super().__init__(n_canvases=3, size=size)
+        super().__init__(n_canvases=3, size=size, **kwargs)
         self._undo_queue: Deque[Callable] = deque([])
         self.image_extent = (0, 0, *size)
 
@@ -38,7 +41,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.interaction_canvas.on_mouse_move(self.on_drag)
         self.interaction_canvas.on_mouse_up(self.on_release)
 
-        self.current_image = None
+        self.current_image: Optional[widgets.Image] = None
         self.dragging: Optional[Callable[[int, int], None]] = None
 
         # register re_draw as handler for obacity changes
@@ -67,13 +70,13 @@ class AbstractAnnotationCanvas(MultiCanvas):
             The image, or the path to the image.
         """
         if isinstance(image, np.ndarray):
-            image = Image.fromarray(np.ndarray.astype(np.uint8))
+            image = Image.fromarray(image.astype(np.uint8))
             image_io = io.BytesIO()
-            image.save(image_io)
+            image.save(image_io, "JPEG")
             image = widgets.Image(value=image_io.getvalue())
         if isinstance(image, Image.Image):
             image_io = io.BytesIO()
-            image.save(image_io)
+            image.save(image_io, "JPEG")
             image = widgets.Image(value=image_io.getvalue())
         if isinstance(image, (str, pathlib.Path)):
             # convert to path:
