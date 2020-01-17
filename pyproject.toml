@@ -8,12 +8,14 @@ author = "Jan Freyberg"
 author-email = "jan.freyberg@gmail.com"
 home-page = "https://github.com/janfreyberg/ipyannotate"
 classifiers = ["License :: OSI Approved :: MIT License"]
+requires-python = ">=3.6"
 requires = [
     "ipywidgets",
     "ipycanvas",
     "palettable",
     "Pillow",
-    "numpy"
+    "numpy",
+    "dataclasses; python_version == '3.6'"
 ]
 
 
@@ -21,6 +23,7 @@ requires = [
 test = [
     "pytest",
     "coverage",
+    "coveralls",
     "pytest-cov",
     "hypothesis"
 ]
