@@ -23,7 +23,7 @@ class Point:
         self.coordinates = (round(x), round(y))
 
     @property
-    def data(self):
+    def data(self) -> dict:
         return {
             "type": "point",
             "label": self.label,
@@ -61,7 +61,7 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
                     old_coordinates = point.coordinates
 
                     def undo_move():
-                        point.move(old_coordinates)
+                        point.move(*old_coordinates)
                         self.re_draw()
 
                     self._undo_queue.append(undo_move)
@@ -108,9 +108,10 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     def data(self):
         return [point.data for point in self.points]
 
-    @data.setter
-    def data(self, value):
-        self.points = [Point.from_data(point) for point in self.points]
+    @data.setter  # type: ignore
+    @trigger_redraw
+    def data(self, value: List[dict]):
+        self.points = [Point.from_data(point) for point in value]
 
     def _init_empty_data(self):
         self.points: List[Point] = []

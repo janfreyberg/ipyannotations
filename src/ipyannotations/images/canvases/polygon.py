@@ -200,7 +200,8 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     def data(self):
         return [polygon.data for polygon in self.polygons]
 
-    @data.setter
+    @data.setter  # type: ignore
+    @trigger_redraw
     def data(self, value: List[dict]):
         self._init_empty_data()
         self.polygons = [
