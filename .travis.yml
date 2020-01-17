@@ -9,6 +9,7 @@ notifications:
 python:
   - "3.6"
   - "3.7"
+  - "3.8"
 script:
   # run tests, and get coverage:
   - python -m pytest --cov=src/
