@@ -39,6 +39,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.interaction_canvas.on_mouse_up(self.on_release)
 
         self.current_image = None
+        self.dragging: Optional[Callable[[int, int], None]] = None
 
         # register re_draw as handler for obacity changes
         # note this is done here rather than as a decorator as re_draw is
@@ -54,6 +55,8 @@ class AbstractAnnotationCanvas(MultiCanvas):
             }
         else:
             self.colormap = defaultdict(lambda: "#000000")
+
+        self._init_empty_data()
 
     def load_image(self, image: Union[widgets.Image, str, pathlib.Path]):
         """Display an image on the annotation canvas.
@@ -79,6 +82,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
             image = widgets.Image(value=image.read_bytes())
         self.current_image = image
         self._display_image()
+        self._init_empty_data()
 
     @observe("current_class")
     def _set_class(self, change):
@@ -107,6 +111,12 @@ class AbstractAnnotationCanvas(MultiCanvas):
     @abc.abstractmethod
     def set_class(self, class_name: str):
         pass
+
+    @abc.abstractmethod
+    def _init_empty_data(self):
+        raise NotImplementedError(
+            "This canvas does not implement initialising the data."
+        )
 
     @observe("image_contrast", "image_brightness")
     def _display_image(self, *change):

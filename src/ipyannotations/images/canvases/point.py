@@ -19,16 +19,22 @@ class Point:
     def __post_init__(self):
         self.coordinates = tuple(map(round, self.coordinates))
 
-    def move(self, coordinates: Tuple[int, int]):
-        self.coordinates = (round(coordinates[0]), round(coordinates[1]))
+    def move(self, x: int, y: int):
+        self.coordinates = (round(x), round(y))
 
     @property
-    def data(self):
+    def data(self) -> dict:
         return {
             "type": "point",
             "label": self.label,
             "coordinates": self.coordinates,
         }
+
+    @classmethod
+    def from_data(cls, data: dict):
+        type_ = data.pop("type")
+        if type_ == "point":
+            return cls(**data)
 
 
 class PointAnnotationCanvas(AbstractAnnotationCanvas):
@@ -38,8 +44,6 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     def __init__(self, size, classes=None):
 
         super().__init__(size=size, classes=classes)
-        self.points: List[Point] = []
-        self.dragging = None
 
     @trigger_redraw
     @only_inside_image
@@ -57,7 +61,7 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
                     old_coordinates = point.coordinates
 
                     def undo_move():
-                        point.move(old_coordinates)
+                        point.move(*old_coordinates)
                         self.re_draw()
 
                     self._undo_queue.append(undo_move)
@@ -71,7 +75,7 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
         if self.dragging is None:
             return
         else:
-            self.dragging((x, y))
+            self.dragging(int(x), int(y))
 
     @trigger_redraw
     def on_release(self, x: float, y: float):
@@ -103,3 +107,11 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
     @property
     def data(self):
         return [point.data for point in self.points]
+
+    @data.setter  # type: ignore
+    @trigger_redraw
+    def data(self, value: List[dict]):
+        self.points = [Point.from_data(point) for point in value]
+
+    def _init_empty_data(self):
+        self.points: List[Point] = []
