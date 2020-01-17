@@ -21,6 +21,7 @@ script:
 install:
   - pip install --upgrade -qq pip flit
   - flit install --symlink --extras=test
+  - pip install --upgrade -qq 'attrs>=19.3.0'
 jobs:
   include:
     - stage: "Static code analysis"
