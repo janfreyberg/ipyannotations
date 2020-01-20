@@ -62,12 +62,11 @@ nbsphinx_prolog = r"""
         :format: html
 
     .. nbinfo::
-        This page was generated from `{{ docname }}`__.
-        Interactive online version:
+        This page was generated from `{{ docname }}`__. All widgets shown here
+        are "static", and interacting with them won't change the rest of the
+        widgets. You can find a fully interactive online version here:
         :raw-html:`<a href="https://mybinder.org/v2/gh/janfreyberg/ipyannotations/{{ env.config.release }}?filepath={{ docname }}"><img alt="Binder badge" src="https://mybinder.org/badge_logo.svg" style="vertical-align:text-bottom"></a>`
 
     __ https://github.com/janfreyberg/ipyannotations/blob/{{ env.config.release }}/{{ docname }}
 
 """
-
-nbsphinx_widgets_path = ""
