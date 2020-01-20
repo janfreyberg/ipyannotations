@@ -3,7 +3,7 @@ language: python
 stages:
   - "Static code analysis"
   - test
-  - deploy
+  - "Build and deploy"
 notifications:
   email: false
 python:
@@ -45,12 +45,20 @@ jobs:
       python: "3.7"
       install:
         - pip install -qq mypy
-    - stage: deploy
-      name: "Deploy to pypi"
+    - stage: "Build and deploy"
+      if: tag IS NOT present
+      name: "test flit build"
+      python: "3.7"
+      install:
+        - pip install flit
+      script:
+        - flit build
+    - stage: "Build and deploy"
+      name: "build & deploy to pypi"
+      python: "3.7"
       if: tag IS present
       install:
         - pip install flit
       script:
         - flit build
         - env FLIT_USERNAME=$PYPI_USER FLIT_PASSWORD=$PYPI_PASSWORD flit publish
-      python: "3.7"
