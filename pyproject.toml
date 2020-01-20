@@ -6,7 +6,8 @@ build-backend = "flit.buildapi"
 module = "ipyannotations"
 author = "Jan Freyberg"
 author-email = "jan.freyberg@gmail.com"
-home-page = "https://github.com/janfreyberg/ipyannotate"
+home-page = "https://github.com/janfreyberg/ipyannotations"
+description-file = "README.md"
 classifiers = ["License :: OSI Approved :: MIT License"]
 requires-python = ">=3.6"
 requires = [
@@ -18,6 +19,9 @@ requires = [
     "dataclasses; python_version == '3.6'"
 ]
 
+[tool.flit.metadata.urls]
+Documentation = "https://ipyannotations.readthedocs.io/"
+"Interactive Binder" = "https://mybinder.org/v2/gh/janfreyberg/ipyannotations/master?filepath=docs/quick-start.ipynb"
 
 [tool.flit.metadata.requires-extra]
 test = [

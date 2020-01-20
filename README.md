@@ -3,6 +3,7 @@
 [![Documentation Status](https://readthedocs.org/projects/ipyannotations/badge/?version=latest)](https://ipyannotations.readthedocs.io/en/latest/?badge=latest)
 [![travis CI build](https://travis-ci.org/janfreyberg/ipyannotations.svg?branch=master)](https://travis-ci.org/janfreyberg/ipyannotations)
 [![Coverage Status](https://coveralls.io/repos/github/janfreyberg/ipyannotations/badge.svg?branch=master)](https://coveralls.io/github/janfreyberg/ipyannotations?branch=master)
+[![Launch Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/janfreyberg/ipyannotations/master?filepath=docs/quick-start.ipynb)
 
 The `ipyannotations` library is designed to let you create rich annotations
 for your data (currently, primarily images) inside jupyter notebooks. It lets
@@ -28,7 +29,6 @@ have to install two Jupyter Lab extensions:
 
 ```
 $ jupyter labextension install @jupyter-widgets/jupyterlab-manager ipycanvas
-$ jupyter labextension install @jupyter-widgets/jupyterlab-manager
 $ jupyter lab build
 ```
 
