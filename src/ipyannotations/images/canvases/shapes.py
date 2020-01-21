@@ -81,3 +81,43 @@ class Point:
         type_ = data.pop("type")
         if type_ == "point":
             return cls(**data)
+
+
+@dataclass
+class BoundingBox:
+    xyxy: Tuple[int, int, int, int]
+    label: str = ""
+
+    def __post_init__(self):
+        self.xyxy = tuple(map(round, self.xyxy))
+
+    def move_corner(self, idx, new_x: int, new_y: int):
+        x_idx, y_idx = [(0, 1), (0, 3), (2, 3), (2, 1)][idx]
+        new_xy = list(self.xyxy)
+        new_xy[x_idx] = round(new_x)
+        new_xy[y_idx] = round(new_y)
+        self.xyxy = tuple(new_xy)  # type: ignore
+
+    @property
+    def corners(self) -> List[Tuple[int, int]]:
+        x0, y0, x1, y1 = self.xyxy
+        return [(x0, y0), (x0, y1), (x1, y1), (x1, y0)]
+
+    @property
+    def data(self) -> dict:
+        x0, y0, x1, y1 = self.xyxy
+        return {
+            "type": "box",
+            "label": self.label,
+            "xyxy": (min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)),
+        }
+
+    @classmethod
+    def from_data(cls, data: dict):
+        type_ = data.pop("type")
+        if type_ == "box":
+            return cls(**data)
+        else:
+            raise ValueError(
+                "The key 'type' in the data you supplied is not 'box'"
+            )

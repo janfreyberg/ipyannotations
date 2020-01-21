@@ -1,4 +1,4 @@
-from ipyannotations.images.canvases.shapes import Polygon, Point
+from ipyannotations.images.canvases.shapes import Polygon, Point, BoundingBox
 
 from hypothesis import given, assume, infer, example, strategies
 
@@ -96,3 +96,35 @@ def test_point_move(p: Point, q: Point):
     #  test moving point from A to B
     p.move(*q.coordinates)
     assert p.coordinates == q.coordinates
+
+
+# -------------------------
+# Boxes
+
+
+@given(p=infer)
+def test_box_round_trips(p: BoundingBox):
+    assert p == BoundingBox.from_data(p.data)
+
+
+@given(p=infer, q=infer, idx=strategies.integers(min_value=0, max_value=3))
+def test_box_corner_move(p: BoundingBox, q: Point, idx):
+    #  test moving point from A to B
+    p.move_corner(idx, *q.coordinates)
+
+    x0, y0, x1, y1 = p.data["xyxy"]
+
+    assert x0 <= x1
+    assert y0 <= y1
+    assert q.coordinates[0] in (x0, x1)
+    assert q.coordinates[1] in (y0, y1)
+
+
+@given(p=infer)
+def test_box_corner_property(p: BoundingBox):
+
+    corners = p.corners
+
+    assert corners[0] <= corners[1]
+    assert corners[0] <= corners[2]
+    assert corners[0] <= corners[3]

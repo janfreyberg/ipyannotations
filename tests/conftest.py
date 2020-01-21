@@ -1,4 +1,4 @@
-from ipyannotations.images.canvases.shapes import Polygon, Point
+from ipyannotations.images.canvases.shapes import Polygon, Point, BoundingBox
 from hypothesis import given, assume, infer, example, strategies
 import numpy as np
 import io
@@ -24,6 +24,20 @@ def polygons(draw):
 def points(draw):
     label = strategies.text()
     return Point(draw(coordinates), draw(label))
+
+
+@strategies.composite
+def boxes(draw):
+    label = strategies.text()
+    a = draw(coordinates)
+    b = draw(coordinates)
+    xyxy = (min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]))
+    return BoundingBox(xyxy, draw(label))
+
+
+strategies.register_type_strategy(Polygon, polygons())
+strategies.register_type_strategy(Point, points())
+strategies.register_type_strategy(BoundingBox, boxes())
 
 
 @strategies.composite
@@ -63,5 +77,3 @@ def image_widgets(draw):
 strategies.register_type_strategy(np.ndarray, image_array())
 strategies.register_type_strategy(Image.Image, pil_image())
 strategies.register_type_strategy(widgets.Image, image_widgets())
-strategies.register_type_strategy(Polygon, polygons())
-strategies.register_type_strategy(Point, points())
