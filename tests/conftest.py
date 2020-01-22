@@ -11,6 +11,8 @@ coordinates = strategies.tuples(
     strategies.integers(min_value=0, max_value=500),
 )
 
+strategies.coordinates = lambda: coordinates
+
 
 @strategies.composite
 def polygons(draw):
