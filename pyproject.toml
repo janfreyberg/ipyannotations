@@ -29,7 +29,8 @@ test = [
     "coverage",
     "coveralls",
     "pytest-cov",
-    "hypothesis"
+    "hypothesis",
+    "pytest-check"
 ]
 dev = [
     "black",
