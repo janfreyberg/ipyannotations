@@ -1,7 +1,7 @@
 # `ipyannotations`: create rich annotations in jupyter notebooks.
 
 [![Documentation Status](https://readthedocs.org/projects/ipyannotations/badge/?version=latest)](https://ipyannotations.readthedocs.io/en/latest/?badge=latest)
-[![travis CI build](https://travis-ci.org/janfreyberg/ipyannotations.svg?branch=master)](https://travis-ci.org/janfreyberg/ipyannotations)
+[![travis CI build](https://travis-ci.com/janfreyberg/ipyannotations.svg?branch=master)](https://travis-ci.com/janfreyberg/ipyannotations)
 [![Coverage Status](https://coveralls.io/repos/github/janfreyberg/ipyannotations/badge.svg?branch=master)](https://coveralls.io/github/janfreyberg/ipyannotations?branch=master)
 [![Launch Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/janfreyberg/ipyannotations/master?filepath=docs/quick-start.ipynb)
 
