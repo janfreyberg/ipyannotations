@@ -5,13 +5,9 @@ from collections import deque, defaultdict
 import abc
 from traitlets import Unicode, Float, Integer, observe
 import pathlib
-import io
-
-import numpy as np
-from PIL import Image
 
 from .utils import set_colors, fit_image
-from .image_utils import adjust
+from .image_utils import adjust, load_img
 
 
 class AbstractAnnotationCanvas(MultiCanvas):
@@ -69,20 +65,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image : Union[widgets.Image, str, pathlib.Path]
             The image, or the path to the image.
         """
-        if isinstance(image, np.ndarray):
-            image = Image.fromarray(image.astype(np.uint8))
-            image_io = io.BytesIO()
-            image.save(image_io, "JPEG")
-            image = widgets.Image(value=image_io.getvalue())
-        if isinstance(image, Image.Image):
-            image_io = io.BytesIO()
-            image.save(image_io, "JPEG")
-            image = widgets.Image(value=image_io.getvalue())
-        if isinstance(image, (str, pathlib.Path)):
-            # convert to path:
-            image = pathlib.Path(image)
-            # read bytes and make widget:
-            image = widgets.Image(value=image.read_bytes())
+        image = load_img(image)
         self.current_image = image
         self._display_image()
         self._init_empty_data()

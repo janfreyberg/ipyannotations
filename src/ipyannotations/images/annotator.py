@@ -6,6 +6,7 @@ import ipywidgets as widgets
 from .canvases._abstract import AbstractAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
+from .canvases.box import BoundingBoxAnnotationCanvas
 
 
 class Annotator(widgets.VBox):
@@ -279,12 +280,6 @@ class Annotator(widgets.VBox):
         else:
             return self.canvas.data
 
-    @data.setter
-    def data(self, value):
-        self.canvas.data = value
-
-    # TODO: allow setting the data
-
 
 class PolygonAnnotator(Annotator):
     """An annotator for drawing polygons on an image.
@@ -318,21 +313,27 @@ class PolygonAnnotator(Annotator):
 
     CanvasClass = PolygonAnnotationCanvas
 
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
 
-PolygonAnnotator.data.__doc__ = """
-The annotation data, as List[ Dict ].
+        The format is a list of dictionaries, with the following key / value
+        combinations:
 
-The format is a list of dictionaries, with the following key / value
-combinations:
+        +------------------+-------------------------+
+        |``'type'``        | ``'polygon'``           |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'points'``      | ``<list of xy-tuples>`` |
+        +------------------+-------------------------+
+        """
+        return super().data
 
-+------------------+-------------------------+
-|``'type'``        | ``'polygon'``           |
-+------------------+-------------------------+
-|``'label'``       | ``<class label>``       |
-+------------------+-------------------------+
-|``'points'``      | ``<list of xy-tuples>`` |
-+------------------+-------------------------+
-"""
+    @data.setter
+    def data(self, value):
+        self.canvas.data = value
 
 
 class PointAnnotator(Annotator):
@@ -358,24 +359,72 @@ class PointAnnotator(Annotator):
     """
 
     CanvasClass = PointAnnotationCanvas
-    # def __init__(self, canvas_size=(700, 500), classes=None):
-    #     """Create an annotator for drawing points on an image."""
-    #     canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
-    #     super().__init__(canvas, classes)
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------+
+        |``'type'``        | ``'point'``             |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'coordinates'`` | ``<xy-tuple>``          |
+        +------------------+-------------------------+
+        """
+        return super().data
+
+    @data.setter
+    def data(self, value):
+        self.canvas.data = value
 
 
-PointAnnotator.data.__doc__ = """
-The annotation data, as List[ Dict ].
+class BoxAnnotator(Annotator):
+    """An annotator for drawing boxes on an image.
 
-The format is a list of dictionaries, with the following key / value
-combinations:
+    To add a box, simply click on one of the corners, and drag the mouse to
+    the corner opposite. The box will grow as you drag your mouse. To adjust
+    the box after, you can click the "Edit" button and drag any of the corners
+    to where you want them.
 
-+------------------+-------------------------+
-|``'type'``        | ``'point'``             |
-+------------------+-------------------------+
-|``'label'``       | ``<class label>``       |
-+------------------+-------------------------+
-|``'coordinates'`` | ``<xy-tuple>``          |
-+------------------+-------------------------+
-"""
+    You can increase or decrease the contrast and brightness  of the image
+    using the sliders to make it easier to annotate. Sometimes you need to see
+    what's behind already-created annotations, and for this purpose you can
+    make them more see-through using the "Opacity" slider.
+
+    Parameters
+    ----------
+    canvas_size : (int, int), optional
+        Size of the annotation canvas in pixels.
+    classes : List[str], optional
+        The list of classes you want to create annotations for, by default
+        None.
+    """
+
+    CanvasClass = BoundingBoxAnnotationCanvas
+
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------------+
+        |``'type'``        | ``'box'``                     |
+        +------------------+-------------------------------+
+        |``'label'``       | ``<class label>``             |
+        +------------------+-------------------------------+
+        |``'xyxy'``        | ``<tuple of x0, y0, x1, y1>`` |
+        +------------------+-------------------------------+
+        """
+        return super().data
+
+    @data.setter
+    def data(self, value):
+        self.canvas.data = value
