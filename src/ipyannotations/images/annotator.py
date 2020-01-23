@@ -284,8 +284,6 @@ class Annotator(widgets.VBox):
     def data(self, value):
         self.canvas.data = value
 
-    # TODO: allow setting the data
-
 
 class PolygonAnnotator(Annotator):
     """An annotator for drawing polygons on an image.
@@ -319,21 +317,27 @@ class PolygonAnnotator(Annotator):
 
     CanvasClass = PolygonAnnotationCanvas
 
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
 
-PolygonAnnotator.data.__doc__ = """
-The annotation data, as List[ Dict ].
+        The format is a list of dictionaries, with the following key / value
+        combinations:
 
-The format is a list of dictionaries, with the following key / value
-combinations:
+        +------------------+-------------------------+
+        |``'type'``        | ``'polygon'``           |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'points'``      | ``<list of xy-tuples>`` |
+        +------------------+-------------------------+
+        """
+        return super().data
 
-+------------------+-------------------------+
-|``'type'``        | ``'polygon'``           |
-+------------------+-------------------------+
-|``'label'``       | ``<class label>``       |
-+------------------+-------------------------+
-|``'points'``      | ``<list of xy-tuples>`` |
-+------------------+-------------------------+
-"""
+    @data.setter
+    def data(self, value):
+        super().data = value
 
 
 class PointAnnotator(Annotator):
@@ -359,33 +363,37 @@ class PointAnnotator(Annotator):
     """
 
     CanvasClass = PointAnnotationCanvas
-    # def __init__(self, canvas_size=(700, 500), classes=None):
-    #     """Create an annotator for drawing points on an image."""
-    #     canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
-    #     super().__init__(canvas, classes)
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
 
+        The format is a list of dictionaries, with the following key / value
+        combinations:
 
-PointAnnotator.data.__doc__ = """
-The annotation data, as List[ Dict ].
+        +------------------+-------------------------+
+        |``'type'``        | ``'point'``             |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'coordinates'`` | ``<xy-tuple>``          |
+        +------------------+-------------------------+
+        """
+        return super().data
 
-The format is a list of dictionaries, with the following key / value
-combinations:
-
-+------------------+-------------------------+
-|``'type'``        | ``'point'``             |
-+------------------+-------------------------+
-|``'label'``       | ``<class label>``       |
-+------------------+-------------------------+
-|``'coordinates'`` | ``<xy-tuple>``          |
-+------------------+-------------------------+
-"""
+    @data.setter
+    def data(self, value):
+        super().data = value
 
 
 class BoxAnnotator(Annotator):
     """An annotator for drawing boxes on an image.
 
-    TODO
+    To add a box, simply click on one of the corners, and drag the mouse to
+    the corner opposite. The box will grow as you drag your mouse. To adjust
+    the box after, you can click the "Edit" button and drag any of the corners
+    to where you want them.
 
     You can increase or decrease the contrast and brightness  of the image
     using the sliders to make it easier to annotate. Sometimes you need to see
@@ -402,26 +410,25 @@ class BoxAnnotator(Annotator):
     """
 
     CanvasClass = BoundingBoxAnnotationCanvas
-    # def __init__(self, canvas_size=(700, 500), classes=None):
-    #     """Create an annotator for drawing points on an image."""
-    #     canvas = PointAnnotationCanvas(size=canvas_size, classes=classes)
 
-    #     super().__init__(canvas, classes)
+    @property
+    def data(self):
+        """
+        The annotation data, as List[ Dict ].
 
+        The format is a list of dictionaries, with the following key / value
+        combinations:
 
-BoxAnnotator.data.__doc__ = """
-The annotation data, as List[ Dict ].
+        +------------------+-------------------------------+
+        |``'type'``        | ``'box'``                     |
+        +------------------+-------------------------------+
+        |``'label'``       | ``<class label>``             |
+        +------------------+-------------------------------+
+        |``'xyxy'``        | ``<tuple of x0, y0, x1, y1>`` |
+        +------------------+-------------------------------+
+        """
+        return super().data
 
-The format is a list of dictionaries, with the following key / value
-combinations:
-
-TODO
-
-+------------------+-------------------------+
-|``'type'``        | ``'point'``             |
-+------------------+-------------------------+
-|``'label'``       | ``<class label>``       |
-+------------------+-------------------------+
-|``'coordinates'`` | ``<xy-tuple>``          |
-+------------------+-------------------------+
-"""
+    @data.setter
+    def data(self, value):
+        super().data = value

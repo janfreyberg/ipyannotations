@@ -1,5 +1,6 @@
 from unittest.mock import patch, MagicMock
 from ipyannotations import PolygonAnnotator, PointAnnotator
+from ipyannotations.images.annotator import Annotator
 from ipyannotations.images.canvases import (
     PolygonAnnotationCanvas,
     PointAnnotationCanvas,
@@ -54,7 +55,7 @@ def test_submit():
     annotator.on_submit(mock_callback_1)
     annotator.on_submit(mock_callback_2)
 
-    with patch.object(PolygonAnnotationCanvas, "data") as mock_data:
+    with patch.object(PolygonAnnotator, "data") as mock_data:
         annotator.submit()
         mock_callback_1.assert_called_once_with(mock_data)
         mock_callback_2.assert_called_once_with(mock_data)
