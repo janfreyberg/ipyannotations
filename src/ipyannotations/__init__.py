@@ -1,5 +1,5 @@
 """Annotate data in jupyter notebooks."""
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 from .images import PolygonAnnotator, PointAnnotator, BoxAnnotator
 
