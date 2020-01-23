@@ -280,10 +280,6 @@ class Annotator(widgets.VBox):
         else:
             return self.canvas.data
 
-    @data.setter
-    def data(self, value):
-        self.canvas.data = value
-
 
 class PolygonAnnotator(Annotator):
     """An annotator for drawing polygons on an image.
@@ -337,7 +333,7 @@ class PolygonAnnotator(Annotator):
 
     @data.setter
     def data(self, value):
-        super().data = value
+        self.canvas.data = value
 
 
 class PointAnnotator(Annotator):
@@ -384,7 +380,7 @@ class PointAnnotator(Annotator):
 
     @data.setter
     def data(self, value):
-        super().data = value
+        self.canvas.data = value
 
 
 class BoxAnnotator(Annotator):
@@ -431,4 +427,4 @@ class BoxAnnotator(Annotator):
 
     @data.setter
     def data(self, value):
-        super().data = value
+        self.canvas.data = value
