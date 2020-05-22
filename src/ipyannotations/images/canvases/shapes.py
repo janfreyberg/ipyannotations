@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional, ClassVar
+from typing import List, Tuple, Optional, ClassVar, Any, Dict
 from dataclasses import dataclass, field
 from .utils import dist
 
@@ -8,6 +8,7 @@ class Polygon:
     points: List[Tuple[int, int]] = field(default_factory=list)
     label: Optional[str] = None
     close_threshold: ClassVar[int] = 5
+    extra_info: Dict[str, Any] = field(default_factory=dict)
 
     def append(self, point: Tuple[int, int], y: Optional[int] = None):
         if isinstance(point, int) and y is not None:
@@ -48,19 +49,36 @@ class Polygon:
 
     @property
     def data(self):
-        return {"type": "polygon", "label": self.label, "points": self.points}
+        info = {"type": "polygon", "label": self.label, "points": self.points}
+        info.update(self.extra_info)
+        return info
 
     @classmethod
     def from_data(cls, data: dict):
         type_ = data.pop("type")
-        if type_ == "polygon":
-            return cls(**data)
+
+        if type_ != "polygon":
+            raise ValueError(
+                "Polygon data needs to contain the key-value pair "
+                "'type': 'polygon'."
+            )
+
+        native_args, extra_args = {}, {}
+        for name, val in data.items():
+            if name in cls.__annotations__:
+                native_args[name] = val
+            else:
+                extra_args[name] = val
+
+        native_args["extra_info"] = extra_args
+        return cls(**native_args)
 
 
 @dataclass
 class Point:
     coordinates: Tuple[int, int]
     label: str = ""
+    extra_info: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         self.coordinates = tuple(map(round, self.coordinates))
@@ -70,17 +88,32 @@ class Point:
 
     @property
     def data(self) -> dict:
-        return {
+        info = {
             "type": "point",
             "label": self.label,
             "coordinates": self.coordinates,
         }
+        info.update(self.extra_info)
+        return info
 
     @classmethod
     def from_data(cls, data: dict):
         type_ = data.pop("type")
-        if type_ == "point":
-            return cls(**data)
+        if type_ != "point":
+            raise ValueError(
+                "Point data needs to contain the key-value pair "
+                "'type': 'point'."
+            )
+
+        native_args, extra_args = {}, {}
+        for name, val in data.items():
+            if name in cls.__annotations__:
+                native_args[name] = val
+            else:
+                extra_args[name] = val
+
+        native_args["extra_info"] = extra_args
+        return cls(**native_args)
 
 
 @dataclass
@@ -106,18 +139,29 @@ class BoundingBox:
     @property
     def data(self) -> dict:
         x0, y0, x1, y1 = self.xyxy
-        return {
+        info = {
             "type": "box",
             "label": self.label,
             "xyxy": (min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)),
         }
+        info.update(self.extra_info)
+        return info
 
     @classmethod
     def from_data(cls, data: dict):
         type_ = data.pop("type")
-        if type_ == "box":
-            return cls(**data)
-        else:
+        if type_ != "point":
             raise ValueError(
-                "The key 'type' in the data you supplied is not 'box'"
+                "Box data needs to contain the key-value pair "
+                "'type': 'box'."
             )
+
+        native_args, extra_args = {}, {}
+        for name, val in data.items():
+            if name in cls.__annotations__:
+                native_args[name] = val
+            else:
+                extra_args[name] = val
+
+        native_args["extra_info"] = extra_args
+        return cls(**native_args)

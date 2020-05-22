@@ -1,5 +1,5 @@
 import pathlib
-from typing import List, Callable, Any, Optional, Union, Type, Sequence
+from typing import List, Callable, Any, Optional, Union, Type, Sequence, Dict
 import traitlets
 import ipywidgets as widgets
 
@@ -34,6 +34,7 @@ class Annotator(widgets.VBox):
         self,
         canvas_size=(700, 500),
         options: Sequence[str] = (),
+        extra_inputs: Optional[Dict[str, widgets.ValueWidget]] = None,
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
         # **kwargs,
     ):
@@ -55,6 +56,11 @@ class Annotator(widgets.VBox):
             (self.class_selector, "value"), (self.canvas, "current_class")
         )
         data_controls.append(self.class_selector)
+
+        self.extra_inputs = extra_inputs or {}
+
+        for widget in self.extra_inputs.values():
+            widget.observe(self._set_extra_info_on_canvas)
 
         extra_buttons = []
         button_layout = widgets.Layout(
@@ -103,6 +109,7 @@ class Annotator(widgets.VBox):
         self.data_controls = widgets.VBox(
             children=(
                 widgets.HTML("Data input settings"),
+                # the standard class dropdown:
                 widgets.HBox(
                     (self.class_selector,),
                     layout={
@@ -110,6 +117,18 @@ class Annotator(widgets.VBox):
                         "justify_content": "flex-end",
                     },
                 ),
+                # any additional data input the user has specified:
+                *(
+                    widgets.HBox(
+                        (widget,),
+                        layout={
+                            "align_items": "stretch",
+                            "justify_content": "flex-end",
+                        },
+                    )
+                    for widget in self.extra_inputs.values()
+                ),
+                # the standard undo / submit / etc buttons
                 extra_buttons,
                 widgets.HBox(
                     (self.submit_button,),
@@ -271,6 +290,12 @@ class Annotator(widgets.VBox):
         """
         for callback in self.skip_callbacks:
             callback()
+
+    def _set_extra_info_on_canvas(self, change):
+        info = {
+            name: widget.value for name, widget in self.extra_inputs.items()
+        }
+        self.canvas.extra_info = info
 
     @property
     def data(self):

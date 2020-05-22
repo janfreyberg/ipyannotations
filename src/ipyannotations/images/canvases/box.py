@@ -120,6 +120,11 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
         self.annotations: List[BoundingBox] = []
         self._undo_queue.clear()
 
+    @trigger_redraw
+    def set_extra_info(self, extra_info):
+        if len(self.annotations) > 0:
+            self.annotations[-1].extra_info = extra_info
+
     @property
     def data(self):
         return [annotation.data for annotation in self.annotations]

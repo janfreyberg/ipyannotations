@@ -1,9 +1,9 @@
 from ipycanvas import MultiCanvas, hold_canvas
 import ipywidgets as widgets
-from typing import Tuple, Optional, Sequence, Deque, Callable, Union
+from typing import Tuple, Optional, Sequence, Deque, Callable, Union, Dict, Any
 from collections import deque, defaultdict
 import abc
-from traitlets import Unicode, Float, Integer, observe
+from traitlets import Unicode, Float, Integer, Dict as DictTrait, observe
 import pathlib
 
 from .utils import set_colors, fit_image
@@ -13,6 +13,8 @@ from .image_utils import adjust, load_img
 class AbstractAnnotationCanvas(MultiCanvas):
 
     current_class = Unicode(allow_none=True)
+    extra_info = DictTrait()
+
     opacity = Float(default_value=0.4)
     point_size = Integer(default_value=5, min=1, max=20)
 
@@ -70,10 +72,6 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self._display_image()
         self._init_empty_data()
 
-    @observe("current_class")
-    def _set_class(self, change):
-        self.set_class(change["new"])
-
     @abc.abstractmethod
     def re_draw(self, *args, **kwargs):
         pass
@@ -94,9 +92,23 @@ class AbstractAnnotationCanvas(MultiCanvas):
     def add_point(self, x: float, y: float):
         pass
 
+    @observe("current_class")
+    def _set_class(self, change):
+        self.set_class(change["new"])
+
     @abc.abstractmethod
     def set_class(self, class_name: str):
         pass
+
+    @observe("extra_info")
+    def _set_extra_info(self, change):
+        self.set_extra_info(change["new"])
+
+    @abc.abstractmethod
+    def set_extra_info(self, extra_info: Dict[str, Any]):
+        raise NotImplementedError(
+            "This canvas does not support setting extra info."
+        )
 
     @abc.abstractmethod
     def _init_empty_data(self):

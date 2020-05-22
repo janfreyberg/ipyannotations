@@ -74,6 +74,10 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         self.current_polygon.label = name
 
     @trigger_redraw
+    def set_extra_info(self, extra_info):
+        self.current_polygon.extra_info = extra_info
+
+    @trigger_redraw
     def _undo_new_point(self):
         self.current_polygon.points.pop()
 
