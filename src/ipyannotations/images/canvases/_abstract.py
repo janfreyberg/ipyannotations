@@ -40,7 +40,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.current_image: Optional[widgets.Image] = None
         self.dragging: Optional[Callable[[int, int], None]] = None
 
-        # register re_draw as handler for obacity changes
+        # register re_draw as handler for opacity changes
         # note this is done here rather than as a decorator as re_draw is
         # an abstract method for now.
         self.observe(
