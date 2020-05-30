@@ -1,10 +1,11 @@
 import numpy as np
 import pytest
-import io
 from PIL import Image
 from unittest.mock import patch, MagicMock
 import ipywidgets
 from ipyannotations.images.canvases.image_utils import load_img, adjust, fit_image
+
+from src.ipyannotations.images.canvases.image_utils import widget_to_pil
 
 
 @pytest.fixture
@@ -76,11 +77,9 @@ def test_changing_brightness(image_array):
 
     img_widget = load_img(image_array)
     adjusted_widget = adjust(
-        img_widget, contrast_factor=1.0, brightness_factor=1.5
+        widget_to_pil(img_widget), contrast_factor=1.0, brightness_factor=1.5
     )
-    new_image_array = np.array(
-        Image.open(io.BytesIO(initial_bytes=adjusted_widget.value))
-    )
+    new_image_array = np.array(adjusted_widget)
 
     assert (new_image_array / image_array).mean() == pytest.approx(
         1.5, abs=1 / 256

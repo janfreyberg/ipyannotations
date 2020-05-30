@@ -31,32 +31,32 @@ def pil_to_widget(image: Image.Image) -> widgets.Image:
     return widgets.Image(value=buffer.read(), format="jpg")
 
 
-def fit_image(img: widgets.Image, size) -> typing.Tuple[widgets.Image, typing.Tuple[int, int, int, int]]:
-    pil_image = Image.open(io.BytesIO(img.value))
-    img_width, img_height = Image.open(io.BytesIO(img.value)).size
+def widget_to_pil(image: widgets.Image):
+    return Image.open(io.BytesIO(image.value))
+
+
+def fit_image(img: Image.Image, size) -> typing.Tuple[Image.Image, typing.Tuple[int, int, int, int]]:
+    img_width, img_height = img.size
     desired_width, desired_height = size
 
     ratio = max(img_width / desired_width, img_height / desired_height)
-    pil_image = ImageOps.scale(pil_image, ratio)
+    img = ImageOps.scale(img, ratio)
 
-    width, height = pil_image.size
+    width, height = img.size
     x, y = (desired_width // 2 - width // 2, desired_height // 2 - height // 2)
 
     border = (x, y, desired_width - x - width, desired_height - y - height)
-    pil_image = ImageOps.expand(pil_image, border=border)
+    img = ImageOps.expand(img, border=border)
 
-    return pil_to_widget(pil_image), (x, y, width, height)
+    return img, (x, y, width, height)
 
 
 def adjust(
-    img: widgets.Image, contrast_factor: float, brightness_factor: float
-) -> widgets.Image:
-    # turn widgets.Image into Pillow Image
-    pil_image = Image.open(io.BytesIO(img.value))
-    # apply adjustments
-    pil_image = ImageEnhance.Contrast(pil_image).enhance(contrast_factor)
-    pil_image = ImageEnhance.Brightness(pil_image).enhance(brightness_factor)
-    return pil_to_widget(pil_image)
+    img: Image.Image, contrast_factor: float, brightness_factor: float
+) -> Image.Image:
+    img = ImageEnhance.Contrast(img).enhance(contrast_factor)
+    img = ImageEnhance.Brightness(img).enhance(brightness_factor)
+    return img
 
 
 @singledispatch

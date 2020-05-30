@@ -1,3 +1,4 @@
+from PIL import ImageOps
 from ipycanvas import MultiCanvas
 import ipywidgets as widgets
 from typing import Tuple, Optional, Sequence, Deque, Callable, Union
@@ -7,7 +8,7 @@ from traitlets import Unicode, Float, Integer, observe
 import pathlib
 
 from .utils import set_colors
-from .image_utils import adjust, load_img, fit_image
+from .image_utils import adjust, load_img, fit_image, pil_to_widget, widget_to_pil
 
 
 class AbstractAnnotationCanvas(MultiCanvas):
@@ -18,6 +19,10 @@ class AbstractAnnotationCanvas(MultiCanvas):
 
     image_contrast = Float(default_value=1, min=0, max=10)
     image_brightness = Float(default_value=1, min=0, max=10)
+
+    zoom = Float(default_value=1, min=0, max=1)
+    zoomed_image_x = Integer(default_value=0, min=0)
+    zoomed_image_y = Integer(default_value=0, min=0)
 
     def __init__(
         self,
@@ -33,9 +38,9 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.annotation_canvas = self[1]
         self.interaction_canvas = self[2]
 
-        self.interaction_canvas.on_mouse_down(self.on_click)
-        self.interaction_canvas.on_mouse_move(self.on_drag)
-        self.interaction_canvas.on_mouse_up(self.on_release)
+        self.interaction_canvas.on_mouse_down(self._on_click)
+        self.interaction_canvas.on_mouse_move(self._on_drag)
+        self.interaction_canvas.on_mouse_up(self._on_release)
 
         self.current_image: Optional[widgets.Image] = None
         self.dragging: Optional[Callable[[int, int], None]] = None
@@ -65,7 +70,9 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image : Union[widgets.Image, str, pathlib.Path]
             The image, or the path to the image.
         """
-        image = load_img(image)
+        # let's keep the image as Image.Image type
+        image = widget_to_pil(load_img(image))
+        # fit image to canvas size
         image, (x, y, width, height) = fit_image(image, self.size)
         self.image_extent = (x, y, x + width, y + height)
         self.current_image = image
@@ -79,6 +86,15 @@ class AbstractAnnotationCanvas(MultiCanvas):
     @abc.abstractmethod
     def re_draw(self, *args, **kwargs):
         pass
+
+    def _on_click(self, x: float, y: float):
+        self.on_click(*self.transform_coordinates(x, y))
+
+    def _on_drag(self, x: float, y: float):
+        self.on_drag(*self.transform_coordinates(x, y))
+
+    def _on_release(self, x: float, y: float):
+        self.on_release(*self.transform_coordinates(x, y))
 
     @abc.abstractmethod
     def on_click(self, x: float, y: float):
@@ -106,16 +122,44 @@ class AbstractAnnotationCanvas(MultiCanvas):
             "This canvas does not implement initialising the data."
         )
 
+    @observe("zoom")
+    def _update_zoom(self):
+        """
+        Update the cached zoomed image.
+        This operation is time consuming and should be computed as little as possible.
+        """
+        self.zoomed_image = ImageOps.scale(self.current_image, self.zoom)
+        self._update_crop()
+
+    @observe("zoomed_image_x", "zoomed_image_y")
+    def _update_crop(self):
+        """
+        Update the cached zoomed image.
+        This operation is time consuming and should be computed as little as possible.
+        """
+        left, right = self.zoomed_image_x, self.zoomed_image_x + self.width
+        upper, lower = self.zoomed_image_y, self.zoomed_image_y + self.height
+        self.image_crop = self.zoomed_image.crop(box=(left, upper, right, lower))
+        self._display_image()
+
     @observe("image_contrast", "image_brightness")
     def _display_image(self, *change):
-        if self.current_image is not None:
+        image = self.image_crop
+        if image is not None:
             if self.image_brightness != 1 or self.image_contrast != 1:
                 image = adjust(
-                    self.current_image,
+                    image,
                     contrast_factor=self.image_contrast,
                     brightness_factor=self.image_brightness,
                 )
-            else:
-                image = self.current_image
 
-            self[0].draw_image(image)
+        self[0].draw_image(pil_to_widget(image))
+
+    def transform_coordinates(self, x, y):
+        """Convert Mouse (x, y) coordinates to (x', y') the coordinates within the current_image"""
+        x = int((x + self.zoomed_image_x) * self.current_image.width / self.zoomed_image.width)
+        y = int((y + self.zoomed_image_y) * self.current_image.height / self.zoomed_image.height)
+        return x, y
+
+    def on_zoom_update(self, callbacks):
+        pass
