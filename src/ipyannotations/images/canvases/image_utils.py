@@ -36,7 +36,7 @@ def widget_to_pil(image: widgets.Image):
 
 
 def fit_image(
-        img: Image.Image, size
+    img: Image.Image, size
 ) -> Tuple[Image.Image, Tuple[int, int, int, int]]:
     img_width, img_height = img.size
     desired_width, desired_height = size
@@ -54,7 +54,7 @@ def fit_image(
 
 
 def adjust(
-        img: Image.Image, contrast_factor: float, brightness_factor: float
+    img: Image.Image, contrast_factor: float, brightness_factor: float
 ) -> Image.Image:
     img = ImageEnhance.Contrast(img).enhance(contrast_factor)
     img = ImageEnhance.Brightness(img).enhance(brightness_factor)

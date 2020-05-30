@@ -8,8 +8,13 @@ from PIL import ImageOps
 from ipycanvas import MultiCanvas
 from traitlets import Unicode, Float, Integer, observe
 
-from .image_utils import adjust, load_img, fit_image, \
-    pil_to_widget, widget_to_pil
+from .image_utils import (
+    adjust,
+    load_img,
+    fit_image,
+    pil_to_widget,
+    widget_to_pil,
+)
 from .utils import set_colors
 
 
@@ -26,10 +31,10 @@ class AbstractAnnotationCanvas(MultiCanvas):
     zoomed_image_y = Integer(default_value=0, min=0)
 
     def __init__(
-            self,
-            size: Tuple[int, int] = (700, 500),
-            classes: Optional[Sequence[str]] = None,
-            **kwargs
+        self,
+        size: Tuple[int, int] = (700, 500),
+        classes: Optional[Sequence[str]] = None,
+        **kwargs
     ):
         super().__init__(n_canvases=3, size=size, **kwargs)
         self._undo_queue: Deque[Callable] = deque([])
