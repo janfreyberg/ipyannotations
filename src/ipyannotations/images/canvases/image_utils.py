@@ -4,7 +4,7 @@ import pathlib
 from functools import singledispatch
 from dataclasses import dataclass
 import re
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
 import ipywidgets as widgets
 
@@ -24,6 +24,30 @@ class URL:
         return bool(URL_REGEX.match(self.value))
 
 
+def pil_to_widget(image: Image.Image) -> widgets.Image:
+    buffer = io.BytesIO()
+    image.save(buffer, "JPEG")
+    buffer.seek(0)
+    return widgets.Image(value=buffer.read(), format="jpg")
+
+
+def fit_image(img: widgets.Image, size) -> typing.Tuple[widgets.Image, typing.Tuple[int, int, int, int]]:
+    pil_image = Image.open(io.BytesIO(img.value))
+    img_width, img_height = Image.open(io.BytesIO(img.value)).size
+    desired_width, desired_height = size
+
+    ratio = max(img_width / desired_width, img_height / desired_height)
+    pil_image = ImageOps.scale(pil_image, ratio)
+
+    width, height = pil_image.size
+    x, y = (desired_width // 2 - width // 2, desired_height // 2 - height // 2)
+
+    border = (x, y, desired_width - x - width, desired_height - y - height)
+    pil_image = ImageOps.expand(pil_image, border=border)
+
+    return pil_to_widget(pil_image), (x, y, width, height)
+
+
 def adjust(
     img: widgets.Image, contrast_factor: float, brightness_factor: float
 ) -> widgets.Image:
@@ -32,11 +56,7 @@ def adjust(
     # apply adjustments
     pil_image = ImageEnhance.Contrast(pil_image).enhance(contrast_factor)
     pil_image = ImageEnhance.Brightness(pil_image).enhance(brightness_factor)
-    # turn back into a widget
-    buffer = io.BytesIO()
-    pil_image.save(buffer, "JPEG")
-    buffer.seek(0)
-    return widgets.Image(value=buffer.read(), format="jpg")
+    return pil_to_widget(pil_image)
 
 
 @singledispatch

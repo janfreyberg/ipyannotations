@@ -1,4 +1,4 @@
-from ipycanvas import MultiCanvas, hold_canvas
+from ipycanvas import MultiCanvas
 import ipywidgets as widgets
 from typing import Tuple, Optional, Sequence, Deque, Callable, Union
 from collections import deque, defaultdict
@@ -6,8 +6,8 @@ import abc
 from traitlets import Unicode, Float, Integer, observe
 import pathlib
 
-from .utils import set_colors, fit_image
-from .image_utils import adjust, load_img
+from .utils import set_colors
+from .image_utils import adjust, load_img, fit_image
 
 
 class AbstractAnnotationCanvas(MultiCanvas):
@@ -66,6 +66,8 @@ class AbstractAnnotationCanvas(MultiCanvas):
             The image, or the path to the image.
         """
         image = load_img(image)
+        image, (x, y, width, height) = fit_image(image, self.size)
+        self.image_extent = (x, y, x + width, y + height)
         self.current_image = image
         self._display_image()
         self._init_empty_data()
@@ -116,10 +118,4 @@ class AbstractAnnotationCanvas(MultiCanvas):
             else:
                 image = self.current_image
 
-            image_canvas = self[0]
-            with hold_canvas(image_canvas):
-                x, y, width, height = fit_image(image, image_canvas)
-                image_canvas.draw_image(
-                    image, x=x, y=y, width=width, height=height
-                )
-                self.image_extent = (x, y, x + width, y + height)
+            self[0].draw_image(image)

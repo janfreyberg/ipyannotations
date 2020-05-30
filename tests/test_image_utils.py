@@ -4,7 +4,7 @@ import io
 from PIL import Image
 from unittest.mock import patch, MagicMock
 import ipywidgets
-from ipyannotations.images.canvases.image_utils import load_img, adjust
+from ipyannotations.images.canvases.image_utils import load_img, adjust, fit_image
 
 
 @pytest.fixture
@@ -85,3 +85,31 @@ def test_changing_brightness(image_array):
     assert (new_image_array / image_array).mean() == pytest.approx(
         1.5, abs=1 / 256
     )
+
+
+def test_fit_image():
+    image = Image.new('RGB', size=(30, 40), color=50)
+
+    # rescale to a smaller size
+    new_image, (x, y, width, height) = fit_image(image, (10, 10))
+    new_image = np.array(new_image)
+
+    assert x == 1
+    assert y == 0
+    assert width == 8
+    assert height == 10
+    assert np.testing.assert_array_equal(new_image[y:y + height, x:x + width], 50)
+    new_image[y:y + height, x:x + width] = 0
+    assert np.testing.assert_array_equal(new_image, 0)
+
+    # rescale to a larger size
+    new_image, (x, y, width, height) = fit_image(image, (45, 80))
+    new_image = np.array(new_image)
+
+    assert x == 0
+    assert y == 10
+    assert width == 45
+    assert height == 60
+    assert np.testing.assert_array_equal(new_image[y:y + height, x:x + width], 50)
+    new_image[y:y + height, x:x + width] = 0
+    assert np.testing.assert_array_equal(new_image, 0)
