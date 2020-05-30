@@ -38,7 +38,7 @@ def widget_to_pil(image: widgets.Image):
 
 def fit_image(
         img: Image.Image, size
-) -> (Image.Image, Tuple[int, int, int, int]):
+) -> Tuple[Image.Image, Tuple[int, int, int, int]]:
     img_width, img_height = img.size
     desired_width, desired_height = size
 
