@@ -1,14 +1,13 @@
 import io
 import pathlib
-from functools import singledispatch
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
+from functools import singledispatch
 from typing import Tuple, Any
 
-from PIL import Image, ImageEnhance, ImageOps
-import numpy as np
 import ipywidgets as widgets
-
+import numpy as np
+from PIL import Image, ImageEnhance, ImageOps
 
 URL_REGEX = re.compile(
     r"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?"
@@ -55,7 +54,7 @@ def fit_image(
 
 
 def adjust(
-    img: Image.Image, contrast_factor: float, brightness_factor: float
+        img: Image.Image, contrast_factor: float, brightness_factor: float
 ) -> Image.Image:
     img = ImageEnhance.Contrast(img).enhance(contrast_factor)
     img = ImageEnhance.Brightness(img).enhance(brightness_factor)
