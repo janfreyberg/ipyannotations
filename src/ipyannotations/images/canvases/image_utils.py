@@ -1,9 +1,10 @@
 import io
-import typing
 import pathlib
 from functools import singledispatch
 from dataclasses import dataclass
 import re
+from typing import Tuple, Any
+
 from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
 import ipywidgets as widgets
@@ -35,7 +36,9 @@ def widget_to_pil(image: widgets.Image):
     return Image.open(io.BytesIO(image.value))
 
 
-def fit_image(img: Image.Image, size) -> typing.Tuple[Image.Image, typing.Tuple[int, int, int, int]]:
+def fit_image(
+        img: Image.Image, size
+) -> (Image.Image, Tuple[int, int, int, int]):
     img_width, img_height = img.size
     desired_width, desired_height = size
 
@@ -43,7 +46,7 @@ def fit_image(img: Image.Image, size) -> typing.Tuple[Image.Image, typing.Tuple[
     img = ImageOps.scale(img, ratio)
 
     width, height = img.size
-    x, y = (desired_width // 2 - width // 2, desired_height // 2 - height // 2)
+    x, y = ((desired_width - width) // 2, (desired_height - height) // 2)
 
     border = (x, y, desired_width - x - width, desired_height - y - height)
     img = ImageOps.expand(img, border=border)
@@ -60,7 +63,7 @@ def adjust(
 
 
 @singledispatch
-def load_img(img: typing.Any):
+def load_img(img: Any):
     """
     Load an image, whether it's from a URL, a file, an array, or an already
     in-memory image.
