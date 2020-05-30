@@ -8,7 +8,8 @@ from traitlets import Unicode, Float, Integer, observe
 import pathlib
 
 from .utils import set_colors
-from .image_utils import adjust, load_img, fit_image, pil_to_widget, widget_to_pil
+from .image_utils import adjust, load_img, fit_image, \
+    pil_to_widget, widget_to_pil
 
 
 class AbstractAnnotationCanvas(MultiCanvas):
@@ -126,7 +127,8 @@ class AbstractAnnotationCanvas(MultiCanvas):
     def _update_zoom(self):
         """
         Update the cached zoomed image.
-        This operation is time consuming and should be computed as little as possible.
+        This operation is time consuming and should be computed
+        as little as possible.
         """
         self.zoomed_image = ImageOps.scale(self.current_image, self.zoom)
         self._update_crop()
@@ -135,11 +137,12 @@ class AbstractAnnotationCanvas(MultiCanvas):
     def _update_crop(self):
         """
         Update the cached zoomed image.
-        This operation is time consuming and should be computed as little as possible.
+        This operation is time consuming and should be computed
+        as little as possible.
         """
-        left, right = self.zoomed_image_x, self.zoomed_image_x + self.width
-        upper, lower = self.zoomed_image_y, self.zoomed_image_y + self.height
-        self.image_crop = self.zoomed_image.crop(box=(left, upper, right, lower))
+        minx, maxx = self.zoomed_image_x, self.zoomed_image_x + self.width
+        miny, maxy = self.zoomed_image_y, self.zoomed_image_y + self.height
+        self.image_crop = self.zoomed_image.crop(box=(minx, miny, maxx, maxy))
         self._display_image()
 
     @observe("image_contrast", "image_brightness")
@@ -156,9 +159,14 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self[0].draw_image(pil_to_widget(image))
 
     def transform_coordinates(self, x, y):
-        """Convert Mouse (x, y) coordinates to (x', y') the coordinates within the current_image"""
-        x = int((x + self.zoomed_image_x) * self.current_image.width / self.zoomed_image.width)
-        y = int((y + self.zoomed_image_y) * self.current_image.height / self.zoomed_image.height)
+        """
+        Convert Mouse (x, y) coordinates to (x', y')
+        the coordinates within the current_image
+        """
+        x += self.zoomed_image_x
+        y += self.zoomed_image_y
+        x = int(x * self.current_image.width / self.zoomed_image.width)
+        y = int(y * self.current_image.height / self.zoomed_image.height)
         return x, y
 
     def on_zoom_update(self, callbacks):
