@@ -48,7 +48,7 @@ def fit_image(
     x, y = ((desired_width - width) // 2, (desired_height - height) // 2)
 
     border = (x, y, desired_width - x - width, desired_height - y - height)
-    img = ImageOps.expand(img, border=border, fill='white')
+    img = ImageOps.expand(img, border=border, fill="white")
 
     return img, (x, y, width, height)
 
