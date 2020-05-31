@@ -1,5 +1,4 @@
 import copy
-from itertools import starmap
 
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
@@ -37,42 +36,39 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
                 self.draw_box(self._proposed_annotation, proposed=True)
 
     def draw_box(self, box: BoundingBox, proposed: bool = False):
-        try:
-            box = copy.deepcopy(box)
-            box.xyxy = (
-                *self.map_image_coords_to_canvas(*box.xyxy[:2]),
-                *self.map_image_coords_to_canvas(*box.xyxy[2:]),
+        box = copy.deepcopy(box)
+        box.xyxy = (
+            *self.map_image_coords_to_canvas(*box.xyxy[:2]),
+            *self.map_image_coords_to_canvas(*box.xyxy[2:]),
+        )
+
+        color = self.colormap.get(box.label, "#000000")
+        canvas = self[1]
+        rgb = hex_to_rgb(color)
+
+        canvas.line_width = 3
+        canvas.stroke_style = rgba_to_html_string(rgb + (1.0,))
+        canvas.set_line_dash([10, 5] if proposed else [])
+        canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
+
+        canvas.begin_path()
+        canvas.move_to(*box.corners[0])
+        for corner in box.corners[1:]:
+            canvas.line_to(*corner)
+        canvas.close_path()
+        canvas.stroke()
+        # canvas.fill()
+
+        x0, y0, x1, y1 = box.xyxy
+        if self.editing:
+            canvas.fill_style = rgba_to_html_string(rgb + (1.0,))
+            canvas.fill_arcs(
+                [x0, x0, x1, x1],
+                [y0, y1, y0, y1],
+                self.point_size,
+                0,
+                2 * pi,
             )
-
-            color = self.colormap.get(box.label, "#000000")
-            canvas = self[1]
-            rgb = hex_to_rgb(color)
-
-            canvas.line_width = 3
-            canvas.stroke_style = rgba_to_html_string(rgb + (1.0,))
-            canvas.set_line_dash([10, 5] if proposed else [])
-            canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
-
-            canvas.begin_path()
-            canvas.move_to(*box.corners[0])
-            for corner in box.corners[1:]:
-                canvas.line_to(*corner)
-            canvas.close_path()
-            canvas.stroke()
-            # canvas.fill()
-
-            x0, y0, x1, y1 = box.xyxy
-            if self.editing:
-                canvas.fill_style = rgba_to_html_string(rgb + (1.0,))
-                canvas.fill_arcs(
-                    [x0, x0, x1, x1],
-                    [y0, y1, y0, y1],
-                    self.point_size,
-                    0,
-                    2 * pi,
-                )
-        except:
-            self.print_traceback()
 
     @trigger_redraw
     @only_inside_image
