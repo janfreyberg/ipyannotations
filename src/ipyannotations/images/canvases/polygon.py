@@ -1,3 +1,6 @@
+import copy
+from itertools import starmap
+
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
 
@@ -98,11 +101,14 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         self.current_polygon.close_threshold = change.new
 
     def draw_polygon(self, polygon, tentative=False):
-
-        color = self.colormap.get(polygon.label, "#000000")
-        canvas = self[1]
         if len(polygon) == 0:
             return
+        polygon = copy.deepcopy(polygon)
+        polygon.points = list(
+            starmap(self.map_image_coords_to_canvas, polygon.points)
+        )
+        color = self.colormap.get(polygon.label, "#000000")
+        canvas = self[1]
         rgb = hex_to_rgb(color)
         xs, ys = polygon.xy_lists
         canvas.stroke_style = rgba_to_html_string(rgb + (1.0,))

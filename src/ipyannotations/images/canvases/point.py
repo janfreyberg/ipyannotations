@@ -1,3 +1,5 @@
+from itertools import starmap
+
 from ipycanvas import hold_canvas
 from traitlets import Bool
 
@@ -71,8 +73,12 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
         # canvas.stroke_style = rgba_to_html_string(rgba)
         canvas.fill_style = rgba_to_html_string(rgba)
         canvas.stroke_style = rgba_to_html_string((0, 0, 0, 1.0))
-        canvas.fill_arc(*point.coordinates, self.point_size, 0, 2 * pi)
-        canvas.stroke_arc(*point.coordinates, self.point_size, 0, 2 * pi)
+
+        coordinates = list(
+            starmap(self.map_image_coords_to_canvas, point.coordinates)
+        )
+        canvas.fill_arc(*coordinates, self.point_size, 0, 2 * pi)
+        canvas.stroke_arc(*coordinates, self.point_size, 0, 2 * pi)
 
     @property
     def data(self):

@@ -26,7 +26,7 @@ class URL:
 
 def pil_to_widget(image: Image.Image) -> widgets.Image:
     buffer = io.BytesIO()
-    image.save(buffer, "JPEG")
+    image.convert("RGB").save(buffer, "JPEG")
     buffer.seek(0)
     return widgets.Image(value=buffer.read(), format="jpg")
 

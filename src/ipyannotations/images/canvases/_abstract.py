@@ -26,7 +26,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
     image_contrast = Float(default_value=1, min=0, max=10)
     image_brightness = Float(default_value=1, min=0, max=10)
 
-    zoom = Float(default_value=1, min=0, max=1)
+    zoom = Float(default_value=1, min=0)
     zoomed_image_x = Integer(default_value=0, min=0)
     zoomed_image_y = Integer(default_value=0, min=0)
 
@@ -90,6 +90,16 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self._update_zoom()
         self._init_empty_data()
 
+    def print_traceback(self):
+        import traceback  # noqa
+
+        self.interaction_canvas.fill_style = "#ff8888"
+        self.interaction_canvas.fill_rect(10, 10, self.width, 300)
+        self.interaction_canvas.fill_style = "#000000"
+        s = traceback.format_exc()
+        for i, si in enumerate(s.split("\n")):
+            self.interaction_canvas.fill_text(si, 20, 30 + 15 * i)
+
     @observe("current_class")
     def _set_class(self, change):
         self.set_class(change["new"])
@@ -99,13 +109,13 @@ class AbstractAnnotationCanvas(MultiCanvas):
         pass
 
     def _on_click(self, x: float, y: float):
-        self.on_click(*self.transform_coordinates(x, y))
+        self.on_click(*self.map_canvas_coords_to_image(x, y))
 
     def _on_drag(self, x: float, y: float):
-        self.on_drag(*self.transform_coordinates(x, y))
+        self.on_drag(*self.map_canvas_coords_to_image(x, y))
 
     def _on_release(self, x: float, y: float):
-        self.on_release(*self.transform_coordinates(x, y))
+        self.on_release(*self.map_canvas_coords_to_image(x, y))
 
     @abc.abstractmethod
     def on_click(self, x: float, y: float):
@@ -134,7 +144,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         )
 
     @observe("zoom")
-    def _update_zoom(self):
+    def _update_zoom(self, *change):
         """
         Update the cached zoomed image.
         This operation is time consuming and should be computed
@@ -144,7 +154,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self._update_crop()
 
     @observe("zoomed_image_x", "zoomed_image_y")
-    def _update_crop(self):
+    def _update_crop(self, *change):
         """
         Update the cached zoomed image.
         This operation is time consuming and should be computed
@@ -154,6 +164,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         miny, maxy = self.zoomed_image_y, self.zoomed_image_y + self.height
         self.image_crop = self.zoomed_image.crop(box=(minx, miny, maxx, maxy))
         self._display_image()
+        self.re_draw()
 
     @observe("image_contrast", "image_brightness")
     def _display_image(self, *change):
@@ -168,16 +179,16 @@ class AbstractAnnotationCanvas(MultiCanvas):
 
         self[0].draw_image(pil_to_widget(image))
 
-    def transform_coordinates(self, x, y):
+    def map_canvas_coords_to_image(self, x, y):
         """
         Convert Mouse (x, y) coordinates to (x', y')
         the coordinates within the current_image
         """
-        x += self.zoomed_image_x
-        y += self.zoomed_image_y
-        x = int(x * self.current_image.width / self.zoomed_image.width)
-        y = int(y * self.current_image.height / self.zoomed_image.height)
+        x = int((x + self.zoomed_image_x) / self.zoom)
+        y = int((y + self.zoomed_image_y) / self.zoom)
         return x, y
 
-    def on_zoom_update(self, callbacks):
-        pass
+    def map_image_coords_to_canvas(self, x, y):
+        x = int(x * self.zoom) - self.zoomed_image_x
+        y = int(y * self.zoom) - self.zoomed_image_y
+        return x, y

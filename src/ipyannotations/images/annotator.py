@@ -153,6 +153,24 @@ class Annotator(widgets.VBox):
         )
         viz_controls.append(self.contrast_slider)
 
+        # sub controls for zoom
+        self.zoom_display = widgets.Text(layout={"width": "60px"})
+        self.display_zoom_value()
+        self.canvas.observe(self.display_zoom_value, "zoom")
+        self.zoom_plus_btn = widgets.Button(
+            description="+", layout={"width": "30px"}
+        )
+        self.zoom_plus_btn.on_click(self.zoom_plus)
+        self.zoom_minus_btn = widgets.Button(
+            description="-", layout={"width": "30px"}
+        )
+        self.zoom_minus_btn.on_click(self.zoom_minus)
+        zoom_controls = widgets.HBox(
+            [self.zoom_plus_btn, self.zoom_minus_btn, self.zoom_display]
+        )
+
+        viz_controls.append(zoom_controls)
+
         self.visualisation_controls = widgets.VBox(
             children=(widgets.HTML("Visualisation settings"), *viz_controls),
             layout={"flex": "1 1 auto"},
@@ -279,6 +297,15 @@ class Annotator(widgets.VBox):
             return self.data_postprocessor(self.canvas.data)
         else:
             return self.canvas.data
+
+    def zoom_plus(self, *args, **kwargs):
+        self.canvas.zoom += 0.1
+
+    def zoom_minus(self, *args, **kwargs):
+        self.canvas.zoom -= 0.1
+
+    def display_zoom_value(self, *change):
+        self.zoom_display.value = f"{self.canvas.zoom * 100:.0f}%"
 
 
 class PolygonAnnotator(Annotator):
