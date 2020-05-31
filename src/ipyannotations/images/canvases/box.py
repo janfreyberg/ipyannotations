@@ -63,11 +63,7 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
         if self.editing:
             canvas.fill_style = rgba_to_html_string(rgb + (1.0,))
             canvas.fill_arcs(
-                [x0, x0, x1, x1],
-                [y0, y1, y0, y1],
-                self.point_size,
-                0,
-                2 * pi,
+                [x0, x0, x1, x1], [y0, y1, y0, y1], self.point_size, 0, 2 * pi,
             )
 
     @trigger_redraw
