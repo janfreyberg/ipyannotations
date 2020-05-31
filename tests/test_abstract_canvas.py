@@ -6,12 +6,13 @@ from unittest.mock import patch
 import ipywidgets as widgets
 import numpy as np
 from PIL import Image
-from hypothesis import given, infer
+from hypothesis import given, infer, settings
 from ipyannotations.images.canvases._abstract import AbstractAnnotationCanvas
 
-from src.ipyannotations.images.canvases.image_utils import fit_image
+setting = settings(deadline=800)
 
 
+@settings(parent=setting)
 @given(img=infer)
 def test_that_loading_image_clears_data(
     img: Union[widgets.Image, np.ndarray, Image.Image]
@@ -27,6 +28,7 @@ def test_that_loading_image_clears_data(
     mock_init_empty_data.assert_called_once()
 
 
+@settings(parent=setting)
 @given(img=infer)
 def test_that_loading_image_from_path(img: Image.Image):
 

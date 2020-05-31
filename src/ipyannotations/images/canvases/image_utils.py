@@ -41,14 +41,14 @@ def fit_image(
     img_width, img_height = img.size
     desired_width, desired_height = size
 
-    ratio = max(img_width / desired_width, img_height / desired_height)
+    ratio = min(desired_width / img_width, desired_height / img_height)
     img = ImageOps.scale(img, ratio)
 
     width, height = img.size
     x, y = ((desired_width - width) // 2, (desired_height - height) // 2)
 
     border = (x, y, desired_width - x - width, desired_height - y - height)
-    img = ImageOps.expand(img, border=border)
+    img = ImageOps.expand(img, border=border, fill='white')
 
     return img, (x, y, width, height)
 

@@ -4,7 +4,7 @@ from collections import deque, defaultdict
 from typing import Tuple, Optional, Sequence, Deque, Callable, Union
 
 import ipywidgets as widgets
-from PIL import ImageOps
+from PIL import ImageOps, Image
 from ipycanvas import MultiCanvas
 from traitlets import Unicode, Float, Integer, observe
 
@@ -48,8 +48,13 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.interaction_canvas.on_mouse_move(self._on_drag)
         self.interaction_canvas.on_mouse_up(self._on_release)
 
-        self.current_image: Optional[widgets.Image] = None
+        self.current_image: Optional[Image.Image] = None
         self.dragging: Optional[Callable[[int, int], None]] = None
+
+        #  Caches for the image at given zoom scale,
+        #  and zoomed image crop that fits within the canvas
+        self.zoomed_image: Optional[Image.Image] = None
+        self.image_crop: Optional[Image.Image] = None
 
         # register re_draw as handler for opacity changes
         # note this is done here rather than as a decorator as re_draw is
@@ -82,7 +87,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image, (x, y, width, height) = fit_image(image, self.size)
         self.image_extent = (x, y, x + width, y + height)
         self.current_image = image
-        self._display_image()
+        self._update_zoom()
         self._init_empty_data()
 
     @observe("current_class")

@@ -86,10 +86,9 @@ def test_changing_brightness(image_array):
     )
 
 
-def test_fit_image():
-    image = Image.new('RGB', size=(30, 40), color=50)
+def test_fit_image_to_smaller_size():
+    image = Image.new('RGB', size=(30, 40), color=(50, 50, 50))
 
-    # rescale to a smaller size
     new_image, (x, y, width, height) = fit_image(image, (10, 10))
     new_image = np.array(new_image)
 
@@ -97,11 +96,14 @@ def test_fit_image():
     assert y == 0
     assert width == 8
     assert height == 10
-    assert np.testing.assert_array_equal(new_image[y:y + height, x:x + width], 50)
-    new_image[y:y + height, x:x + width] = 0
-    assert np.testing.assert_array_equal(new_image, 0)
+    assert np.all(new_image[y:y + height, x:x + width] == 50)
+    new_image[y:y + height, x:x + width] = 255
+    assert np.all(new_image == 255)
 
-    # rescale to a larger size
+
+def test_fit_image_to_larger_size():
+    image = Image.new('RGB', size=(30, 40), color=(50, 50, 50))
+
     new_image, (x, y, width, height) = fit_image(image, (45, 80))
     new_image = np.array(new_image)
 
@@ -109,6 +111,6 @@ def test_fit_image():
     assert y == 10
     assert width == 45
     assert height == 60
-    assert np.testing.assert_array_equal(new_image[y:y + height, x:x + width], 50)
-    new_image[y:y + height, x:x + width] = 0
-    assert np.testing.assert_array_equal(new_image, 0)
+    assert np.all(new_image[y:y + height, x:x + width] == 50)
+    new_image[y:y + height, x:x + width] = 255
+    assert np.all(new_image == 255)
