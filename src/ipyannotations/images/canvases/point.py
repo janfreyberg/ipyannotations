@@ -76,7 +76,7 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
 
         coordinates = list(
             starmap(self.map_image_coords_to_canvas, point.coordinates)
-        )
+        )  # type: ignore
         canvas.fill_arc(*coordinates, self.point_size, 0, 2 * pi)
         canvas.stroke_arc(*coordinates, self.point_size, 0, 2 * pi)
 

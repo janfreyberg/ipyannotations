@@ -40,7 +40,7 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
         box.xyxy = (
             *self.map_image_coords_to_canvas(*box.xyxy[:2]),
             *self.map_image_coords_to_canvas(*box.xyxy[2:]),
-        )
+        )  # type: ignore
 
         color = self.colormap.get(box.label, "#000000")
         canvas = self[1]
