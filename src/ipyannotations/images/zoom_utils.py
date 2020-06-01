@@ -1,5 +1,5 @@
 import pathlib
-from typing import Union, Callable, Any, List, Optional
+from typing import Union
 
 import numpy as np
 from PIL import Image
