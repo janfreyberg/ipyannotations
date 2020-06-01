@@ -8,7 +8,7 @@ from .canvases._abstract import AbstractAnnotationCanvas
 from .canvases.box import BoundingBoxAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
-from .zoom_utils import ZoomCanvas, ZoomControler
+from .zoom_utils import ZoomControler
 
 
 class Annotator(widgets.VBox):
@@ -189,20 +189,6 @@ class Annotator(widgets.VBox):
             self.all_controls,
             widgets.HBox([self.canvas, self.zoomed_canvas]),
         ]
-
-    def build_zoom_setup(self):
-
-        self.canvas.observe(self.update_zoom_canvas_rect, "zoom")
-        self.zoomed_canvas.observe(self.update_zoomed_image_crop, ["x", "y"])
-        self.zoom_plus_btn.on_click(self.zoom_plus)
-        self.zoom_minus_btn = widgets.Button(
-            description="-", layout={"width": "30px"}
-        )
-        self.zoom_minus_btn.on_click(self.zoom_minus)
-        zoom_controls = widgets.HBox(
-            [self.zoom_plus_btn, self.zoom_minus_btn, self.zoom_text]
-        )
-        zoom_setup = widgets.VBox([zoom_controls, self.zoomed_canvas])
 
     def display(self, image: Union[widgets.Image, pathlib.Path]):
         """Clear the annotations and display an image

@@ -114,7 +114,8 @@ class ZoomControler(widgets.VBox):
 
     def on_zoom(self, callback: Callable[[], None]):
         """
-        Register a callback to handle data when the user clicks the unzoom btn "-".
+        Register a callback to handle data when the user clicks
+        the unzoom btn "-".
         """
         self.zoom_callback.append(callback)
 
@@ -124,7 +125,8 @@ class ZoomControler(widgets.VBox):
 
     def on_unzoom(self, callback: Callable[[], None]):
         """
-        Register a callback to handle data when the user clicks the zoom btn "+".
+        Register a callback to handle data when the user clicks
+        the zoom btn "+".
         """
         self.submit_callbacks.append(callback)
 
