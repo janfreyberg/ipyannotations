@@ -38,9 +38,9 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
     def draw_box(self, box: BoundingBox, proposed: bool = False):
         box = copy.deepcopy(box)
         box.xyxy = (  # type: ignore
-            *self.map_image_coords_to_canvas(*box.xyxy[:2]),
-            *self.map_image_coords_to_canvas(*box.xyxy[2:]),
-        )
+            *self.map_image_coords_to_canvas(*box.xyxy[:2]),  # type: ignore
+            *self.map_image_coords_to_canvas(*box.xyxy[2:]),  # type: ignore
+        )  # type: ignore
 
         color = self.colormap.get(box.label, "#000000")
         canvas = self[1]
