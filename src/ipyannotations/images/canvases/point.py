@@ -1,5 +1,3 @@
-from itertools import starmap
-
 from ipycanvas import hold_canvas
 from traitlets import Bool
 
