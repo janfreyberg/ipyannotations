@@ -90,8 +90,6 @@ class ZoomControler(widgets.VBox):
         layout = {"width": "30px"}
         self.zoom_plus_btn = widgets.Button(description="+", layout=layout)
         self.zoom_minus_btn = widgets.Button(description="-", layout=layout)
-        self.zoom_callback: List[Callable[[Any], None]] = []
-        self.unzoom_callback: List[Callable[[Any], None]] = []
         self.zoom_plus_btn.on_click(self.zoom)
         self.zoom_minus_btn.on_click(self.unzoom)
         self.zoom_plus_btn.on_click(self.zoom_plus)
@@ -111,28 +109,6 @@ class ZoomControler(widgets.VBox):
             self.canvas.rect_height = 1 / self.zoom_scale
 
         self.text.value = f"{self.zoom_scale * 100:.0f}%"
-
-    def on_zoom(self, callback: Callable[[], None]):
-        """
-        Register a callback to handle data when the user clicks
-        the unzoom btn "-".
-        """
-        self.zoom_callback.append(callback)
-
-    def zoom(self, button: Optional[Any] = None):
-        for callback in self.zoom_callback:
-            callback()
-
-    def on_unzoom(self, callback: Callable[[], None]):
-        """
-        Register a callback to handle data when the user clicks
-        the zoom btn "+".
-        """
-        self.submit_callbacks.append(callback)
-
-    def unzoom(self, button: Optional[Any] = None):
-        for callback in self.unzoom_callback:
-            callback()
 
     def load_image(self, image: Union[str, pathlib.Path, Image.Image]):
         self.canvas.load_image(image)
