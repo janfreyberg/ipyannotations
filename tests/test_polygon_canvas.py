@@ -121,6 +121,7 @@ def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 
 
 @given(polygon=infer)
+@settings(max_examples=50)
 def test_dragging_without_edit_mode(polygon: Polygon):
 
     assume(len(polygon) > 4)
