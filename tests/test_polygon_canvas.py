@@ -1,8 +1,10 @@
-from typing import List, Tuple, Union
-from hypothesis import given, infer, strategies, assume
+from typing import List
 from math import isfinite
-from unittest.mock import MagicMock, patch
+from typing import List
+from unittest.mock import patch
+
 import ipycanvas
+from hypothesis import given, infer, assume, settings
 from ipyannotations.images.canvases import PolygonAnnotationCanvas
 from ipyannotations.images.canvases.shapes import Polygon, Point
 
@@ -20,8 +22,6 @@ def test_reading_and_setting_data(data: List[Polygon]):
 
     assert all(p1 == p2 for p1, p2 in zip(c.polygons, data))
 
-    print(c.data)
-    print("type" in serialised_data)
     assert c.data == serialised_data
 
 
@@ -56,8 +56,8 @@ def test_drawing_invokes_canvas_line_to(data: List[Polygon]):
 
 
 @given(polygon=infer)
+@settings(max_examples=50)
 def test_closing_current_polygon(polygon: Polygon):
-
     canvas = PolygonAnnotationCanvas()
     canvas.current_polygon = polygon
 
@@ -74,9 +74,6 @@ def test_closing_current_polygon(polygon: Polygon):
     )
 
     canvas.on_click(*closing_click)
-
-    print(poly_points)
-    print(closing_click)
 
     assert len(canvas.polygons) == 1
     assert canvas.polygons[0].points[:-1] == poly_points
