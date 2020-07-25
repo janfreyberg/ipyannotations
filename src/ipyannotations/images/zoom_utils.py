@@ -79,7 +79,10 @@ class ZoomCanvas(MultiCanvas):
             self.draw_current_rectangle()
 
 
-class ZoomControler(widgets.VBox):
+class ZoomController(widgets.VBox):
+    """
+    Widget with buttons to zoom in and out of the image.
+    """
 
     zoom_scale = Float(default_value=1, min=1)
 
@@ -90,8 +93,6 @@ class ZoomControler(widgets.VBox):
         layout = {"width": "30px"}
         self.zoom_plus_btn = widgets.Button(description="+", layout=layout)
         self.zoom_minus_btn = widgets.Button(description="-", layout=layout)
-        self.zoom_plus_btn.on_click(self.zoom)
-        self.zoom_minus_btn.on_click(self.unzoom)
         self.zoom_plus_btn.on_click(self.zoom_plus)
         self.zoom_minus_btn.on_click(self.zoom_minus)
         zoom_controls = widgets.HBox(
@@ -100,6 +101,9 @@ class ZoomControler(widgets.VBox):
 
         super().__init__()
         self.children = [zoom_controls, self.canvas]
+        self.layout.margin = '0px 0px 0px 20px'
+        self.layout.align_items = 'center'
+        print(self.layout)
         self.update_zoom()
 
     @observe("zoom_scale")

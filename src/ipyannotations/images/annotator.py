@@ -8,7 +8,7 @@ from .canvases._abstract import AbstractAnnotationCanvas
 from .canvases.box import BoundingBoxAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
-from .zoom_utils import ZoomControler
+from .zoom_utils import ZoomController
 
 
 class Annotator(widgets.VBox):
@@ -169,7 +169,7 @@ class Annotator(widgets.VBox):
             },
         )
 
-        self.zoomed_canvas = ZoomControler(width=200, height=200)
+        self.zoomed_canvas = ZoomController(width=200, height=200)
         widgets.link(
             (self.zoomed_canvas, "zoom_scale"), (self.canvas, "zoom_scale")
         )
