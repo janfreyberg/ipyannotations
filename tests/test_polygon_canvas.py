@@ -10,6 +10,7 @@ from ipyannotations.images.canvases.shapes import Polygon, Point
 
 
 @given(data=infer)
+@settings(max_examples=30)
 def test_reading_and_setting_data(data: List[Polygon]):
 
     c = PolygonAnnotationCanvas()
@@ -26,6 +27,7 @@ def test_reading_and_setting_data(data: List[Polygon]):
 
 
 @given(point=infer, other_data=infer)
+@settings(max_examples=30)
 def test_click_handling(point: Point, other_data: List[Polygon]):
 
     point = point.coordinates
@@ -42,6 +44,7 @@ def test_click_handling(point: Point, other_data: List[Polygon]):
 
 
 @given(data=infer)
+@settings(max_examples=30)
 def test_drawing_invokes_canvas_line_to(data: List[Polygon]):
 
     canvas = PolygonAnnotationCanvas()
@@ -56,7 +59,7 @@ def test_drawing_invokes_canvas_line_to(data: List[Polygon]):
 
 
 @given(polygon=infer)
-@settings(max_examples=50)
+@settings(max_examples=30)
 def test_closing_current_polygon(polygon: Polygon):
     canvas = PolygonAnnotationCanvas()
     canvas.current_polygon = polygon
@@ -82,7 +85,7 @@ def test_closing_current_polygon(polygon: Polygon):
 
 
 @given(polygon=infer, polygons=infer)
-@settings(max_examples=50)
+@settings(max_examples=30)
 def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 
     assume(len(polygon) > 2)
@@ -122,7 +125,7 @@ def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 
 
 @given(polygon=infer)
-@settings(max_examples=50)
+@settings(max_examples=30)
 def test_dragging_without_edit_mode(polygon: Polygon):
 
     assume(len(polygon) > 4)
