@@ -82,6 +82,7 @@ def test_closing_current_polygon(polygon: Polygon):
 
 
 @given(polygon=infer, polygons=infer)
+@settings(max_examples=50)
 def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 
     assume(len(polygon) > 2)
