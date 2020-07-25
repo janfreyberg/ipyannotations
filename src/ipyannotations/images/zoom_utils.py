@@ -103,7 +103,6 @@ class ZoomController(widgets.VBox):
         self.children = [zoom_controls, self.canvas]
         self.layout.margin = '0px 0px 0px 20px'
         self.layout.align_items = 'center'
-        print(self.layout)
         self.update_zoom()
 
     @observe("zoom_scale")
