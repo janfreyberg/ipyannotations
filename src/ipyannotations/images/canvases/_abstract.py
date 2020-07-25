@@ -48,11 +48,12 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.interaction_canvas.on_mouse_move(self._on_drag)
         self.interaction_canvas.on_mouse_up(self._on_release)
 
-        self.current_image: Optional[Image.Image] = None
+        self.current_image = Image.new(mode="RGB", size=size, color="grey")
         self.dragging: Optional[Callable[[int, int], None]] = None
 
         #  Caches for the image at given zoom scale,
         #  and zoomed image crop that fits within the canvas
+        self.zoom_scale = 1
         self.zoomed_image: Optional[Image.Image] = None
         self.image_crop: Optional[Image.Image] = None
 
@@ -72,6 +73,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
             self.colormap = defaultdict(lambda: "#000000")
 
         self._init_empty_data()
+        self._update_zoom()
 
     def load_image(self, image: Union[widgets.Image, str, pathlib.Path]):
         """Display an image on the annotation canvas.
@@ -87,8 +89,6 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image, (x, y, width, height) = fit_image(image, self.size)
         self.image_extent = (x, y, x + width, y + height)
         self.current_image = image
-        # reset zoom
-        self.zoom_scale = 1
         self._update_zoom()
         self._init_empty_data()
 
