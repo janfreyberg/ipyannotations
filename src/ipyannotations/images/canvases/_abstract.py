@@ -55,7 +55,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         else:
             self.colormap = defaultdict(lambda: "#000000")
 
-        self._init_empty_data()
+        self.init_empty_data()
 
     def load_image(self, image: Union[widgets.Image, str, pathlib.Path]):
         """Display an image on the annotation canvas.
@@ -68,7 +68,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image = load_img(image)
         self.current_image = image
         self._display_image()
-        self._init_empty_data()
+        self.init_empty_data()
 
     @observe("current_class")
     def _set_class(self, change):
@@ -99,7 +99,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         pass
 
     @abc.abstractmethod
-    def _init_empty_data(self):
+    def init_empty_data(self):
         raise NotImplementedError(
             "This canvas does not implement initialising the data."
         )

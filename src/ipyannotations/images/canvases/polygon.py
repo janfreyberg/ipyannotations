@@ -149,11 +149,11 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     @data.setter  # type: ignore
     @trigger_redraw
     def data(self, value: List[dict]):
-        self._init_empty_data()
+        self.init_empty_data()
         self.polygons = [
             Polygon.from_data(polygon_dict.copy()) for polygon_dict in value
         ]
 
-    def _init_empty_data(self):
+    def init_empty_data(self):
         self.polygons: List[Polygon] = []
         self.current_polygon: Polygon = Polygon(label=self.current_class)
