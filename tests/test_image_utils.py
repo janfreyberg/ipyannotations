@@ -83,5 +83,5 @@ def test_changing_brightness(image_array):
     )
 
     assert (new_image_array / image_array).mean() == pytest.approx(
-        1.5, abs=1 / 256
+        1.5, abs=0.01
     )
