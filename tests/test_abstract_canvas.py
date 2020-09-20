@@ -20,7 +20,7 @@ def test_that_loading_image_clears_data(
 ):
 
     with patch.object(
-        AbstractAnnotationCanvas, "_init_empty_data"
+        AbstractAnnotationCanvas, "init_empty_data"
     ) as mock_init_empty_data:
         canvas = AbstractAnnotationCanvas()
         mock_init_empty_data.reset_mock()
@@ -38,7 +38,7 @@ def test_that_loading_image_from_path(img: Image.Image):
         img.save(tmp)
 
         with patch.object(
-            AbstractAnnotationCanvas, "_init_empty_data"
+            AbstractAnnotationCanvas, "init_empty_data"
         ) as mock_init_empty_data:
             canvas = AbstractAnnotationCanvas()
             mock_init_empty_data.reset_mock()
@@ -50,7 +50,7 @@ def test_that_loading_image_from_path(img: Image.Image):
 @given(img=infer)
 def test_that_fit_image_always_fits_image(img: widgets.Image):
 
-    with patch.object(AbstractAnnotationCanvas, "_init_empty_data"):
+    with patch.object(AbstractAnnotationCanvas, "init_empty_data"):
         canvas = AbstractAnnotationCanvas()
 
     x0, y0, x1, y1 = fit_image(img, canvas)

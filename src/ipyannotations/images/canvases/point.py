@@ -85,5 +85,5 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
             Point.from_data(point_dict.copy()) for point_dict in value
         ]
 
-    def _init_empty_data(self):
+    def init_empty_data(self):
         self.points: List[Point] = []

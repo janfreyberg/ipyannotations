@@ -61,7 +61,8 @@ def test_that_adding_point_close_by_closes(poly: Polygon):
 @given(poly=infer)
 def test_that_polygon_doesnt_close_if_only_two_points(poly: Polygon):
 
-    assume(len(poly.points) == 1)
+    if len(poly.points) > 1:
+        poly.points = poly.points[:1]
 
     start_point = poly.points[0]
     max_dist = poly.close_threshold

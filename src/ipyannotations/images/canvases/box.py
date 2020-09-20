@@ -116,7 +116,7 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
     def _undo_new_box(self):
         self.annotations.pop()
 
-    def _init_empty_data(self):
+    def init_empty_data(self):
         self.annotations: List[BoundingBox] = []
         self._undo_queue.clear()
 
@@ -127,7 +127,7 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
     @data.setter  # type: ignore
     @trigger_redraw
     def data(self, value: List[dict]):
-        self._init_empty_data()
+        self.init_empty_data()
         self.annotations = [
             BoundingBox.from_data(annotation.copy()) for annotation in value
         ]

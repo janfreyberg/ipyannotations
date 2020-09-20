@@ -25,7 +25,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         classes: Optional[Sequence[str]] = None,
         **kwargs
     ):
-        super().__init__(n_canvases=3, size=size, **kwargs)
+        super().__init__(n_canvases=3, width=size[0], height=size[1], **kwargs)
         self._undo_queue: Deque[Callable] = deque([])
         self.image_extent = (0, 0, *size)
 
@@ -55,7 +55,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         else:
             self.colormap = defaultdict(lambda: "#000000")
 
-        self._init_empty_data()
+        self.init_empty_data()
 
     def load_image(self, image: Union[widgets.Image, str, pathlib.Path]):
         """Display an image on the annotation canvas.
@@ -68,7 +68,12 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image = load_img(image)
         self.current_image = image
         self._display_image()
-        self._init_empty_data()
+        self.init_empty_data()
+
+    def clear(self) -> None:
+        """Clear the canvas - clear the image and delete any annotations."""
+        super().clear()
+        self.init_empty_data()
 
     @observe("current_class")
     def _set_class(self, change):
@@ -99,7 +104,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         pass
 
     @abc.abstractmethod
-    def _init_empty_data(self):
+    def init_empty_data(self):
         raise NotImplementedError(
             "This canvas does not implement initialising the data."
         )
