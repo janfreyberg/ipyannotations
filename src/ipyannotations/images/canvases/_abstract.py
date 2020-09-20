@@ -25,7 +25,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         classes: Optional[Sequence[str]] = None,
         **kwargs
     ):
-        super().__init__(n_canvases=3, size=size, **kwargs)
+        super().__init__(n_canvases=3, width=size[0], height=size[1], **kwargs)
         self._undo_queue: Deque[Callable] = deque([])
         self.image_extent = (0, 0, *size)
 
@@ -68,6 +68,11 @@ class AbstractAnnotationCanvas(MultiCanvas):
         image = load_img(image)
         self.current_image = image
         self._display_image()
+        self.init_empty_data()
+
+    def clear(self) -> None:
+        """Clear the canvas; clearing the image and deleting any annotations."""
+        super().clear()
         self.init_empty_data()
 
     @observe("current_class")
