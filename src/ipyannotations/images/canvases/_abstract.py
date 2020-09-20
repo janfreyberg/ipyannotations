@@ -71,7 +71,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
         self.init_empty_data()
 
     def clear(self) -> None:
-        """Clear the canvas; clearing the image and deleting any annotations."""
+        """Clear the canvas - clear the image and delete any annotations."""
         super().clear()
         self.init_empty_data()
 

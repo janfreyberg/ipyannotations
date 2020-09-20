@@ -170,7 +170,7 @@ class Annotator(widgets.VBox):
         self.undo_callbacks: List[Callable[[], None]] = []
         self.skip_callbacks: List[Callable[[], None]] = []
 
-        super().__init__()
+        super().__init__(layout={"width": f"{self.canvas.size[0]}px"})
         self.children = [self.canvas, self.all_controls]
 
     def display(self, image: Union[widgets.Image, pathlib.Path]):
