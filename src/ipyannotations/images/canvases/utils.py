@@ -26,9 +26,7 @@ def fit_image(img: widgets.Image, canvas: Canvas) -> Tuple[int, int, int, int]:
         # width is the limiting factor:
         height = int(img_height / width_ratio)
         width = int(img_width / width_ratio)
-    # breakpoint()
     x, y = (canvas_width // 2 - width // 2, canvas_height // 2 - height // 2)
-    # canvas.draw_image(img, x=x, y=y, width=height, height=width)
     return x, y, width, height
 
 
