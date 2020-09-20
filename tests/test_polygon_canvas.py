@@ -126,7 +126,7 @@ def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 @given(polygon=infer)
 def test_dragging_without_edit_mode(polygon: Polygon):
 
-    assume(len(polygon) > 4)
+    assume(len(polygon) > 2)
 
     canvas = PolygonAnnotationCanvas()
     canvas.editing = False

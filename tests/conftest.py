@@ -16,7 +16,7 @@ strategies.coordinates = lambda: coordinates
 
 @strategies.composite
 def polygons(draw):
-    points = strategies.lists(coordinates)
+    points = strategies.lists(coordinates, min_size=3)
     label = strategies.text()
 
     return Polygon(draw(points), draw(label))
