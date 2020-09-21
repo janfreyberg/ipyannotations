@@ -31,20 +31,21 @@ test = [
     "coveralls",
     "pytest-cov",
     "hypothesis",
-    "pytest-check"
+    "pytest-check",
+    "mypy",
 ]
 dev = [
     "black",
     "flake8",
     "pre-commit",
     "jupyterlab",
-    "rope"
+    "rope",
 ]
 doc = [
     "sphinx>=2.3",
     "m2r",
     "sphinx_rtd_theme",
-    "nbsphinx"
+    "nbsphinx",
 ]
 
 

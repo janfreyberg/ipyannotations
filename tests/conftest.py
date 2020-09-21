@@ -1,10 +1,15 @@
+import os
 from ipyannotations.images.canvases.shapes import Polygon, Point, BoundingBox
-from hypothesis import given, assume, infer, example, strategies
+from hypothesis import given, assume, infer, example, strategies, settings
 import numpy as np
 import io
 from PIL import Image
 import ipywidgets as widgets
 
+settings.register_profile("ci", settings(deadline=600))
+
+if os.getenv("CI"):
+    settings.load_profile("ci")
 
 coordinates = strategies.tuples(
     strategies.integers(min_value=0, max_value=700),
