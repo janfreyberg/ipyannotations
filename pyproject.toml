@@ -43,9 +43,9 @@ dev = [
 ]
 doc = [
     "sphinx>=2.3",
-    "m2r",
     "sphinx_rtd_theme",
     "nbsphinx",
+    "myst-parser>=0.12.9",
 ]
 
 

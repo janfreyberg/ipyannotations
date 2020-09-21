@@ -28,7 +28,7 @@ release = version
 
 master_doc = "index"
 
-extensions = ["m2r", "nbsphinx", "sphinx.ext.napoleon"]
+extensions = ["myst_parser", "nbsphinx", "sphinx.ext.napoleon"]
 
 source_suffix = [".rst", ".md"]
 

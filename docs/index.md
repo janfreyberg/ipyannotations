@@ -9,14 +9,16 @@ For example, draw polygons onto images for your machine learning applications:
 
 ![interface](img/interface.png)
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+```{toctree}
+---
+maxdepth: 2
+caption: "Contents:"
+---
 
-   installation
-   quick-start
-   api
-
+installation
+quick-start
+api
+```
 
 
 ## Indices and tables
