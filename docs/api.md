@@ -1,10 +1,12 @@
 # API Index
 
-.. contents::
-   :local:
+```{contents}
+:local:
+```
 
 ## Polygon annotations
 
+```{eval-rst}
 .. autoclass:: ipyannotations.PolygonAnnotator
 
    .. rubric:: Methods
@@ -16,9 +18,11 @@
    .. rubric:: Attributes
    .. autoattribute:: options
    .. autoattribute:: data
+```
 
 ## Point annotations
 
+```{eval-rst}
 .. autoclass:: ipyannotations.PointAnnotator
 
    .. rubric:: Methods
@@ -30,9 +34,11 @@
    .. rubric:: Attributes
    .. autoattribute:: options
    .. autoattribute:: data
+```
 
 ## Bounding box annotations
 
+```{eval-rst}
 .. autoclass:: ipyannotations.BoxAnnotator
 
    .. rubric:: Methods
@@ -44,3 +50,4 @@
    .. rubric:: Attributes
    .. autoattribute:: options
    .. autoattribute:: data
+```
