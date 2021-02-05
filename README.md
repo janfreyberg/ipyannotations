@@ -22,30 +22,35 @@ Start by installing `ipyannotations`:
 $ pip install ipyannotations
 ```
 
-If you are using Jupyter Lab, rather than the old Jupyter Notebook application, you will also
-have to install two Jupyter Lab extensions:
-
-## Jupyter Lab extensions
+On older versions of Jupyter Lab, rather than the old Jupyter Notebook
+application, you will also have to install two Jupyter Lab extensions:
 
 ```
 $ jupyter labextension install @jupyter-widgets/jupyterlab-manager ipycanvas
 $ jupyter lab build
 ```
 
-## ipyannotations development
+## Development installation
 
 It's super helpful to have other people contribute to projects like this, so
 please fork this repository and make pull requests!
 
-`ipyannotations` uses `flit` to manage the packaging, so the easiest way to use
-it is to set up a virtual environment, install `ipyannotations` as a symlink,
-and go from there:
+For a development installation (requires [Node.js](https://nodejs.org) and
+[Yarn version 1](https://classic.yarnpkg.com/)),
 
-```
-git clone git@github.com:<your-username>/ipyannotations.git && cd ipyannotations
-pre-commit install
-python -m venv .venv
-flit install --symlink --python .venv/bin/python
-jupyter labextension install @jupyter-widgets/jupyterlab-manager ipycanvas
-jupyter lab build
-```
+    $ git clone https://github.com/janfreyberg/ipyannotations.git
+    $ cd ipyannotations
+    $ pip install -e .
+    $ jupyter nbextension install --py --symlink --overwrite --sys-prefix ipyannotations
+    $ jupyter nbextension enable --py --sys-prefix ipyannotations
+
+When actively developing your extension for JupyterLab, run the command:
+
+    $ jupyter labextension develop --overwrite ipyannotations
+
+Then you need to rebuild the JS when you make a code change:
+
+    $ cd js
+    $ yarn run build
+
+You then need to refresh the JupyterLab page when your javascript changes.
