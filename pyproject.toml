@@ -1,53 +1,6 @@
 [build-system]
-requires = ["flit"]
-build-backend = "flit.buildapi"
-
-[tool.flit.metadata]
-module = "ipyannotations"
-author = "Jan Freyberg"
-author-email = "jan.freyberg@gmail.com"
-home-page = "https://github.com/janfreyberg/ipyannotations"
-description-file = "README.md"
-classifiers = ["License :: OSI Approved :: MIT License"]
-requires-python = ">=3.6"
-requires = [
-    "ipywidgets",
-    "ipycanvas",
-    "palettable",
-    "Pillow",
-    "numpy",
-    "requests",
-    "dataclasses; python_version == '3.6'"
-]
-
-[tool.flit.metadata.urls]
-Documentation = "https://ipyannotations.readthedocs.io/"
-"Interactive Binder" = "https://mybinder.org/v2/gh/janfreyberg/ipyannotations/master?filepath=docs/quick-start.ipynb"
-
-[tool.flit.metadata.requires-extra]
-test = [
-    "pytest",
-    "coverage",
-    "coveralls",
-    "pytest-cov",
-    "hypothesis",
-    "pytest-check",
-    "mypy",
-]
-dev = [
-    "black",
-    "flake8",
-    "pre-commit",
-    "jupyterlab",
-    "rope",
-]
-doc = [
-    "sphinx>=2.3",
-    "sphinx_rtd_theme",
-    "nbsphinx",
-    "myst-parser>=0.12.9",
-]
-
+requires = ["jupyter_packaging~=0.7.9", "jupyterlab>=3.0.0,==3.*", "setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 79

@@ -3,7 +3,7 @@
 *~
 
 *egg-info
-*.ipynb_checkpoints*
+*.ipynb_checkpoints/
 js/node_modules/*
 js/dist/*
 js/jupyterlab-dist/*
@@ -27,3 +27,12 @@ docs/_build/
 htmlcov/
 .hypothesis/
 .coverage
+
+dist/
+build/
+*.py[cod]
+node_modules/
+
+# Compiled javascript
+src/ipyannotations/nbextension/
+src/ipyannotations/labextension/
