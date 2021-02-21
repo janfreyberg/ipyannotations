@@ -1,5 +1,6 @@
-from typing import List, Tuple, Optional, ClassVar
 from dataclasses import dataclass, field
+from typing import ClassVar, List, Optional, Tuple
+
 from .utils import dist
 
 

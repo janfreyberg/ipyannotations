@@ -1,10 +1,11 @@
 import io
-from typing import Tuple, Callable, Sequence, Iterator, Optional, Any
-import ipywidgets as widgets
 from functools import wraps
+from typing import Any, Callable, Iterator, Optional, Sequence, Tuple
+
+import ipywidgets as widgets
 from ipycanvas import Canvas
-from PIL import Image
 from palettable.colorbrewer.qualitative import Set2_8
+from PIL import Image
 
 
 def fit_image(img: widgets.Image, canvas: Canvas) -> Tuple[int, int, int, int]:

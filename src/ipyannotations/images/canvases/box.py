@@ -1,16 +1,14 @@
+from math import pi
+from typing import List, Optional
+
+import ipywidgets as widgets
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
 
-import ipywidgets as widgets
-
-from typing import List, Optional
-
-from math import pi
-
-from .utils import dist, trigger_redraw, only_inside_image
-from .color_utils import hex_to_rgb, rgba_to_html_string
 from ._abstract import AbstractAnnotationCanvas
+from .color_utils import hex_to_rgb, rgba_to_html_string
 from .shapes import BoundingBox
+from .utils import dist, only_inside_image, trigger_redraw
 
 
 class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):

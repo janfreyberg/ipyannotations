@@ -1,13 +1,13 @@
 import io
-import typing
 import pathlib
-from functools import singledispatch
-from dataclasses import dataclass
 import re
-from PIL import Image, ImageEnhance
-import numpy as np
-import ipywidgets as widgets
+import typing
+from dataclasses import dataclass
+from functools import singledispatch
 
+import ipywidgets as widgets
+import numpy as np
+from PIL import Image, ImageEnhance
 
 URL_REGEX = re.compile(
     r"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?"

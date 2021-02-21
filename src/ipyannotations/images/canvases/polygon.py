@@ -1,14 +1,13 @@
+from math import pi
+from typing import List
+
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
 
-from typing import List
-
-from math import pi
-
-from .utils import dist, trigger_redraw, only_inside_image
-from .color_utils import hex_to_rgb, rgba_to_html_string
 from ._abstract import AbstractAnnotationCanvas
+from .color_utils import hex_to_rgb, rgba_to_html_string
 from .shapes import Polygon
+from .utils import dist, only_inside_image, trigger_redraw
 
 
 class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
@@ -106,6 +105,7 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         rgb = hex_to_rgb(color)
         xs, ys = polygon.xy_lists
         canvas.stroke_style = rgba_to_html_string(rgb + (1.0,))
+        canvas.line_width = 3
 
         if tentative:
             canvas.set_line_dash([10, 5])

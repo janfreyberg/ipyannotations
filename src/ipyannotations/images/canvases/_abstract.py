@@ -1,13 +1,14 @@
-from ipycanvas import MultiCanvas, hold_canvas
-import ipywidgets as widgets
-from typing import Tuple, Optional, Sequence, Deque, Callable, Union
-from collections import deque, defaultdict
 import abc
-from traitlets import Unicode, Float, Integer, observe
 import pathlib
+from collections import defaultdict, deque
+from typing import Callable, Deque, Optional, Sequence, Tuple, Union
 
-from .utils import set_colors, fit_image
+import ipywidgets as widgets
+from ipycanvas import MultiCanvas, hold_canvas
+from traitlets import Float, Integer, Unicode, observe
+
 from .image_utils import adjust, load_img
+from .utils import fit_image, set_colors
 
 
 class AbstractAnnotationCanvas(MultiCanvas):

@@ -1,15 +1,17 @@
 import pathlib
-from typing import List, Callable, Any, Optional, Union, Type, Sequence
-import traitlets
+from typing import Any, Callable, List, Optional, Sequence, Type, Union
+
 import ipywidgets as widgets
+import traitlets
 
+from ..base import LabellingWidgetMixin
 from .canvases._abstract import AbstractAnnotationCanvas
-from .canvases.polygon import PolygonAnnotationCanvas
-from .canvases.point import PointAnnotationCanvas
 from .canvases.box import BoundingBoxAnnotationCanvas
+from .canvases.point import PointAnnotationCanvas
+from .canvases.polygon import PolygonAnnotationCanvas
 
 
-class Annotator(widgets.VBox):
+class Annotator(LabellingWidgetMixin, widgets.VBox):
     """A generic image annotation widget.
 
     Parameters
@@ -35,9 +37,12 @@ class Annotator(widgets.VBox):
         canvas_size=(700, 500),
         options: Sequence[str] = (),
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
-        # **kwargs,
+        **kwargs,
     ):
         """Create an annotation widget for images."""
+        layout = {"width": f"{canvas_size[0]}px"}
+        layout.update(kwargs.pop("layout", {}))
+        super().__init__(layout=layout)
         self.canvas = self.CanvasClass(canvas_size, classes=options)
         self.data_postprocessor = data_postprocessor
 
@@ -64,18 +69,7 @@ class Annotator(widgets.VBox):
             max_width="120px",
         )
 
-        self.undo_button = widgets.Button(
-            description="Undo", icon="undo", layout=button_layout
-        )
-        self.undo_button.on_click(self.undo)
-        extra_buttons.append(self.undo_button)
-
-        self.skip_button = widgets.Button(
-            description="Skip", icon="fast-forward", layout=button_layout
-        )
-        self.skip_button.on_click(self.skip)
-        extra_buttons.append(self.skip_button)
-
+        extra_buttons = [self.undo_button, self.skip_button]
         if hasattr(self.canvas, "editing"):
             self.edit_button = widgets.ToggleButton(
                 description="Edit", icon="pencil", layout=button_layout
@@ -91,14 +85,6 @@ class Annotator(widgets.VBox):
                 "flex_flow": "row wrap",
             },
         )
-
-        self.submit_button = widgets.Button(
-            description="Submit data",
-            icon="tick",
-            button_style="success",
-            layout=button_layout,
-        )
-        self.submit_button.on_click(self.submit)
 
         self.data_controls = widgets.VBox(
             children=(
@@ -123,7 +109,7 @@ class Annotator(widgets.VBox):
         viz_controls = []
         if hasattr(self.canvas, "opacity"):
             self.opacity_slider = widgets.FloatSlider(
-                description="Opacity", value=1, min=0, max=1, step=0.025
+                description="Opacity", value=0.5, min=0, max=1, step=0.025
             )
             widgets.link(
                 (self.opacity_slider, "value"), (self.canvas, "opacity")
@@ -169,9 +155,7 @@ class Annotator(widgets.VBox):
         self.submit_callbacks: List[Callable[[Any], None]] = []
         self.undo_callbacks: List[Callable[[], None]] = []
         self.skip_callbacks: List[Callable[[], None]] = []
-
-        super().__init__(layout={"width": f"{self.canvas.size[0]}px"})
-        self.children = [self.canvas, self.all_controls]
+        self.children = self.children + (self.canvas, self.all_controls)
 
     def display(self, image: Union[widgets.Image, pathlib.Path]):
         """Clear the annotations and display an image
@@ -185,93 +169,6 @@ class Annotator(widgets.VBox):
         self.canvas.clear()
         self.canvas.load_image(image)
 
-    def on_submit(self, callback: Callable[[Any], None]):
-        """Register a callback to handle data when the user clicks "Submit".
-
-        .. note::
-            Callbacks are called in order of registration - first registered,
-            first called.
-
-        Parameters
-        ----------
-        callback : Callable[[Any], None]
-            A function that takes in data. Usually, this data is a list of
-            dictionaries, but you are able to define data post-processors when
-            you create an annotator that get called before this callback is
-            called. Any return values are ignored.
-        """
-        self.submit_callbacks.append(callback)
-
-    def submit(self, button: Optional[Any] = None):
-        """Trigger the "Submit" callbacks.
-
-        This function is called when users click "Submit".
-
-        Parameters
-        ----------
-        button : optional
-            Ignored argument. Supplied when invoked due to a button click.
-        """
-        for callback in self.submit_callbacks:
-            callback(self.data)
-
-    def on_undo(self, callback: Callable[[], None]):
-        """Register a callback to handle when the user clicks "Undo".
-
-        Note that any callback registered here is only called when the canvas
-        is empty - while there are annotations on the canvas, "Undo" actually
-        undoes the annotations, until the canvas is empty.
-
-        Parameters
-        ----------
-        callback : Callable[[], None]
-            A function to be called when users press "Undo". This should be
-            a function that takes in no arguments; any return values are
-            ignored.
-        """
-        self.undo_callbacks.append(callback)
-
-    def undo(self, button: Optional[Any] = None):
-        """Trigger the "Undo" callbacks.
-
-        This function is called when users click "Undo".
-
-        Parameters
-        ----------
-        button : optional
-            Ignored argument. Supplied when invoked due to a button click.
-        """
-        if self.canvas._undo_queue:
-            undo = self.canvas._undo_queue.pop()
-            undo()
-        else:
-            for callback in self.undo_callbacks:
-                callback()
-
-    def on_skip(self, callback: Callable[[], None]):
-        """Register a callback to handle when the user clicks "Skip".
-
-        Parameters
-        ----------
-        callback : Callable[[], None]
-            The function to be called when the user clicks "Skip". It should
-            take no arguments, and any return values are ignored.
-        """
-        self.skip_callbacks.append(callback)
-
-    def skip(self, button: Optional[Any] = None):
-        """Trigger the "Skip" callbacks.
-
-        This function is called when users click "Skip".
-
-        Parameters
-        ----------
-        button : optional
-            Ignored argument. Supplied when invoked due to a button click.
-        """
-        for callback in self.skip_callbacks:
-            callback()
-
     @property
     def data(self):
         """The annotation data."""
@@ -279,6 +176,21 @@ class Annotator(widgets.VBox):
             return self.data_postprocessor(self.canvas.data)
         else:
             return self.canvas.data
+
+    def undo(self, button: Optional[Any] = None):
+        if self.canvas._undo_queue:
+            undo = self.canvas._undo_queue.pop()
+            undo()
+        else:
+            super().undo()
+
+    def _handle_keystroke(self, event):
+        super()._handle_keystroke(event)
+        for i, option in enumerate(self.class_selector.options):
+            if event["key"] == f"{(i + 1) % 10}":
+                self.class_selector.value = option
+            if i == 10:
+                break
 
 
 class PolygonAnnotator(Annotator):
