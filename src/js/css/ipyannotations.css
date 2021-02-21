@@ -49,3 +49,18 @@
     vertical-align: middle;
     margin-left: 0.5rem;
 }
+
+.button-keyboard-icon {
+    font-size: small;
+    color: gray;
+    /* position: absolute; */
+    /* bottom: 0; */
+    position: absolute;
+    /* vertical-align: middle; */
+    bottom: 1px;
+    /* height: 20px; */
+    right: 2px;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}

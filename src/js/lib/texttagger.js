@@ -1,6 +1,6 @@
 var widgets = require('@jupyter-widgets/base');
 var _ = require('lodash');
-
+require("../css/ipyannotations.css");
 
 // When serialiazing the entire widget state for embedding, only values that
 // differ from the defaults will be specified.

@@ -1,4 +1,4 @@
-Create rich adata annotations in jupyter notebooks.
+Create rich data annotations in jupyter notebooks.
 
 Package Install
 ---------------
