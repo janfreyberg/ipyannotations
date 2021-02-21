@@ -1,5 +1,6 @@
-from typing import Callable, List, Tuple
 from copy import copy
+from typing import Callable, List, Tuple
+
 import ipywidgets as widgets
 import traitlets
 
@@ -8,7 +9,7 @@ from ..base import LabellingWidgetMixin
 
 @widgets.register
 class TextTaggerCore(widgets.DOMWidget):
-    """An example widget."""
+    """A text tagging javascript widget."""
 
     # properties to make sure the right frontend widget is found:
     _view_name = traitlets.Unicode("TextTaggerView").tag(sync=True)
@@ -18,10 +19,10 @@ class TextTaggerCore(widgets.DOMWidget):
     _view_module_version = traitlets.Unicode("^0.1.0").tag(sync=True)
     _model_module_version = traitlets.Unicode("^0.1.0").tag(sync=True)
 
-    text = traitlets.Unicode("Lorem ipsum", help="The text to display.").tag(
-        sync=True
-    )
-    classes = traitlets.List(
+    text: str = traitlets.Unicode(
+        "Lorem ipsum", help="The text to display."
+    ).tag(sync=True)
+    classes: List[str] = traitlets.List(
         trait=traitlets.Unicode, default_value=["MISC", "PER", "LOC", "ORG"]
     ).tag(sync=True)
     selected_class = traitlets.Unicode().tag(sync=True)
@@ -63,7 +64,7 @@ class TextTaggerCore(widgets.DOMWidget):
 
 
 class TextTagger(LabellingWidgetMixin, widgets.VBox):
-    """A tagging widget."""
+    """A tagging widget to annotate tokens inside text."""
 
     data: List[Tuple[int, int, str]] = traitlets.List(
         trait=traitlets.Tuple(
@@ -78,6 +79,20 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
         data=[],
         button_width="5em",
     ):
+        """A tagging widget to annotate tokens inside text.
+
+        Parameters
+        ----------
+        classes : list, optional
+            The classes of entities to annotate, by default
+            ["MISC", "PER", "LOC", "ORG"]
+        text : str, optional
+            The text to display, by default "Lorem ipsum"
+        data : list, optional
+            If you have entity annotations for this text already, by default []
+        button_width : str, optional
+            A valid HTML width string, by default "5em"
+        """
         super().__init__()
         self.text_widget = TextTaggerCore(
             text=text, classes=classes, entity_spans=data
@@ -93,27 +108,23 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
         widgets.link((self, "data"), (self.text_widget, "entity_spans"))
         self.children = (self.text_widget, self.class_picker)
 
-        self._undo_queue = []
-
         self.children = (
             self.text_widget,
             self.class_picker,
             widgets.HBox(
-                [self.undo_button, self.skip_button],
+                [self.undo_button, self.skip_button, self.submit_button],
                 layout={
                     "align_items": "stretch",
                     "justify_content": "flex-end",
                     "flex_flow": "row wrap",
                 },
             ),
+            self.event_watcher,
         )
 
-    def undo(self, *_):
-        if self._undo_queue:
-            last_undo_fn = self._undo_queue.pop()
-            last_undo_fn()
-        else:
-            super().undo()
+    def display(self, text: str):
+        self.text_widget.text = text
+        self.text_widget.entity_spans = []
 
     @traitlets.observe("data")
     def _append_undo_fn(self, proposal: dict):
@@ -129,3 +140,13 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
                 self.data = data
 
             self._undo_queue.append(_undo_adding_point)
+        elif len(new_data) == 0:
+            self._undo_queue.clear()
+
+    def _handle_keystroke(self, event):
+        super()._handle_keystroke(event)
+        for i, option in enumerate(self.class_picker.options):
+            if event["key"] == f"{(i + 1) % 10}":
+                self.class_picker.value = option
+            if i == 10:
+                break
