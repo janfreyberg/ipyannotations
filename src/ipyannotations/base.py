@@ -1,20 +1,54 @@
 """The base class that data labelling widgets should inherit from."""
-from typing import Callable, Any
+from typing import Any, Callable, List, Optional
+
+import ipyevents
 import ipywidgets as widgets
+
+CallbackList = List[Callable]
 
 
 class LabellingWidgetMixin:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, track_keystrokes=True, **kwargs):
         super().__init__(*args, **kwargs)
-        self.skip_fns = []
-        self.skip_button = widgets.Button(
-            description="Skip", icon="fast-forward"
+        button_layout = widgets.Layout(
+            # width="auto",
+            min_width="80px",
+            flex="1 1 auto",
+            max_width="120px",
         )
+        self.skip_button = widgets.Button(
+            description="Skip",
+            icon="fast-forward",
+            layout=button_layout,
+        )
+        self.skip_fns: CallbackList = []
         self.skip_button.on_click(self.skip)
-        self.undo_fns = []
-        self.undo_button = widgets.Button(description="Undo", icon="undo")
-        self._undo_queue = []
+
+        self.undo_button = widgets.Button(
+            description="Undo",
+            icon="undo",
+            layout=button_layout,
+        )
+        self.undo_fns: CallbackList = []
+        self._undo_queue: CallbackList = []
         self.undo_button.on_click(self.undo)
+
+        self.submit_button = widgets.Button(
+            description="Submit",
+            icon="check",
+            button_style="success",
+            layout=button_layout,
+        )
+        self.submission_functions = []
+        self.submit_button.on_click(self.submit)
+
+        self.event_watcher = ipyevents.Event(
+            source=self,
+            watched_events=["keyup"] if track_keystrokes else [],
+            prevent_default_actions=True,
+        )
+        self.event_watcher.on_dom_event(self._handle_keystroke)
+        self.children = self.children + (self.event_watcher,)
 
     def on_submit(self, callback: Callable):
         """
@@ -22,7 +56,7 @@ class LabellingWidgetMixin:
 
         Parameters
         ----------
-        callback : callable
+        callback : Callable[[Any], None]
             The function to be called when the widget is submitted.
         """
         if not callable(callback):
@@ -33,27 +67,21 @@ class LabellingWidgetMixin:
             )
         self.submission_functions.append(callback)
 
-    def submit(self, sender=None):
+    def submit(self, sender: Optional[widgets.Button] = None):
         """The function that gets called by submitting an option.
 
         This is called by the button / text field elements and shouldn't be
         called directly.
         """
-        # TODO: Implement logic to handle widgets with persistent data state
-
-        # figure out if it's a button or text field
-        if isinstance(sender, widgets.Text):
-            value = sender.value
+        if hasattr(self, "data"):
+            value = self.data
         else:
-            value = sender.description
-
-        if value is not None and value not in self.options:
-            self.options = self.options + [value]
+            raise NotImplementedError(
+                "Submission for this widget doesn't seem to be implemented."
+            )
 
         for callback in self.submission_functions:
             callback(value)
-
-        # self._compose()
 
     def on_undo(self, callback: Callable):
         """Provide a function that will be called when the user presses "undo".
@@ -66,19 +94,21 @@ class LabellingWidgetMixin:
         self.undo_fns.append(callback)
 
     def undo(self, sender=None):
-        for callback in self.undo_fns:
-            callback()
+        if self._undo_queue:
+            last_undo_fn = self._undo_queue.pop()
+            last_undo_fn()
+        else:
+            for callback in self.undo_fns:
+                callback()
 
-    def on_skip(self, callback: Callable):
-        """Provide a function that will be called when the user presses "Skip".
+    def skip(self, sender: Optional[widgets.Button] = None):
+        for callback in self.submission_functions:
+            callback(None)
 
-        Parameters
-        ----------
-        callback : Callable[[], None]
-            The function to be called. Takes no arguments and returns nothing.
-        """
-        self.skip_fns.append(callback)
-
-    def skip(self, sender=None):
-        for callback in self.skip_fns:
-            callback()
+    def _handle_keystroke(self, event):
+        if event["type"] != "keyup":
+            return
+        if event["key"] == "Enter":
+            self.submit()
+        elif event["key"] == "Backspace":
+            self.undo()
