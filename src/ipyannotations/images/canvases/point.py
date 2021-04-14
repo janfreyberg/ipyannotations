@@ -6,8 +6,8 @@ from traitlets import Bool
 
 from ._abstract import AbstractAnnotationCanvas
 from .color_utils import hex_to_rgb, rgba_to_html_string
+from .image_utils import dist, only_inside_image, trigger_redraw
 from .shapes import Point
-from .utils import dist, only_inside_image, trigger_redraw
 
 
 class PointAnnotationCanvas(AbstractAnnotationCanvas):
@@ -64,14 +64,15 @@ class PointAnnotationCanvas(AbstractAnnotationCanvas):
                 self.draw_point(point)
 
     def draw_point(self, point: Point):
+        coordinates = self.image_to_canvas_coordinates(point.coordinates)
         canvas = self[1]
         color = self.colormap.get(point.label, "#000000")
         rgba = hex_to_rgb(color) + (self.opacity,)
         # canvas.stroke_style = rgba_to_html_string(rgba)
         canvas.fill_style = rgba_to_html_string(rgba)
         canvas.stroke_style = rgba_to_html_string((0, 0, 0, 1.0))
-        canvas.fill_arc(*point.coordinates, self.point_size, 0, 2 * pi)
-        canvas.stroke_arc(*point.coordinates, self.point_size, 0, 2 * pi)
+        canvas.fill_arc(*coordinates, self.point_size, 0, 2 * pi)
+        canvas.stroke_arc(*coordinates, self.point_size, 0, 2 * pi)
 
     @property
     def data(self):

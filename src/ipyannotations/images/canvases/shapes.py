@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import ClassVar, List, Optional, Tuple
 
-from .utils import dist
+from .image_utils import dist
 
 
 @dataclass
@@ -27,7 +27,15 @@ class Polygon:
     def xy_lists(self):
         if len(self.points) == 0:
             return [], []
-        return map(list, zip(*self.points))
+        return list(map(list, zip(*self.points)))
+
+    @property
+    def xs(self):
+        return [point[0] for point in self.points]
+
+    @property
+    def ys(self):
+        return [point[1] for point in self.points]
 
     @property
     def closed(self) -> bool:

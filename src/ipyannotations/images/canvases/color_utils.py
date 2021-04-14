@@ -1,4 +1,6 @@
-from typing import Tuple
+from typing import Iterator, Tuple
+
+from palettable.colorbrewer.qualitative import Set2_8
 
 
 def hex_to_rgb(value: str) -> Tuple[int, int, int]:
@@ -27,3 +29,15 @@ def rgba_to_html_string(rgba: Tuple[int, int, int, float]) -> str:
         return f"rgb({rgba[0]}, {rgba[1]}, {rgba[2]})"
     else:
         raise ValueError("You did not pass a valid color tuple")
+
+
+def set_colors() -> Iterator[str]:
+    """An infinite iterator over the Set2 hex colors.
+
+    Yields
+    -------
+    str
+        A valid hex-string from the Set2 colors. 8 unique colors available.
+    """
+    while True:
+        yield from Set2_8.hex_colors

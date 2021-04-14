@@ -7,8 +7,8 @@ import ipywidgets as widgets
 from ipycanvas import MultiCanvas, hold_canvas
 from traitlets import Float, Integer, Unicode, observe
 
-from .image_utils import adjust, load_img
-from .utils import fit_image, set_colors
+from .color_utils import set_colors
+from .image_utils import adjust, fit_image, load_img
 
 
 class AbstractAnnotationCanvas(MultiCanvas):
@@ -40,6 +40,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
 
         self.current_image: Optional[widgets.Image] = None
         self.dragging: Optional[Callable[[int, int], None]] = None
+        self.error_output_widget = widgets.Output()
 
         # register re_draw as handler for obacity changes
         # note this is done here rather than as a decorator as re_draw is
@@ -110,6 +111,36 @@ class AbstractAnnotationCanvas(MultiCanvas):
             "This canvas does not implement initialising the data."
         )
 
+    def canvas_to_image_coordinates(
+        self, point: Tuple[int, int]
+    ) -> Tuple[int, int]:
+        x, y = point
+        adjusted_width = self.image_extent[2] - self.image_extent[0]
+        x_adjustment = self.original_width / adjusted_width
+        adjusted_height = self.image_extent[3] - self.image_extent[1]
+        y_adjustment = self.original_height / adjusted_height
+        x = x_adjustment * (x - self.image_extent[0])
+        y = y_adjustment * (y - self.image_extent[1])
+        x, y = round(x), round(y)
+        return x, y
+
+    def image_to_canvas_coordinates(
+        self, point: Tuple[int, int]
+    ) -> Tuple[int, int]:
+        x, y = point
+        adjusted_width = self.image_extent[2] - self.image_extent[0]
+        adjusted_height = self.image_extent[3] - self.image_extent[1]
+        x = x * adjusted_width / self.original_width + self.image_extent[0]
+        y = y * adjusted_height / self.original_height + self.image_extent[1]
+        x, y = round(x), round(y)
+        return x, y
+
+    def correct_coordinates(self, point: Tuple[int, int]) -> Tuple[int, int]:
+        return (
+            point[0] + self.image_extent[0],
+            point[1] + self.image_extent[1],
+        )
+
     @observe("image_contrast", "image_brightness")
     def _display_image(self, *change):
         if self.current_image is not None:
@@ -124,8 +155,17 @@ class AbstractAnnotationCanvas(MultiCanvas):
 
             image_canvas = self[0]
             with hold_canvas(image_canvas):
-                x, y, width, height = fit_image(image, image_canvas)
+                x, y, width, height, img_width, img_height = fit_image(
+                    image, image_canvas
+                )
                 image_canvas.draw_image(
                     image, x=x, y=y, width=width, height=height
                 )
-                self.image_extent = (x, y, x + width, y + height)
+            self.image_extent = (x, y, x + width, y + height)
+            self.original_width = img_width
+            self.original_height = img_height
+
+    # def __getattr__(self, name):
+    #     if name in ("caching", "width", "height"):
+    #         return getattr(self._canvases[0], name)
+    #     raise AttributeError(name)

@@ -6,8 +6,8 @@ from traitlets import Bool, observe
 
 from ._abstract import AbstractAnnotationCanvas
 from .color_utils import hex_to_rgb, rgba_to_html_string
+from .image_utils import dist, only_inside_image, trigger_redraw
 from .shapes import Polygon
-from .utils import dist, only_inside_image, trigger_redraw
 
 
 class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
@@ -96,14 +96,18 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     def _update_polygon_closing_threshold(self, change):
         self.current_polygon.close_threshold = change.new
 
-    def draw_polygon(self, polygon, tentative=False):
+    def draw_polygon(self, polygon: Polygon, tentative=False):
 
-        color = self.colormap.get(polygon.label, "#000000")
+        if polygon.label is not None:
+            color = self.colormap.get(polygon.label, "#000000")
+        else:
+            color = "#000000"
         canvas = self[1]
         if len(polygon) == 0:
             return
         rgb = hex_to_rgb(color)
-        xs, ys = polygon.xy_lists
+        xs = [self.image_to_canvas_coordinates((x, 0))[0] for x in polygon.xs]
+        ys = [self.image_to_canvas_coordinates((0, y))[1] for y in polygon.ys]
         canvas.stroke_style = rgba_to_html_string(rgb + (1.0,))
         canvas.line_width = 3
 
@@ -116,9 +120,10 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
             canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
 
         canvas.begin_path()
-        current_point = polygon.points[0]
+        current_point = self.image_to_canvas_coordinates(polygon.points[0])
         canvas.move_to(*current_point)
         for next_point in polygon.points[1:]:
+            next_point = self.image_to_canvas_coordinates(next_point)
             canvas.line_to(*next_point)
             current_point = next_point
         if len(polygon) > 2:

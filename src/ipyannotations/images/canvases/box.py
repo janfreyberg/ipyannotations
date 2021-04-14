@@ -7,8 +7,8 @@ from traitlets import Bool, observe
 
 from ._abstract import AbstractAnnotationCanvas
 from .color_utils import hex_to_rgb, rgba_to_html_string
+from .image_utils import dist, only_inside_image, trigger_redraw
 from .shapes import BoundingBox
-from .utils import dist, only_inside_image, trigger_redraw
 
 
 class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
@@ -41,16 +41,19 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
         canvas.stroke_style = rgba_to_html_string(rgb + (1.0,))
         canvas.set_line_dash([10, 5] if proposed else [])
         canvas.fill_style = rgba_to_html_string(rgb + (self.opacity,))
-
+        corners = [
+            self.image_to_canvas_coordinates(corner) for corner in box.corners
+        ]
         canvas.begin_path()
-        canvas.move_to(*box.corners[0])
-        for corner in box.corners[1:]:
+        canvas.move_to(*corners[0])
+        for corner in corners[1:]:
             canvas.line_to(*corner)
         canvas.close_path()
         canvas.stroke()
-        # canvas.fill()
 
         x0, y0, x1, y1 = box.xyxy
+        x0, y0 = self.image_to_canvas_coordinates((x0, y0))
+        x1, y1 = self.image_to_canvas_coordinates((x1, y1))
         if self.editing:
             canvas.fill_style = rgba_to_html_string(rgb + (1.0,))
             canvas.fill_arcs(

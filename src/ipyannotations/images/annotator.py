@@ -155,7 +155,11 @@ class Annotator(LabellingWidgetMixin, widgets.VBox):
         self.submit_callbacks: List[Callable[[Any], None]] = []
         self.undo_callbacks: List[Callable[[], None]] = []
         self.skip_callbacks: List[Callable[[], None]] = []
-        self.children = self.children + (self.canvas, self.all_controls)
+        self.children = self.children + (
+            self.canvas,
+            self.all_controls,
+            self.canvas.error_output_widget,
+        )
 
     def display(self, image: Union[widgets.Image, pathlib.Path]):
         """Clear the annotations and display an image
