@@ -1,21 +1,19 @@
-"""Input and timing control widgets."""
+"""A widget to assign a single class to each data point."""
 
-from typing import Any, Callable, Dict, List, Optional, Sequence
+from typing import Sequence
 
-import IPython.display
 import ipywidgets as widgets
 import traitlets
 
 from ..base import LabellingWidgetMixin
-
-# from .._compatibility import ignore_widget_on_submit_warning
-# from .base import SubmissionWidgetMixin
 from ..controls.buttongroup import ButtonGroup
 from ..controls.dropdownbutton import DropdownButton
-from .display_function import default_display_function
+from .generic_mixin import GenericWidgetMixin, default_display_function
 
 
-class ClassificationWidget(LabellingWidgetMixin, widgets.VBox):
+class ClassificationWidget(
+    GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox
+):
     """
     A flexible data submission widget.
 
@@ -29,7 +27,7 @@ class ClassificationWidget(LabellingWidgetMixin, widgets.VBox):
     max_buttons : int
         The number buttons you want to display. If len(options) >
         max_buttons, the options will be displayed in a dropdown instead.
-    allow_other : bool, optional
+    allow_freetext : bool, optional
         Whether the widget should contain a text box for users to type in
         a value not in options.
     hint_function : fun
@@ -46,19 +44,17 @@ class ClassificationWidget(LabellingWidgetMixin, widgets.VBox):
         have any hints yet.
     """
 
-    allow_other = traitlets.Bool(True)
+    allow_freetext = traitlets.Bool(True)
     options = traitlets.List(list(), allow_none=True)
     max_buttons = traitlets.Integer(12)
+    data: str
 
     def __init__(
         self,
         options: Sequence[str] = (),
         max_buttons: int = 12,
-        allow_other: bool = True,
+        allow_freetext: bool = True,
         display_function=default_display_function,
-        hint_function: Optional[Callable] = None,
-        hints: Optional[Dict[str, Any]] = None,
-        update_hints: bool = True,
         *args,
         **kwargs,
     ):
@@ -69,79 +65,27 @@ class ClassificationWidget(LabellingWidgetMixin, widgets.VBox):
         you create the widget.
         """
         super().__init__(
+            allow_freetext=allow_freetext,
+            display_function=display_function,
             *args,
             **kwargs,
-        )
-        # self.hint_function = hint_function
-        # self.hints = dict() if hints is None else hints
-        # if self.hint_function is not None:
-        #     for option, feature in self.hints.items():
-        #         self.hints[option] = widgets.Output()
-        #         with self.hints[option]:
-        #             self.hint_function(feature)
+        )  # type: ignore
 
         self.sort_button = widgets.Button(
             description="Sort options", icon="sort"
         )
         self.sort_button.on_click(self._sort_options)
 
-        self.display_widget = widgets.Output(
-            layout=widgets.Layout(margin="auto")
-        )
-        if allow_other:
-            self.other_widget = widgets.Text(
-                value="",
-                description="Other:",
-                placeholder="Hit enter to submit.",
-            )
-            self.other_widget.on_submit(self.submit)
-        else:
-            self.other_widget = widgets.HBox([])
         self.options = [str(option) for option in options]
         self._fixed_options = [option for option in self.options]
         self.max_buttons = max_buttons
-        self.allow_other = allow_other
-        self.display_function = display_function
         self._compose()
-
-    def add_hint(self, value, hint):
-        """Add a hint to the widget.
-
-        Parameters
-        ----------
-        value : str
-            The label for which this hint applies.
-        hint : Any
-            The data point to use for the hint.
-        """
-        if (
-            self.hint_function is not None
-            and self.hints is not None
-            and value not in self.hints
-        ):
-            with self.control_elements.hints[value]:
-                self.hint_function(hint)
-
-    def remove_options(self, values):
-        """Remove options from the widget.
-
-        Parameters
-        ----------
-        values : Sequence[str]
-            The options to remove.
-        """
-
-        self.options = [
-            option
-            for option in self.options
-            if option not in values or option in self._fixed_options
-        ]
 
     def _sort_options(self, change=None):
         self.options = list(sorted(self.options))
 
     def submit(self, sender):
-        if isinstance(sender, widgets.Text):
+        if isinstance(sender, widgets.Text) and sender.value:
             value = sender.value
             # check if this is a new option:
             if value not in self.options:
@@ -152,12 +96,7 @@ class ClassificationWidget(LabellingWidgetMixin, widgets.VBox):
         self.data = value
         super().submit()
 
-    def display(self, item):
-        with self.display_widget:
-            IPython.display.clear_output(wait=True)
-            self.display_function(item)
-
-    @traitlets.observe("allow_other", "options", "max_buttons")
+    @traitlets.observe("options", "max_buttons")
     def _compose(self, change=None):
 
         if len(self.options) <= self.max_buttons:
@@ -168,11 +107,19 @@ class ClassificationWidget(LabellingWidgetMixin, widgets.VBox):
         self.control_elements.on_click(self.submit)
 
         self.children = [
-            self.display_widget,
+            widgets.Box(
+                (self.display_widget,),
+                layout=widgets.Layout(
+                    justify_content="center",
+                    padding="2.5% 0",
+                    display="flex",
+                    width="100%",
+                ),
+            ),
             self.control_elements,
             widgets.HBox(
                 [
-                    self.other_widget,
+                    self.freetext_widget,
                     widgets.HBox(
                         [self.sort_button, self.skip_button, self.undo_button]
                     ),
