@@ -36,3 +36,4 @@ node_modules/
 # Compiled javascript
 src/ipyannotations/nbextension/
 src/ipyannotations/labextension/
+pip-wheel-metadata/
