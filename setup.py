@@ -71,6 +71,7 @@ setup_args = dict(
         "numpy",
         "requests",
         "dataclasses; python_version == '3.6'",
+        "ipyevents",
     ],
     extras_require={
         "test": [
@@ -88,6 +89,7 @@ setup_args = dict(
             "pre-commit",
             "jupyterlab",
             "rope",
+            "docargs",
         ],
         "doc": [
             "sphinx>=2.3",

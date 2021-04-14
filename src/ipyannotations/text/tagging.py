@@ -1,5 +1,4 @@
-from copy import copy
-from typing import Callable, List, Tuple
+from typing import List, Tuple
 
 import ipywidgets as widgets
 import traitlets
@@ -16,8 +15,8 @@ class TextTaggerCore(widgets.DOMWidget):
     _model_name = traitlets.Unicode("TextTaggerModel").tag(sync=True)
     _view_module = traitlets.Unicode("ipyannotations").tag(sync=True)
     _model_module = traitlets.Unicode("ipyannotations").tag(sync=True)
-    _view_module_version = traitlets.Unicode("^0.1.0").tag(sync=True)
-    _model_module_version = traitlets.Unicode("^0.1.0").tag(sync=True)
+    _view_module_version = traitlets.Unicode("^0.1.2").tag(sync=True)
+    _model_module_version = traitlets.Unicode("^0.1.2").tag(sync=True)
 
     text: str = traitlets.Unicode(
         "Lorem ipsum", help="The text to display."
@@ -97,20 +96,21 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
         self.text_widget = TextTaggerCore(
             text=text, classes=classes, entity_spans=data
         )
-        self.class_picker = widgets.ToggleButtons(
+        self.class_selector = widgets.ToggleButtons(
             options=classes,
             description="Class to tag:",
             style=widgets.ToggleButtonsStyle(button_width=button_width),
         )
         widgets.link(
-            (self.class_picker, "value"), (self.text_widget, "selected_class")
+            (self.class_selector, "value"),
+            (self.text_widget, "selected_class"),
         )
         widgets.link((self, "data"), (self.text_widget, "entity_spans"))
-        self.children = (self.text_widget, self.class_picker)
+        self.children = (self.text_widget, self.class_selector)
 
         self.children = (
             self.text_widget,
-            self.class_picker,
+            self.class_selector,
             widgets.HBox(
                 [self.undo_button, self.skip_button, self.submit_button],
                 layout={
@@ -121,32 +121,30 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
             ),
             self.event_watcher,
         )
+        self.__undo_in_process = False
 
     def display(self, text: str):
         self.text_widget.text = text
-        self.text_widget.entity_spans = []
+        self.clear()
+        self._undo_queue.clear()
 
     @traitlets.observe("data")
     def _append_undo_fn(self, proposal: dict):
+        if self.__undo_in_process:
+            return
         old_data = proposal["old"]
-        new_data = proposal["new"]
-        diff = set(new_data) - set(old_data)
-        if len(diff) == 1:
-            latest_added_point = next(iter(diff))
 
-            def _undo_adding_point():
-                data = self.data.copy()
-                data.remove(latest_added_point)
-                self.data = data
+        def _undo_data_change():
+            self.__undo_in_process = True
+            self.data = old_data
+            self.__undo_in_process = False
 
-            self._undo_queue.append(_undo_adding_point)
-        elif len(new_data) == 0:
-            self._undo_queue.clear()
+        self._undo_queue.append(_undo_data_change)
 
     def _handle_keystroke(self, event):
         super()._handle_keystroke(event)
-        for i, option in enumerate(self.class_picker.options):
+        for i, option in enumerate(self.class_selector.options):
             if event["key"] == f"{(i + 1) % 10}":
-                self.class_picker.value = option
+                self.class_selector.value = option
             if i == 10:
                 break

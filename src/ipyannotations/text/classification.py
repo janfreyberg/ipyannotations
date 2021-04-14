@@ -1,14 +1,14 @@
-import re
 from typing import Any, Callable, Dict, Optional, Sequence
 
 import IPython.display
 import ipywidgets as widgets
+import traitlets
 
 from ..base import LabellingWidgetMixin
-from ..generic.classifier import ClassificationWidget
+from ..generic.classification import ClassificationWidget
 
 
-class TextClassifier(ClassificationWidget):
+class ClassLabeller(ClassificationWidget):
     def __init__(
         self,
         options: Sequence[str] = (),
@@ -30,14 +30,15 @@ class TextClassifier(ClassificationWidget):
             update_hints=update_hints,
             *args,
             **kwargs,
+        )  # type: ignore
+        self.display_function = lambda item: IPython.display.display(
+            IPython.display.Markdown(item)
         )
 
-    def display(self, item):
-        with self.display_widget:
-            IPython.display.display(IPython.display.Markdown(item))
 
+class SentimentLabeller(LabellingWidgetMixin, widgets.VBox):
+    data: str = traitlets.Unicode()
 
-class SentimentClassifier(LabellingWidgetMixin, widgets.VBox):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.buttons = [
@@ -65,7 +66,15 @@ class SentimentClassifier(LabellingWidgetMixin, widgets.VBox):
             layout=widgets.Layout(margin="auto")
         )
         self.children = [
-            self.display_widget,
+            widgets.Box(
+                (self.display_widget,),
+                layout=widgets.Layout(
+                    justify_content="center",
+                    padding="2.5% 0",
+                    display="flex",
+                    width="100%",
+                ),
+            ),
             widgets.HBox(
                 [
                     widgets.HBox(),
