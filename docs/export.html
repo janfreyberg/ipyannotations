@@ -1,0 +1,42 @@
+
+<html>
+  <head>
+
+    <title>Widget export</title>
+
+    <!-- Load RequireJS, used by the IPywidgets for dependency management -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"
+      integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA="
+      crossorigin="anonymous">
+    </script>
+
+    <!-- Load IPywidgets bundle for embedding. -->
+    <script
+      data-jupyter-widgets-cdn="https://unpkg.com/"
+      data-jupyter-widgets-cdn-only
+      src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@*/dist/embed-amd.js"
+      crossorigin="anonymous">
+    </script>
+
+    <!-- The state of all the widget models on the page -->
+    <script type="application/vnd.jupyter.widget-state+json">
+      {"version_major": 2, "version_minor": 0, "state": {"e063ae2504154681a876ff21ecaa0199": {"model_name": "VBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_view_count": 1, "children": ["IPY_MODEL_ca668974b61140cabd98efea25f7eb28", "IPY_MODEL_0903219541c345f585ef655a8fd5714a", "IPY_MODEL_da2f68956474424da46f424f3f88c803", "IPY_MODEL_531c2a1d938f4d12b95fefd9f10dd94c"], "layout": "IPY_MODEL_ee407cbd4c94403d85dd86ee6a8a6017"}}, "ca668974b61140cabd98efea25f7eb28": {"model_name": "TextTaggerModel", "model_module": "ipyannotations", "model_module_version": "^0.1.2", "state": {"_dom_classes": [], "classes": ["MISC", "PER", "LOC", "ORG"], "entity_spans": [], "layout": "IPY_MODEL_f2a21375502a424a980bf819ebe881b6", "palette": ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"], "selected_class": "MISC", "text": "Test tagging text. Try highlighting a word to tag it, then submit to see the output."}}, "f2a21375502a424a980bf819ebe881b6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {}}, "0903219541c345f585ef655a8fd5714a": {"model_name": "ToggleButtonsModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_options_labels": ["MISC", "PER", "LOC", "ORG"], "description": "Class to tag:", "icons": [], "index": 0, "layout": "IPY_MODEL_0edc9e3723374eac962980483fcb9caa", "style": "IPY_MODEL_3458a1bb83e9469f98944afcba528d02", "tooltips": []}}, "0edc9e3723374eac962980483fcb9caa": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {}}, "3458a1bb83e9469f98944afcba528d02": {"model_name": "ToggleButtonsStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"button_width": "5em"}}, "da2f68956474424da46f424f3f88c803": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "children": ["IPY_MODEL_028d56fb8aa840d7bb3c03504bf278f2", "IPY_MODEL_b3d64ad1a2f1459e86cea35d6b12322f", "IPY_MODEL_2cb14af6e5e5411bba53474590adaeac"], "layout": "IPY_MODEL_f29b92992bd841dc9e1fe929e55fae36"}}, "028d56fb8aa840d7bb3c03504bf278f2": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "description": "Undo", "icon": "undo", "layout": "IPY_MODEL_93a0af715c3c451cabe5088f64470195", "style": "IPY_MODEL_e34fff122d0e43b38f50dbe8001fde95"}}, "93a0af715c3c451cabe5088f64470195": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"flex": "1 1 auto", "max_width": "120px", "min_width": "80px"}}, "e34fff122d0e43b38f50dbe8001fde95": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {}}, "b3d64ad1a2f1459e86cea35d6b12322f": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "description": "Skip", "icon": "fast-forward", "layout": "IPY_MODEL_93a0af715c3c451cabe5088f64470195", "style": "IPY_MODEL_5a76459d717d4ef69d608757cbe7d0af"}}, "5a76459d717d4ef69d608757cbe7d0af": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {}}, "2cb14af6e5e5411bba53474590adaeac": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "button_style": "success", "description": "Submit", "icon": "check", "layout": "IPY_MODEL_93a0af715c3c451cabe5088f64470195", "style": "IPY_MODEL_9ba8cf859139481696f92b7a45074ecf"}}, "9ba8cf859139481696f92b7a45074ecf": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {}}, "f29b92992bd841dc9e1fe929e55fae36": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"align_items": "stretch", "flex_flow": "row wrap", "justify_content": "flex-end"}}, "531c2a1d938f4d12b95fefd9f10dd94c": {"model_name": "EventModel", "model_module": "ipyevents", "model_module_version": "1.8.2", "state": {"_supported_key_events": ["keydown", "keyup"], "_supported_mouse_events": ["click", "auxclick", "dblclick", "mouseenter", "mouseleave", "mousedown", "mouseup", "mousemove", "wheel", "contextmenu", "dragstart", "drag", "dragend", "dragenter", "dragover", "dragleave", "drop"], "source": "IPY_MODEL_e063ae2504154681a876ff21ecaa0199", "watched_events": ["keyup"], "xy": []}}, "ee407cbd4c94403d85dd86ee6a8a6017": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {}}}}
+    </script>
+  </head>
+
+  <body>
+
+    <h1>Widget export</h1>
+
+    <div id="first-slider-widget">
+      <!-- This script tag will be replaced by the view's DOM tree -->
+      <script type="application/vnd.jupyter.widget-view+json">
+        {"version_major": 2, "version_minor": 0, "model_id": "e063ae2504154681a876ff21ecaa0199"}
+      </script>
+    </div>
+
+    <hrule />
+
+  </body>
+</html>
