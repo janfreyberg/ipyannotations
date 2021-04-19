@@ -4,6 +4,7 @@ import ipywidgets as widgets
 import traitlets
 
 from ..base import LabellingWidgetMixin
+from .._frontend import module_name, module_version
 
 
 @widgets.register
@@ -13,10 +14,10 @@ class TextTaggerCore(widgets.DOMWidget):
     # properties to make sure the right frontend widget is found:
     _view_name = traitlets.Unicode("TextTaggerView").tag(sync=True)
     _model_name = traitlets.Unicode("TextTaggerModel").tag(sync=True)
-    _view_module = traitlets.Unicode("ipyannotations").tag(sync=True)
-    _model_module = traitlets.Unicode("ipyannotations").tag(sync=True)
-    _view_module_version = traitlets.Unicode("^0.1.2").tag(sync=True)
-    _model_module_version = traitlets.Unicode("^0.1.2").tag(sync=True)
+    _model_module = traitlets.Unicode(module_name).tag(sync=True)
+    _model_module_version = traitlets.Unicode(module_version).tag(sync=True)
+    _view_module = traitlets.Unicode(module_name).tag(sync=True)
+    _view_module_version = traitlets.Unicode(module_version).tag(sync=True)
 
     text: str = traitlets.Unicode(
         "Lorem ipsum", help="The text to display."

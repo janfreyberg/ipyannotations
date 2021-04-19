@@ -1,0 +1,66 @@
+.entity-tagger {
+  line-height: 2.5;
+  padding: 0.5em 0.75em;
+  text-align: center;
+}
+
+.entity {
+  background: #bdbdbd;
+  padding: 0.4em 0.5em;
+  margin: 0 0.25em;
+  line-height: 1;
+  border-radius: 0.35em;
+  cursor: pointer;
+  /* disable highlighting: */
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.entity-label {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+  supported by Chrome, Edge, Opera and Firefox */
+  font-size: 0.8em;
+  font-weight: bold;
+  line-height: 1;
+  border-radius: 0.35em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.button-keyboard-icon {
+  font-size: small;
+  color: gray;
+  /* position: absolute; */
+  /* bottom: 0; */
+  position: absolute;
+  /* vertical-align: middle; */
+  bottom: 1px;
+  /* height: 20px; */
+  right: 2px;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}

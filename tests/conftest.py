@@ -1,6 +1,4 @@
-import functools
 import io
-import os
 
 import ipywidgets as widgets
 import numpy as np
@@ -8,6 +6,11 @@ from hypothesis import assume, example, given, infer, settings, strategies
 from PIL import Image
 
 from ipyannotations.images.canvases.shapes import BoundingBox, Point, Polygon
+import pytest
+
+from ipykernel.comm import Comm
+from ipywidgets import Widget
+
 
 settings.register_profile("default_", settings(deadline=None))
 settings.load_profile("default_")
@@ -91,3 +94,54 @@ strategies.register_type_strategy(Image.Image, pil_image())
 strategies.register_type_strategy(widgets.Image, image_widgets())
 
 strategies.image_widgets = image_widgets
+
+
+class MockComm(Comm):
+    """A mock Comm object.
+
+    Can be used to inspect calls to Comm's open/send/close methods.
+    """
+
+    comm_id = "a-b-c-d"
+    kernel = "Truthy"
+
+    def __init__(self, *args, **kwargs):
+        self.log_open = []
+        self.log_send = []
+        self.log_close = []
+        super(MockComm, self).__init__(*args, **kwargs)
+
+    def open(self, *args, **kwargs):
+        self.log_open.append((args, kwargs))
+
+    def send(self, *args, **kwargs):
+        self.log_send.append((args, kwargs))
+
+    def close(self, *args, **kwargs):
+        self.log_close.append((args, kwargs))
+
+
+_widget_attrs = {}
+undefined = object()
+
+
+@pytest.fixture
+def mock_comm():
+    _widget_attrs["_comm_default"] = getattr(
+        Widget, "_comm_default", undefined
+    )
+    Widget._comm_default = lambda self: MockComm()
+    _widget_attrs["_ipython_display_"] = Widget._ipython_display_
+
+    def raise_not_implemented(*args, **kwargs):
+        raise NotImplementedError()
+
+    Widget._ipython_display_ = raise_not_implemented
+
+    yield MockComm()
+
+    for attr, value in _widget_attrs.items():
+        if value is undefined:
+            delattr(Widget, attr)
+        else:
+            setattr(Widget, attr, value)

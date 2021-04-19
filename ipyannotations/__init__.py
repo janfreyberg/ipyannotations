@@ -1,12 +1,12 @@
 """Create rich adata annotations in jupyter notebooks."""
 
+from .example import ExampleWidget
 from ._version import __version__, version_info
 
 
 def _jupyter_labextension_paths():
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
     to install the widget
-
     Returns
     =======
     src: Source directory name to copy files from. Webpack outputs generated files
@@ -27,7 +27,6 @@ def _jupyter_labextension_paths():
 def _jupyter_nbextension_paths():
     """Called by Jupyter Notebook Server to detect if it is a valid nbextension and
     to install the widget
-
     Returns
     =======
     section: The section of the Jupyter Notebook Server to change.

@@ -1,16 +1,36 @@
-graft src/ipyannotations/nbextension
-graft src/ipyannotations/labextension
-
-graft src/js
-graft tests
-prune **/node_modules
-
-include ipyannotations.json
-
 include LICENSE
-include setup.py
-include pyproject.toml
-include install.json
+include README.md
+
+include setupbase.py
+include pytest.ini
+include .coverage.rc
+
+include tsconfig.json
+include package.json
+include webpack.config.js
+include ipyannotations/labextension/*.tgz
+
+# Documentation
+graft docs
+exclude docs/\#*
+prune docs/build
+prune docs/gh-pages
+prune docs/dist
+
+# Examples
+graft examples
+
+# Tests
+graft tests
+prune tests/build
+
+# Javascript files
+graft ipyannotations/nbextension
+graft src
+graft css
+prune **/node_modules
+prune coverage
+prune lib
 
 # Patterns to exclude from any directory
 global-exclude *~
@@ -18,4 +38,3 @@ global-exclude *.pyc
 global-exclude *.pyo
 global-exclude .git
 global-exclude .ipynb_checkpoints
-global-exclude *.map
