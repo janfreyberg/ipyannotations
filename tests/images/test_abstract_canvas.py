@@ -8,7 +8,9 @@ import numpy as np
 from hypothesis import assume, given, infer, settings, strategies
 from PIL import Image
 
-from ipyannotations.images.canvases._abstract import AbstractAnnotationCanvas
+from ipyannotations.images.canvases.abstract_canvas import (
+    AbstractAnnotationCanvas,
+)
 from ipyannotations.images.canvases.image_utils import fit_image
 
 # ImageTypes =

@@ -20,7 +20,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
     image_contrast = Float(default_value=1, min=0, max=10)
     image_brightness = Float(default_value=1, min=0, max=10)
 
-    def __init__(
+    def __init__(  # noqa: D001
         self,
         size: Tuple[int, int] = (700, 500),
         classes: Optional[Sequence[str]] = None,
@@ -86,23 +86,23 @@ class AbstractAnnotationCanvas(MultiCanvas):
         pass
 
     @abc.abstractmethod
-    def on_click(self, x: float, y: float):
+    def on_click(self, x: float, y: float):  # noqa: D001
         pass
 
     @abc.abstractmethod
-    def on_drag(self, x: float, y: float):
+    def on_drag(self, x: float, y: float):  # noqa: D001
         pass
 
     @abc.abstractmethod
-    def on_release(self, x: float, y: float):
+    def on_release(self, x: float, y: float):  # noqa: D001
         pass
 
     @abc.abstractmethod
-    def add_point(self, x: float, y: float):
+    def add_point(self, x: float, y: float):  # noqa: D001
         pass
 
     @abc.abstractmethod
-    def set_class(self, class_name: str):
+    def set_class(self, class_name: str):  # noqa: D001
         pass
 
     @abc.abstractmethod
@@ -114,6 +114,20 @@ class AbstractAnnotationCanvas(MultiCanvas):
     def canvas_to_image_coordinates(
         self, point: Tuple[int, int]
     ) -> Tuple[int, int]:
+        """Convert an x, y point from canvas coordinates to image coordinates.
+
+        Parameters
+        ----------
+        point : Tuple[int, int]
+            The point, as integers (or floats, to be rounded) relative to the
+            canvas, with 0,0 being the top left, and
+            (canvas_width, canvas_height) being the bottom right.
+
+        Returns
+        -------
+        Tuple[int, int]
+            The point relative to the image.
+        """
         x, y = point
         adjusted_width = self.image_extent[2] - self.image_extent[0]
         x_adjustment = self.original_width / adjusted_width
@@ -127,6 +141,20 @@ class AbstractAnnotationCanvas(MultiCanvas):
     def image_to_canvas_coordinates(
         self, point: Tuple[int, int]
     ) -> Tuple[int, int]:
+        """Convert an x, y point from image coordinates to canvas coordinates.
+
+        Parameters
+        ----------
+        point : Tuple[int, int]
+            The point, as integers (or floats, to be rounded) relative to the
+            image, with 0,0 being the top left, and
+            (image_width, image_height) being the bottom right.
+
+        Returns
+        -------
+        Tuple[int, int]
+            The point relative to the canvas.
+        """
         x, y = point
         adjusted_width = self.image_extent[2] - self.image_extent[0]
         adjusted_height = self.image_extent[3] - self.image_extent[1]
@@ -135,11 +163,11 @@ class AbstractAnnotationCanvas(MultiCanvas):
         x, y = round(x), round(y)
         return x, y
 
-    def correct_coordinates(self, point: Tuple[int, int]) -> Tuple[int, int]:
-        return (
-            point[0] + self.image_extent[0],
-            point[1] + self.image_extent[1],
-        )
+    # def correct_coordinates(self, point: Tuple[int, int]) -> Tuple[int, int]:
+    #     return (
+    #         point[0] + self.image_extent[0],
+    #         point[1] + self.image_extent[1],
+    #     )
 
     @observe("image_contrast", "image_brightness")
     def _display_image(self, *change):

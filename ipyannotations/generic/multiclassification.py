@@ -19,29 +19,6 @@ class MultiClassificationWidget(
 
     Submitter allows you to specifiy options, which can be chosen either via
     buttons or a dropdown, and a text field for "other" values.
-
-    Parameters
-    ----------
-    options : list, tuple, optional
-        The data submission options.
-    max_buttons : int
-        The number buttons you want to display. If len(options) >
-        max_buttons, the options will be displayed in a dropdown instead.
-    allow_freetext : bool, optional
-        Whether the widget should contain a text box for users to type in
-        a value not in options.
-    hint_function : fun
-        A function that will be passed the hint for each label, that displays
-        some output that will be displayed under each label and can be
-        considered a hint or more in-depth description of a label. During image
-        labelling tasks, this might be a function that displays an example
-        image.
-    hints : dict
-        A dictionary with each element of options as a key, and the data that
-        gets passed to hint_function as input.
-    update_hints : bool
-        Whether to update hints as you go through - for options that don't
-        have any hints yet.
     """
 
     allow_freetext = traitlets.Bool(True)
@@ -66,6 +43,19 @@ class MultiClassificationWidget(
 
         Note that all parameters can also be changed through assignment after
         you create the widget.
+
+        Parameters
+        ----------
+        options : list, tuple, optional
+            The data submission options.
+        max_buttons : int
+            The number buttons you want to display. If len(options) >
+            max_buttons, the options will be displayed in a dropdown instead.
+        allow_freetext : bool, optional
+            Whether the widget should contain a text box for users to type in
+            a value not in options.
+        display_function : callable
+            The function called on each datapoint to display it.
         """
         super().__init__(
             allow_freetext=allow_freetext,
@@ -79,6 +69,7 @@ class MultiClassificationWidget(
         traitlets.link((self, "options"), (self.class_selector, "options"))
         self._fixed_options = [option for option in self.options]
         self._freetext_timestamp = 0.0
+        self.freetext_widget.on_submit(self.freetext_submission)
 
         self.children = [
             self.display_widget,
@@ -109,6 +100,16 @@ class MultiClassificationWidget(
                 self.class_selector._toggle(option)
 
     def freetext_submission(self, sender: widgets.Text):
+        """Handle a submission by the free-text widget.
+
+        This is a separate method from `submit`, because it doesn't actually
+        submit the data. Instead, it adds the free-text as an option, and
+        toggles that option to `True`.
+
+        Parameters
+        ----------
+        sender : widgets.Text
+        """
         if sender is self.freetext_widget and sender.value:
             value = sender.value
             # check if this is a new option:
@@ -126,7 +127,12 @@ class MultiClassificationWidget(
             sender.value = ""
         self._freetext_timestamp = time.time()
 
-    def undo(self, sender=None):
+    def undo(self, sender=None):  # noqa: D001
+        """Undo the last action.
+
+        This will undo the addition of any free-text, and if none are in the
+        queue, functions registered with `on_undo` are called.
+        """
         if self._undo_queue:
             last_undo_fn = self._undo_queue.pop()
             last_undo_fn()

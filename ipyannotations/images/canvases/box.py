@@ -5,7 +5,7 @@ import ipywidgets as widgets
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
 
-from ._abstract import AbstractAnnotationCanvas
+from .abstract_canvas import AbstractAnnotationCanvas
 from .color_utils import hex_to_rgb, rgba_to_html_string
 from .image_utils import dist, only_inside_image, trigger_redraw
 from .shapes import BoundingBox
@@ -20,7 +20,7 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
     debug_output = widgets.Output()
 
     @observe("point_size", "editing")
-    def re_draw(self, change=None):
+    def re_draw(self, _=None):  # noqa: D001
 
         with hold_canvas(self):
             self.annotation_canvas.clear()
@@ -32,6 +32,15 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
                 self.draw_box(self._proposed_annotation, proposed=True)
 
     def draw_box(self, box: BoundingBox, proposed: bool = False):
+        """Draw a box onto the canvas.
+
+        Parameters
+        ----------
+        box : BoundingBox
+            The box to draw.
+        proposed : bool, optional
+            Whether this box is a proposal, by default False
+        """
 
         color = self.colormap.get(box.label, "#000000")
         canvas = self[1]
@@ -63,6 +72,19 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
     @trigger_redraw
     @only_inside_image
     def on_click(self, x: float, y: float):
+        """Handle a click.
+
+        This function either starts a new proposed box and sets the
+        dragging functionality, or in editing mode sets dragging one of
+        the corners.
+
+        Parameters
+        ----------
+        x : float
+            The x coordinate, relative to the image.
+        y : float
+            The y coordinate, relative to the image.
+        """
 
         if not self.editing:
             x, y = int(x), int(y)
@@ -95,6 +117,15 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
     @trigger_redraw
     @only_inside_image
     def on_drag(self, x: float, y: float):
+        """Handle a dragging action.
+
+        Parameters
+        ----------
+        x : float
+            The new x coordinate, relative to the image.
+        y : float
+            The new y coordinate, relative to the image.
+        """
 
         if self.dragging is None:
             return
@@ -103,6 +134,17 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
 
     @trigger_redraw
     def on_release(self, x: float, y: float):
+        """Handle a mouse release.
+
+        This function will re-set the dragging handler, and append a new
+        box to the annotation data if required.
+
+        Parameters
+        ----------
+        x : float
+        y : float
+        """
+
         self.dragging = None
         if self._proposed_annotation is not None:
             x0, y0, x1, y1 = self._proposed_annotation.xyxy
@@ -123,11 +165,33 @@ class BoundingBoxAnnotationCanvas(AbstractAnnotationCanvas):
 
     @property
     def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------------+
+        |``'type'``        | ``'box'``                     |
+        +------------------+-------------------------------+
+        |``'label'``       | ``<class label>``             |
+        +------------------+-------------------------------+
+        |``'xyxy'``        | ``<tuple of x0, y0, x1, y1>`` |
+        +------------------+-------------------------------+
+        """
+
         return [annotation.data for annotation in self.annotations]
 
     @data.setter  # type: ignore
     @trigger_redraw
     def data(self, value: List[dict]):
+        """Set the annotation data on this canvas.
+
+        Parameters
+        ----------
+        value : List[dict]
+            List of dictionaries, with keys `type`, `label`, and `xyxy`.
+        """
         self.init_empty_data()
         self.annotations = [
             BoundingBox.from_data(annotation.copy()) for annotation in value

@@ -1,6 +1,6 @@
 """A widget to assign a single class to each data point."""
 
-from typing import Sequence
+from typing import Sequence, Union
 
 import ipywidgets as widgets
 import traitlets
@@ -15,33 +15,10 @@ class ClassificationWidget(
     GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox
 ):
     """
-    A flexible data submission widget.
+    A classification widget.
 
-    Submitter allows you to specifiy options, which can be chosen either via
-    buttons or a dropdown, and a text field for "other" values.
-
-    Parameters
-    ----------
-    options : list, tuple, optional
-        The data submission options.
-    max_buttons : int
-        The number buttons you want to display. If len(options) >
-        max_buttons, the options will be displayed in a dropdown instead.
-    allow_freetext : bool, optional
-        Whether the widget should contain a text box for users to type in
-        a value not in options.
-    hint_function : fun
-        A function that will be passed the hint for each label, that displays
-        some output that will be displayed under each label and can be
-        considered a hint or more in-depth description of a label. During image
-        labelling tasks, this might be a function that displays an example
-        image.
-    hints : dict
-        A dictionary with each element of options as a key, and the data that
-        gets passed to hint_function as input.
-    update_hints : bool
-        Whether to update hints as you go through - for options that don't
-        have any hints yet.
+    This widget is designed to assign one class (a string label) to each data
+    point.
     """
 
     allow_freetext = traitlets.Bool(True)
@@ -58,11 +35,20 @@ class ClassificationWidget(
         *args,
         **kwargs,
     ):
-        """
-        Create a widget that will render submission options.
+        """Create a widget for classification labelling.
 
-        Note that all parameters can also be changed through assignment after
-        you create the widget.
+        Parameters
+        ----------
+        options : Sequence[str], optional
+            The classes, by default ()
+        max_buttons : int, optional
+            The number of buttons to allow, before switching to a dropdown
+            menu, by default 12
+        allow_freetext : bool, optional
+            If a text box should be available for new classes, by default True
+        display_function : callable, optional
+            The function called to display a data point, by
+            default default_display_function
         """
         super().__init__(
             allow_freetext=allow_freetext,
@@ -84,7 +70,14 @@ class ClassificationWidget(
     def _sort_options(self, change=None):
         self.options = list(sorted(self.options))
 
-    def submit(self, sender):
+    def submit(self, sender: Union[widgets.Button, widgets.Text]):
+        """Trigger the submission functions.
+
+        Parameters
+        ----------
+        sender : ipywidgets.Button, ipywidgets.Text
+            The widget that triggered this.
+        """
         if isinstance(sender, widgets.Text) and sender.value:
             value = sender.value
             # check if this is a new option:

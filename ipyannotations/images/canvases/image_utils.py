@@ -29,6 +29,20 @@ class URL:
 def adjust(
     img: widgets.Image, contrast_factor: float, brightness_factor: float
 ) -> widgets.Image:
+    """Adjust an image.
+
+    Parameters
+    ----------
+    img : widgets.Image
+    contrast_factor : float
+        How much to multiply the contrast by.
+    brightness_factor : float
+        How much to multiply the brightness by.
+
+    Returns
+    -------
+    widgets.Image
+    """
     # turn widgets.Image into Pillow Image
     pil_image = Image.open(io.BytesIO(img.value))
     # apply adjustments
@@ -46,6 +60,10 @@ def load_img(img: typing.Any):
     """
     Load an image, whether it's from a URL, a file, an array, or an already
     in-memory image.
+
+    Parameters
+    ----------
+    img : widgets.Image
     """
     raise ValueError(f"Can not load object of type {type(img)} as image.")
 

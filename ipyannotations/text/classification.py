@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, Sequence
+from typing import Sequence
 
 import IPython.display
 import ipywidgets as widgets
@@ -6,41 +6,65 @@ import traitlets
 
 from ..base import LabellingWidgetMixin
 from ..generic.classification import ClassificationWidget
+from ..generic.generic_mixin import GenericWidgetMixin
+
+
+def _text_display_function(item: str):
+    IPython.display.display(IPython.display.Markdown(item))
 
 
 class ClassLabeller(ClassificationWidget):
+    """A text classification widget.
+
+    This widget lets you assign a single class to text.
+    """
+
     def __init__(
         self,
         options: Sequence[str] = (),
         max_buttons: int = 12,
-        allow_other: bool = True,
-        hint_function: Optional[Callable] = None,
-        hints: Optional[Dict[str, Any]] = None,
-        update_hints: bool = True,
+        allow_freetext: bool = True,
         *args,
         **kwargs,
     ):
+        """Create a widget for classifying text.
 
+        Parameters
+        ----------
+        options : Sequence[str], optional
+            The classes, by default ()
+        max_buttons : int, optional
+            The number of buttons to allow, before switching to a dropdown
+            menu, by default 12
+        allow_freetext : bool, optional
+            If a text box should be available for new classes, by default True
+        """
         super().__init__(
             options=options,
             max_buttons=max_buttons,
-            allow_other=allow_other,
-            hint_function=hint_function,
-            hints=hints,
-            update_hints=update_hints,
+            allow_freetext=allow_freetext,
+            display_function=_text_display_function,
             *args,
             **kwargs,
         )  # type: ignore
-        self.display_function = lambda item: IPython.display.display(
-            IPython.display.Markdown(item)
-        )
 
 
-class SentimentLabeller(LabellingWidgetMixin, widgets.VBox):
+class SentimentLabeller(
+    GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox
+):
+    """A sentiment classification widget.
+
+    This widget presents three label options, for classifying text into
+    one of negative, neutral, or positive sentiment.
+    """
+
     data: str = traitlets.Unicode()
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        """Create a sentiment classification widget."""
+        super().__init__(
+            display_function=_text_display_function, *args, **kwargs
+        )
         self.buttons = [
             widgets.Button(
                 description="negative",
@@ -85,14 +109,17 @@ class SentimentLabeller(LabellingWidgetMixin, widgets.VBox):
             ),
         ]
 
-    def submit(self, sender):
+    def submit(self, sender: widgets.Button):
+        """Submit the label.
+
+        Parameters
+        ----------
+        sender : widgets.Button
+            One of the three interface buttons.
+        """
         value = sender.description
         self.data = value
         super().submit()
-
-    def display(self, item):
-        with self.display_widget:
-            IPython.display.display(IPython.display.Markdown(item))
 
     def _handle_keystroke(self, event):
         # the default enter shouldn't apply

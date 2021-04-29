@@ -8,34 +8,10 @@ from .generic_mixin import GenericWidgetMixin, default_display_function
 
 
 class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
-    """
-    A flexible data submission widget.
+    """A widget for submitting free-text data annotations.
 
-    Submitter allows you to specifiy options, which can be chosen either via
-    buttons or a dropdown, and a text field for "other" values.
-
-    Parameters
-    ----------
-    options : list, tuple, optional
-        The data submission options.
-    max_buttons : int
-        The number buttons you want to display. If len(options) >
-        max_buttons, the options will be displayed in a dropdown instead.
-    allow_freetext : bool, optional
-        Whether the widget should contain a text box for users to type in
-        a value not in options.
-    hint_function : fun
-        A function that will be passed the hint for each label, that displays
-        some output that will be displayed under each label and can be
-        considered a hint or more in-depth description of a label. During image
-        labelling tasks, this might be a function that displays an example
-        image.
-    hints : dict
-        A dictionary with each element of options as a key, and the data that
-        gets passed to hint_function as input.
-    update_hints : bool
-        Whether to update hints as you go through - for options that don't
-        have any hints yet.
+    This widget presents a simple text box for data entry, and is designed for
+    captioning, question answering, and similar tasks.
     """
 
     data: str = traitlets.Unicode()
@@ -43,15 +19,19 @@ class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
     def __init__(
         self,
         display_function=default_display_function,
-        textbox_placeholder="Type the response and press Enter to submit.",
+        textbox_placeholder="Type a response and press Shift+Enter to submit.",
         *args,
         **kwargs,
     ):
-        """
-        Create a widget that will render submission options.
+        """Create a free-text data annotation widget.
 
-        Note that all parameters can also be changed through assignment after
-        you create the widget.
+        Parameters
+        ----------
+        display_function : callable, optional
+            The display function called on each data point.
+        textbox_placeholder : str, optional
+            The text shown when the textbox is empty, by default:
+            "Type the response and press Shift+Enter to submit."
         """
         super().__init__(
             display_function=display_function,

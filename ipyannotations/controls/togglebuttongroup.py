@@ -68,7 +68,7 @@ class ToggleButtonGroup(widgets.HBox):
         self.children = self.buttons
 
     @traitlets.observe("value")
-    def update_toggles(self, change):
+    def update_toggles(self, change):  # noqa: D001
         with self.hold_trait_notifications():
             for button in self.buttons:
                 button.value = button.description in change["new"]

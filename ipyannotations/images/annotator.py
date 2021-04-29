@@ -5,7 +5,7 @@ import ipywidgets as widgets
 import traitlets
 
 from ..base import LabellingWidgetMixin
-from .canvases._abstract import AbstractAnnotationCanvas
+from .canvases.abstract_canvas import AbstractAnnotationCanvas
 from .canvases.box import BoundingBoxAnnotationCanvas
 from .canvases.point import PointAnnotationCanvas
 from .canvases.polygon import PolygonAnnotationCanvas
@@ -39,7 +39,16 @@ class Annotator(LabellingWidgetMixin, widgets.VBox):
         data_postprocessor: Optional[Callable[[List[dict]], Any]] = None,
         **kwargs,
     ):
-        """Create an annotation widget for images."""
+        """Create an annotation widget for images.
+
+        Parameters
+        ----------
+        canvas_size : tuple, optional, by default (700, 500)
+        options : Sequence[str], optional
+            The classes to be annotated, by default ()
+        data_postprocessor : Optional[Callable[[List[dict]], Any]], optional
+            A function to post-process the data, by default None.
+        """
         layout = {"width": f"{canvas_size[0]}px"}
         layout.update(kwargs.pop("layout", {}))
         super().__init__(layout=layout)
@@ -181,7 +190,7 @@ class Annotator(LabellingWidgetMixin, widgets.VBox):
         else:
             return self.canvas.data
 
-    def undo(self, button: Optional[Any] = None):
+    def undo(self, _: Optional[Any] = None):  # noqa: D001
         if self.canvas._undo_queue:
             undo = self.canvas._undo_queue.pop()
             undo()
@@ -248,7 +257,7 @@ class PolygonAnnotator(Annotator):
         return super().data
 
     @data.setter
-    def data(self, value):
+    def data(self, value):  # noqa: D001
         self.canvas.data = value
 
 
@@ -295,7 +304,7 @@ class PointAnnotator(Annotator):
         return super().data
 
     @data.setter
-    def data(self, value):
+    def data(self, value):  # noqa: D001
         self.canvas.data = value
 
 
@@ -342,5 +351,5 @@ class BoxAnnotator(Annotator):
         return super().data
 
     @data.setter
-    def data(self, value):
+    def data(self, value):  # noqa: D001
         self.canvas.data = value

@@ -1,5 +1,6 @@
 """A widget to use when building a "generic" widget to display data as-is."""
 
+from typing import Any
 import IPython.display
 import ipywidgets as widgets
 
@@ -20,7 +21,7 @@ def default_display_function(feature):
 
 
 class GenericWidgetMixin:
-    def __init__(
+    def __init__(  # noqa: D001
         self,
         display_function=default_display_function,
         allow_freetext=False,
@@ -43,7 +44,18 @@ class GenericWidgetMixin:
             self.freetext_widget = widgets.HBox([])
         self.display_function = display_function
 
-    def display(self, item):
+    def display(self, item: Any):
+        """Display a data point.
+
+        This function calles the display function provided to the widget,
+        and wraps it in a ipywidgets.Output widget to present the display in
+        the right location.
+
+        Parameters
+        ----------
+        item : any
+            The data point.
+        """
         self.display_widget.clear_output(wait=True)
         with self.display_widget:
             self.display_function(item)

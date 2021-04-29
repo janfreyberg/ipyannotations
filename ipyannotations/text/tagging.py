@@ -23,7 +23,7 @@ class TextTaggerCore(widgets.DOMWidget):
         "Lorem ipsum", help="The text to display."
     ).tag(sync=True)
     classes: List[str] = traitlets.List(
-        trait=traitlets.Unicode, default_value=["MISC", "PER", "LOC", "ORG"]
+        trait=traitlets.Unicode(), default_value=["MISC", "PER", "LOC", "ORG"]
     ).tag(sync=True)
     selected_class = traitlets.Unicode().tag(sync=True)
     entity_spans = traitlets.List(
@@ -56,6 +56,24 @@ class TextTaggerCore(widgets.DOMWidget):
         entity_spans=[],
         **kwargs,
     ):
+        """Create a text tagging "core" widget.
+
+        This is a front-end widget that displays its 'text' attribute. When a
+        sub-string is highlighted, it will snap to the word boundaries, and
+        mark it as a span of type `widget.selected_class`. All spans that are
+        highlighted are available under `widget.entity_spans`, which is
+        assignable.
+
+        Parameters
+        ----------
+        text : str, optional
+            The text to display in the frontend, by default "Lorem ipsum"
+        classes : list, optional
+            The possible classes to assign to a span, by default
+            ["MISC", "PER", "LOC", "ORG"].
+        entity_spans : list, optional
+            The currently highlighted spans, by default []
+        """
         super().__init__(
             text=text, classes=classes, entity_spans=entity_spans, **kwargs
         )
@@ -125,6 +143,12 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
         self.__undo_in_process = False
 
     def display(self, text: str):
+        """Display text to be tagged.
+
+        Parameters
+        ----------
+        text : str
+        """
         self.text_widget.text = text
         self.clear()
         self._undo_queue.clear()

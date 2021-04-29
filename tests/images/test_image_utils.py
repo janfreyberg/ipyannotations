@@ -10,7 +10,9 @@ from hypothesis import assume, given, infer
 from PIL import Image
 from pytest_mock import MockerFixture
 
-from ipyannotations.images.canvases._abstract import AbstractAnnotationCanvas
+from ipyannotations.images.canvases.abstract_canvas import (
+    AbstractAnnotationCanvas,
+)
 from ipyannotations.images.canvases.image_utils import (
     adjust,
     fit_image,

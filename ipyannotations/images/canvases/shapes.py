@@ -10,12 +10,14 @@ class Polygon:
     label: Optional[str] = None
     close_threshold: ClassVar[int] = 5
 
-    def append(self, point: Tuple[int, int], y: Optional[int] = None):
-        if isinstance(point, int) and y is not None:
-            point = (point, y)
-        # if self.closed:
-        #     raise ValueError("Can't append to a closed polygon.")
-        # else:
+    def append(self, point: Tuple[int, int]):
+        """Add a point to the polygon.
+
+        Parameters
+        ----------
+        point : Tuple[int, int]
+            The (x, y) coordinates of the point.
+        """
         point = (round(point[0]), round(point[1]))
         self.points.append(point)
         if self._is_closed():
@@ -52,6 +54,15 @@ class Polygon:
         return len(self.points)
 
     def move_point(self, point_index: int, point: Tuple[int, int]):
+        """Move a point in the polygon.
+
+        Parameters
+        ----------
+        point_index : int
+            The index of the point.
+        point : Tuple[int, int]
+            The new coordinates.
+        """
         point = (round(point[0]), round(point[1]))
         self.points[point_index] = point
 
@@ -61,6 +72,14 @@ class Polygon:
 
     @classmethod
     def from_data(cls, data: dict):
+        """Create a polygon from a dictionary.
+
+        Parameters
+        ----------
+        data : dict
+            The data should have the keys: 'type', 'label', 'coordinates'. The
+            value for the 'type' key needs to be 'polygon'.
+        """
         type_ = data.pop("type")
         if type_ == "polygon":
             return cls(**data)
@@ -75,6 +94,13 @@ class Point:
         self.coordinates = tuple(map(round, self.coordinates))
 
     def move(self, x: int, y: int):
+        """Move a point to new coordinates.
+
+        Parameters
+        ----------
+        x : int
+        y : int
+        """
         self.coordinates = (round(x), round(y))
 
     @property
@@ -87,6 +113,14 @@ class Point:
 
     @classmethod
     def from_data(cls, data: dict):
+        """Create a point from a dictionary.
+
+        Parameters
+        ----------
+        data : dict
+            The data should have the keys: 'type', 'label', 'coordinates'. The
+            value for the 'type' key needs to be 'point'.
+        """
         type_ = data.pop("type")
         if type_ == "point":
             return cls(**data)
@@ -100,7 +134,17 @@ class BoundingBox:
     def __post_init__(self):
         self.xyxy = tuple(map(round, self.xyxy))
 
-    def move_corner(self, idx, new_x: int, new_y: int):
+    def move_corner(self, idx: int, new_x: int, new_y: int):
+        """Move a corner of the bounding
+
+        Parameters
+        ----------
+        idx : int
+            The corner to be moved, starting with 0 in the top left
+            corner, going counter-clockwise.
+        new_x : int
+        new_y : int
+        """
         x_idx, y_idx = [(0, 1), (0, 3), (2, 3), (2, 1)][idx]
         new_xy = list(self.xyxy)
         new_xy[x_idx] = round(new_x)
@@ -123,6 +167,14 @@ class BoundingBox:
 
     @classmethod
     def from_data(cls, data: dict):
+        """Create a box from a dictionary.
+
+        Parameters
+        ----------
+        data : dict
+            The data should have the keys: 'type', 'label', 'coordinates'. The
+            value for the 'type' key needs to be 'box'.
+        """
         type_ = data.pop("type")
         if type_ == "box":
             return cls(**data)

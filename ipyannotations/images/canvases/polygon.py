@@ -4,7 +4,7 @@ from typing import List
 from ipycanvas import hold_canvas
 from traitlets import Bool, observe
 
-from ._abstract import AbstractAnnotationCanvas
+from .abstract_canvas import AbstractAnnotationCanvas
 from .color_utils import hex_to_rgb, rgba_to_html_string
 from .image_utils import dist, only_inside_image, trigger_redraw
 from .shapes import Polygon
@@ -20,6 +20,16 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     @trigger_redraw
     @only_inside_image
     def on_click(self, x: float, y: float):
+        """Handle a click.
+
+        Either adds a point to the current / new polygon, or set the
+        dragging handler if in editing mode.
+
+        Parameters
+        ----------
+        x : float
+        y : float
+        """
 
         if not self.editing:
 
@@ -57,6 +67,13 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
     @trigger_redraw
     @only_inside_image
     def on_drag(self, x: float, y: float):
+        """Handle a dragging action.
+
+        Parameters
+        ----------
+        x : float
+        y : float
+        """
 
         x, y = int(x), int(y)
         if self.dragging is None:
@@ -65,11 +82,14 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
             self.dragging(x, y)
 
     @trigger_redraw
-    def on_release(self, x: float, y: float):
+    def on_release(self, x: float, y: float):  # noqa: D001
+        """Reset the drag function."""
+
         self.dragging = None
 
     @trigger_redraw
-    def set_class(self, name):
+    def set_class(self, name: str):  # noqa: D001
+        """Set the current class of the polygon being proposed."""
         self.current_polygon.label = name
 
     @trigger_redraw
@@ -82,7 +102,7 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         self.current_polygon.points.pop(-1)
 
     @observe("point_size", "editing")
-    def re_draw(self, change=None):
+    def re_draw(self, _=None):  # noqa: D001
 
         with hold_canvas(self):
             self[1].clear()
@@ -97,6 +117,14 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
         self.current_polygon.close_threshold = change.new
 
     def draw_polygon(self, polygon: Polygon, tentative=False):
+        """Draw a polygon annotation.
+
+        Parameters
+        ----------
+        polygon : Polygon
+        tentative : bool, optional
+            If this is a proposed polygon, by default False
+        """
 
         if polygon.label is not None:
             color = self.colormap.get(polygon.label, "#000000")
@@ -149,11 +177,33 @@ class PolygonAnnotationCanvas(AbstractAnnotationCanvas):
 
     @property
     def data(self):
+        """
+        The annotation data, as List[ Dict ].
+
+        The format is a list of dictionaries, with the following key / value
+        combinations:
+
+        +------------------+-------------------------+
+        |``'type'``        | ``'polygon'``           |
+        +------------------+-------------------------+
+        |``'label'``       | ``<class label>``       |
+        +------------------+-------------------------+
+        |``'points'``      | ``<list of xy-tuples>`` |
+        +------------------+-------------------------+
+        """
         return [polygon.data for polygon in self.polygons]
 
     @data.setter  # type: ignore
     @trigger_redraw
     def data(self, value: List[dict]):
+        """Set the annotations for this canvas.
+
+        Parameters
+        ----------
+        value : List[dict]
+            The annotations, in a dict with `type`, `label`, and `points`,
+            where points is a list of x,y tuples relative to the image.
+        """
         self.init_empty_data()
         self.polygons = [
             Polygon.from_data(polygon_dict.copy()) for polygon_dict in value
