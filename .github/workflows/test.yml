@@ -39,7 +39,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install -qq --upgrade pip
-        python -m pip install --upgrade -v -e ".[test, examples, docs]"
+        python -m pip install --upgrade -v -e ".[test, examples, doc]"
     - name: Test with pytest
       run: python -m pytest --cov=ipyannotations/
     - name: Update coveralls
