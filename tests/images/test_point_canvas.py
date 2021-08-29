@@ -11,6 +11,7 @@ from ipyannotations.images.canvases import PointAnnotationCanvas
 from ipyannotations.images.canvases.shapes import Point
 
 IMAGE = np.random.randint(0, 256, size=(500, 700, 3), dtype=np.uint8)
+IMAGE_SMALL = np.random.randint(0, 256, size=(500, 500, 3), dtype=np.uint8)
 
 
 @settings(deadline=None)
@@ -37,6 +38,15 @@ def test_click_handling(point: Point):
     assert canvas.points == []
     canvas.on_click(*point)
     assert canvas.points[-1].coordinates == (round(point[0]), round(point[1]))
+
+
+def test_data_is_translated():
+    canvas = PointAnnotationCanvas()
+    canvas.load_image(IMAGE_SMALL)
+    canvas.on_click(0, 0)
+    assert canvas.points == []
+    canvas.on_click(100, 0)
+    assert canvas.points[-1].coordinates == (0, 0)
 
 
 @settings(deadline=None)
