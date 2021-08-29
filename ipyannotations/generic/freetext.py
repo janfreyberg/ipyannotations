@@ -20,6 +20,7 @@ class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
         self,
         display_function=default_display_function,
         textbox_placeholder="Type a response and press Shift+Enter to submit.",
+        num_textbox_rows=5,
         *args,
         **kwargs,
     ):
@@ -42,6 +43,7 @@ class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
         )
         self.freetext_widget = widgets.Textarea(
             placeholder=textbox_placeholder,
+            rows=num_textbox_rows,
             layout={"width": "50%"},
         )
         widgets.link((self, "data"), (self.freetext_widget, "value"))
@@ -66,5 +68,5 @@ class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
 
     def _handle_keystroke(self, event):
         if event["key"] == "Enter" and event["shiftKey"]:
-            self.freetext_widget.value = self.freetext_widget.value[:-1]
+            self.data = self.freetext_widget.value[:-1]
             super()._handle_keystroke(event)
