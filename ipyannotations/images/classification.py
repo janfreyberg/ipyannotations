@@ -28,21 +28,12 @@ class ClassLabeller(ClassificationWidget):
         allow_freetext : bool, optional
             Whether a free-text entry box should be displayed,
             by default True
-        # hint_function : Optional[Callable], optional
-        #     A function that displays, by default None
-        # hints : Optional[Dict[str, Any]], optional
-        #     [description], by default None
-        # update_hints : bool, optional
-        #     [description], by default True
         """
 
         super().__init__(
             options=options,
             max_buttons=max_buttons,
             allow_freetext=allow_freetext,
-            # hint_function=hint_function,
-            # hints=hints,
-            # update_hints=update_hints,
             *args,
             **kwargs,
         )  # type: ignore
@@ -55,9 +46,6 @@ class MulticlassLabeller(MultiClassificationWidget):
         options: Sequence[str] = (),
         max_buttons: int = 12,
         allow_freetext: bool = True,
-        # hint_function: Optional[Callable] = None,
-        # hints: Optional[Dict[str, Any]] = None,
-        # update_hints: bool = True,
         *args,
         **kwargs,
     ):
@@ -73,21 +61,12 @@ class MulticlassLabeller(MultiClassificationWidget):
         allow_freetext : bool, optional
             Whether to allow free-text submission in a text box,
             by default True
-        # hint_function : Optional[Callable], optional
-        #     [description], by default None
-        # hints : Optional[Dict[str, Any]], optional
-        #     [description], by default None
-        # update_hints : bool, optional
-        #     [description], by default True
         """
 
         super().__init__(
             options=options,
             max_buttons=max_buttons,
             allow_freetext=allow_freetext,
-            # hint_function=hint_function,
-            # hints=hints,
-            # update_hints=update_hints,
             *args,
             **kwargs,
         )  # type: ignore
