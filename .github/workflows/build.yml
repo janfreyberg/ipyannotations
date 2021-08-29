@@ -1,37 +1,63 @@
-name: Package build and publishing
+name: Build
 
 on:
   push:
-    branches:
-      - master
-    tags:
-      - '*'
+    branches: main
   pull_request:
-    branches:
-      - master
+    branches: "*"
 
 jobs:
   build:
-    env:
-      FLIT_USERNAME: __token__
-      FLIT_PASSWORD: ${{ secrets.pypi_secret }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.6
-    - name: Install dependencies
-      run: |
-        python -m pip install -qq --upgrade pip flit testver
-    - name: Set testing variables
-      if: "!startsWith(github.event.ref, 'refs/tags')"
-      run: |
-        testver src/ipyannotations/
-        echo "::set-env name=FLIT_INDEX_URL::https://test.pypi.org/legacy/"
-        echo "::set-env name=FLIT_PASSWORD::${{ secrets.test_pypi_secret }}"
-    - name: Build
-      run: flit build
-    - name: Publish
-      run: flit publish
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+          architecture: "x64"
+
+      - name: Setup pip cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: pip-3.7-${{ hashFiles('package.json') }}
+          restore-keys: |
+            pip-3.7-
+            pip-
+
+      - name: Get npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip setuptools codecov jupyter_packaging
+          npm install -g codecov
+      - name: Test the extension
+        run: |
+          python -m pip install --upgrade -v -e ".[test, examples, docs]"
+          yarn run lint:check
+          yarn run test
+      - name: Test the build process
+        run: |
+          python setup.py sdist bdist_wheel
+      - name: Check docs can be built + links
+        run: |
+          sudo apt install -y pandoc
+          pushd docs
+          make html
+          python -m pytest --check-links
+          popd
