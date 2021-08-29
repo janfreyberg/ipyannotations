@@ -70,7 +70,7 @@ class ClassificationWidget(
     def _sort_options(self, change=None):
         self.options = list(sorted(self.options))
 
-    def submit(self, sender: Union[widgets.Button, widgets.Text]):
+    def submit(self, sender: Union[widgets.Button, widgets.Text]):  # type: ignore
         """Trigger the submission functions.
 
         Parameters
