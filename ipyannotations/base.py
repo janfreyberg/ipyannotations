@@ -1,5 +1,5 @@
 """The base class that data labelling widgets should inherit from."""
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Any
 
 import ipyevents
 import ipywidgets as widgets
@@ -67,7 +67,7 @@ class LabellingWidgetMixin:
             )
         self.submission_functions.append(callback)
 
-    def submit(self, sender: Optional[widgets.Button] = None):
+    def submit(self, sender: Any = None):
         """The function that gets called by submitting an option.
 
         This is called by the button / text field elements and shouldn't be
