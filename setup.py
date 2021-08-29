@@ -115,6 +115,10 @@ setup_args = dict(
             "hypothesis",
             "pytest-check",
             "mypy",
+            "pytest-mock",
+            "flake8",
+            "black",
+            "types-requests",
         ],
         "dev": [
             "black",
@@ -123,6 +127,7 @@ setup_args = dict(
             "jupyterlab",
             "rope",
             "docargs",
+            "jupyter_packaging",
         ],
         "examples": [
             # Any requirements for the examples to run
@@ -132,6 +137,8 @@ setup_args = dict(
             "sphinx_rtd_theme",
             "nbsphinx",
             "myst-parser>=0.12.9",
+            "nbsphinx_link",
+            "jupyter_sphinx",
         ],
     },
     entry_points={},

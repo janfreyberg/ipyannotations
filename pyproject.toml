@@ -8,8 +8,7 @@ line-length = 79
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
-    "ipyannotations/tests",
-    "examples",
+    "tests",
 ]
 norecursedirs = [
     "node_modules",
