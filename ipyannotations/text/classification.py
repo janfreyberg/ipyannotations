@@ -6,6 +6,7 @@ import traitlets
 
 from ..base import LabellingWidgetMixin
 from ..generic.classification import ClassificationWidget
+from ..generic.multiclassification import MultiClassificationWidget
 from ..generic.generic_mixin import GenericWidgetMixin
 
 
@@ -39,6 +40,39 @@ class ClassLabeller(ClassificationWidget):
         allow_freetext : bool, optional
             If a text box should be available for new classes, by default True
         """
+        super().__init__(
+            options=options,
+            max_buttons=max_buttons,
+            allow_freetext=allow_freetext,
+            display_function=_text_display_function,
+            *args,
+            **kwargs,
+        )  # type: ignore
+
+
+class MulticlassLabeller(MultiClassificationWidget):
+    def __init__(
+        self,
+        options: Sequence[str] = (),
+        max_buttons: int = 12,
+        allow_freetext: bool = True,
+        *args,
+        **kwargs,
+    ):
+        """Create a widget for multi-class assignment.
+
+        Parameters
+        ----------
+        options : Sequence[str], optional
+            The options for classes, by default ()
+        max_buttons : int, optional
+            How many buttons to display before switching to a multi-select
+            tool, by default 12
+        allow_freetext : bool, optional
+            Whether to allow free-text submission in a text box,
+            by default True
+        """
+
         super().__init__(
             options=options,
             max_buttons=max_buttons,
@@ -109,7 +143,7 @@ class SentimentLabeller(
             ),
         ]
 
-    def submit(self, sender: widgets.Button):
+    def submit(self, sender: widgets.Button):  # type: ignore
         """Submit the label.
 
         Parameters
