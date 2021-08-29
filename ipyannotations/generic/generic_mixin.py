@@ -59,4 +59,4 @@ class GenericWidgetMixin:
         self.display_widget.clear_output(wait=True)
         with self.display_widget:
             self.display_function(item)
-        self.clear()
+        self.clear()  # type: ignore

@@ -1,7 +1,7 @@
 """Widgets to assign multiple classes to data points."""
 
 import time
-from typing import List, Sequence
+from typing import List, Iterable
 
 import ipywidgets as widgets
 import traitlets
@@ -22,7 +22,7 @@ class MultiClassificationWidget(
     """
 
     allow_freetext = traitlets.Bool(True)
-    options = traitlets.List(
+    options: List[str] = traitlets.List(
         trait=traitlets.Unicode(), default_value=list(), allow_none=True
     )
     max_buttons = traitlets.Integer(12)
@@ -32,7 +32,7 @@ class MultiClassificationWidget(
 
     def __init__(
         self,
-        options: Sequence[str] = (),
+        options: Iterable[str] = (),
         allow_freetext: bool = True,
         display_function=default_display_function,
         *args,
@@ -63,8 +63,8 @@ class MultiClassificationWidget(
             *args,
             **kwargs,
         )  # type: ignore
-        self.options = [str(option) for option in options]
-        self.class_selector = ToggleButtonGroup(options=options)
+        self.options: List[str] = [str(option) for option in options]
+        self.class_selector = ToggleButtonGroup(options=self.options)
         traitlets.link((self, "data"), (self.class_selector, "value"))
         traitlets.link((self, "options"), (self.class_selector, "options"))
         self._fixed_options = [option for option in self.options]
@@ -72,7 +72,15 @@ class MultiClassificationWidget(
         self.freetext_widget.on_submit(self.freetext_submission)
 
         self.children = [
-            self.display_widget,
+            widgets.Box(
+                (self.display_widget,),
+                layout=widgets.Layout(
+                    justify_content="center",
+                    padding="2.5% 0",
+                    display="flex",
+                    width="100%",
+                ),
+            ),
             self.class_selector,
             widgets.HBox(
                 [
