@@ -163,12 +163,6 @@ class AbstractAnnotationCanvas(MultiCanvas):
         x, y = round(x), round(y)
         return x, y
 
-    # def correct_coordinates(self, point: Tuple[int, int]) -> Tuple[int, int]:
-    #     return (
-    #         point[0] + self.image_extent[0],
-    #         point[1] + self.image_extent[1],
-    #     )
-
     @observe("image_contrast", "image_brightness")
     def _display_image(self, *change):
         if self.current_image is not None:
@@ -193,7 +187,7 @@ class AbstractAnnotationCanvas(MultiCanvas):
             self.original_width = img_width
             self.original_height = img_height
 
-    # def __getattr__(self, name):
-    #     if name in ("caching", "width", "height"):
-    #         return getattr(self._canvases[0], name)
-    #     raise AttributeError(name)
+    def __getattr__(self, name):
+        if name in ("caching", "width", "height"):
+            return getattr(self._canvases[0], name)
+        raise AttributeError(name)
