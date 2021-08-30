@@ -1,4 +1,4 @@
-from typing import Tuple
+# flake8: noqa
 import ipywidgets as widgets
 import ipyevents
 import ipycanvas

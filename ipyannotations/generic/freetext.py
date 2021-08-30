@@ -33,6 +33,8 @@ class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
         textbox_placeholder : str, optional
             The text shown when the textbox is empty, by default:
             "Type the response and press Shift+Enter to submit."
+        num_textbox_rows : int
+            The height of the text box, in number of rows (of text), default 5.
         """
         super().__init__(
             display_function=display_function,
