@@ -135,6 +135,7 @@ setup_args = dict(
         "doc": [
             "sphinx>=2.3",
             "sphinx_rtd_theme",
+            "matplotlib",
             "nbsphinx",
             "myst-parser>=0.12.9",
             "nbsphinx_link",
