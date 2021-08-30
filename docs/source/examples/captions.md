@@ -27,6 +27,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
+import os
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.images import ImageCaption
 
@@ -65,6 +66,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
+import os
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.text import FreeTextEntry
 
@@ -108,10 +110,10 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
+import os
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 import ipyannotations.generic
 from IPython.display import display, Audio
-import os
 
 if bool(os.getenv("READTHEDOCS")):
     audiopath = 'docs/source/audio/Akwai_ibom_state.ogg'

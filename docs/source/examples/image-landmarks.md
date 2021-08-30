@@ -44,11 +44,18 @@ widget
 ```{jupyter-execute}
 :hide-code:
 
+import os
+import os.path
 from ipyannotations.images import PolygonAnnotator
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 
+print(os.getcwd())
+print(__file__)
 widget = PolygonAnnotator(options=["eye", "mouth"])
-widget.display("source/img/baboon.png")
+if bool(os.getenv("READTHEDOCS")):
+    widget.display("docs/source/img/baboon.png")
+else:
+    widget.display("source/img/baboon.png")
 
 widget.opacity_slider.value = 0.75
 
@@ -103,6 +110,7 @@ point_widget
 
 ```{jupyter-execute}
 :hide-code:
+import os
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.images import PointAnnotator
 point_widget = PointAnnotator(options=["pigeon"])
@@ -137,6 +145,7 @@ box_widget
 
 ```{jupyter-execute}
 :hide-code:
+import os
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.images import BoxAnnotator
 box_widget = BoxAnnotator(options=["eye", "mouth", "nose", "cheek"])

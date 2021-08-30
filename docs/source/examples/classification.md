@@ -36,7 +36,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-
+import os
 import ipyannotations.images
 from ipyannotations._doc_utils import recursively_remove_from_dom
 
@@ -67,7 +67,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-
+import os
 import ipyannotations.text
 
 widget = ipyannotations.text.ClassLabeller(
@@ -92,7 +92,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-
+import os
 import ipyannotations.text
 
 widget = ipyannotations.text.SentimentLabeller()
@@ -118,7 +118,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-
+import os
 import ipyannotations.images
 from ipyannotations._doc_utils import recursively_remove_from_dom
 
@@ -163,7 +163,8 @@ widget
 ```
 
 ```{jupyter-execute}
-
+:hide-code:
+import os
 import ipyannotations.generic
 import numpy as np
 import matplotlib.pyplot as plt
