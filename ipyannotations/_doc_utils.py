@@ -27,8 +27,7 @@ def recursively_remove_from_dom(
 
 
 def patch_canvas(annotator, img_path):
-    if bool(os.getenv("READTHEDOCS")):
-        img_path = os.path.join("docs", img_path)
+    img_path = os.path.join("docs", img_path)
     with open(img_path, "rb") as f:
         bytesval = f.read()
     img_widg = widgets.Image(value=bytesval)
@@ -41,3 +40,10 @@ def patch_canvas(annotator, img_path):
         canvas.close()
     annotator.canvas.close()
     return annotator
+
+
+def get_asset_path(path):
+    if bool(os.getenv("READTHEDOCS")):
+        return path
+    else:
+        return os.path.join("source", path)

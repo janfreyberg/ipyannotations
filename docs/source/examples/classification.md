@@ -38,13 +38,10 @@ widget
 :hide-code:
 import os
 import ipyannotations.images
-from ipyannotations._doc_utils import recursively_remove_from_dom
+from ipyannotations._doc_utils import recursively_remove_from_dom, get_asset_path
 
 widget = ipyannotations.images.ClassLabeller(options=['baboon', 'orangutan'])
-if bool(os.getenv("READTHEDOCS")):
-    widget.display('docs/source/img/baboon.png')
-else:
-    widget.display('source/img/baboon.png')
+widget.display(get_asset_path('img/baboon.png'))
 recursively_remove_from_dom(widget)
 ```
 
@@ -67,7 +64,6 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
 import ipyannotations.text
 
 widget = ipyannotations.text.ClassLabeller(
@@ -92,7 +88,6 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
 import ipyannotations.text
 
 widget = ipyannotations.text.SentimentLabeller()
@@ -118,16 +113,12 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
 import ipyannotations.images
-from ipyannotations._doc_utils import recursively_remove_from_dom
+from ipyannotations._doc_utils import recursively_remove_from_dom, get_asset_path
 
 widget = ipyannotations.images.MulticlassLabeller(
     options=['baboon', 'mammal', 'toucan', 'bird'], allow_freetext=True)
-if bool(os.getenv("READTHEDOCS")):
-    widget.display('docs/source/img/baboon.png')
-else:
-    widget.display('source/img/baboon.png')
+widget.display(get_asset_path('img/baboon.png'))
 recursively_remove_from_dom(widget)
 ```
 
@@ -164,7 +155,6 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
 import ipyannotations.generic
 import numpy as np
 import matplotlib.pyplot as plt

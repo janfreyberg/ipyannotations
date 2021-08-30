@@ -44,19 +44,11 @@ widget
 ```{jupyter-execute}
 :hide-code:
 
-import os
-import os.path
 from ipyannotations.images import PolygonAnnotator
-from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
+from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
 
-print(os.getcwd())
 widget = PolygonAnnotator(options=["eye", "mouth"])
-```
-```
-if bool(os.getenv("READTHEDOCS")):
-    widget.display("docs/source/img/baboon.png")
-else:
-    widget.display("source/img/baboon.png")
+widget.display(get_asset_path("img/baboon.png"))
 
 widget.opacity_slider.value = 0.75
 
@@ -78,7 +70,7 @@ widget.data = [
     ]},
 ]
 
-widget = patch_canvas(widget, "source/img/baboon-polygons.png")
+widget = patch_canvas(widget, get_asset_path("img/baboon-polygons.png"))
 recursively_remove_from_dom(widget)
 ```
 
@@ -111,17 +103,11 @@ point_widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
-```
-```
-from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
+from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
 from ipyannotations.images import PointAnnotator
 point_widget = PointAnnotator(options=["pigeon"])
-if bool(os.getenv("READTHEDOCS")):
-    point_widget.display("docs/source/img/vdnkh.jpg")
-else:
-    point_widget.display("source/img/vdnkh.jpg")
-patch_canvas(point_widget, 'source/img/vdnkh-annotated.png')
+point_widget.display(get_asset_path("img/vdnkh.jpg"))
+patch_canvas(point_widget, get_asset_path('img/vdnkh-annotated.png'))
 recursively_remove_from_dom(point_widget)
 ```
 
@@ -148,17 +134,11 @@ box_widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
-```
-```
-from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
+from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
 from ipyannotations.images import BoxAnnotator
 box_widget = BoxAnnotator(options=["eye", "mouth", "nose", "cheek"])
-if bool(os.getenv("READTHEDOCS")):
-    box_widget.display("docs/source/img/baboon.png")
-else:
-    box_widget.display("source/img/baboon.png")
-patch_canvas(box_widget, "source/img/baboon-boxes.png")
+box_widget.display(get_asset_path("img/baboon.png"))
+patch_canvas(box_widget, get_asset_path("img/baboon-boxes.png"))
 recursively_remove_from_dom(box_widget)
 ```
 

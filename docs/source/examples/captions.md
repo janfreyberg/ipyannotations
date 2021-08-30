@@ -27,15 +27,11 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
-from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
+from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
 from ipyannotations.images import ImageCaption
 
 widget = ImageCaption()
-if bool(os.getenv("READTHEDOCS")):
-    widget.display("docs/source/img/vdnkh.jpg")
-else:
-    widget.display('source/img/vdnkh.jpg')
+widget.display(get_asset_path('img/vdnkh.jpg'))
 
 recursively_remove_from_dom(widget)
 ```
@@ -66,8 +62,7 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
-from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
+from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
 from ipyannotations.text import FreeTextEntry
 
 widget = FreeTextEntry(
@@ -110,21 +105,16 @@ widget
 
 ```{jupyter-execute}
 :hide-code:
-import os
-from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
+from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
 import ipyannotations.generic
 from IPython.display import display, Audio
-
-if bool(os.getenv("READTHEDOCS")):
-    audiopath = 'docs/source/audio/Akwai_ibom_state.ogg'
-else:
-    audiopath = 'source/audio/Akwai_ibom_state.ogg'
+audiopath = get_asset_path('audio/Akwai_ibom_state.ogg')
 
 widget = ipyannotations.generic.FreetextEntry(
     display_function=lambda f: display(Audio(filename=f)),
     textbox_placeholder='Please transcribe the audio sample. Use Shift+Enter to submit.',
 )
-widget.display('source/audio/Akwai_ibom_state.ogg')
+widget.display(audiopath)
 
 recursively_remove_from_dom(widget)
 ```
