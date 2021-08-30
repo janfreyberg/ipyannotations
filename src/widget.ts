@@ -17,7 +17,15 @@ interface NonStandardSelection extends Selection {
 }
 
 export class TextTaggerModel extends DOMWidgetModel {
-  defaults() {
+  defaults(): {
+    _model_module: string;
+    _model_name: string;
+    _model_module_version: string;
+    _view_module: string;
+    _view_name: string;
+    _view_module_version: string;
+    _view_count: number;
+  } {
     return {
       ...super.defaults(),
       _model_name: TextTaggerModel.model_name,
@@ -48,7 +56,7 @@ export class TextTaggerModel extends DOMWidgetModel {
 }
 
 export class TextTaggerView extends DOMWidgetView {
-  render() {
+  render(): void {
     this.el.classList.add('entity-tagger');
     this._render_text();
     // Observe changes in the value traitlet in Python, and define
@@ -58,25 +66,25 @@ export class TextTaggerView extends DOMWidgetView {
     this.el.addEventListener('mouseup', this.on_click.bind(this));
   }
 
-  _render_text() {
-    var text = this.model.get('text');
-    var entity_spans = this.model.get('entity_spans');
-    entity_spans.sort(function (a: number[], b: number[]) {
+  _render_text(): void {
+    let text = this.model.get('text');
+    const entity_spans = this.model.get('entity_spans');
+    entity_spans.sort((a: number[], b: number[]) => {
       return a[0] - b[0];
     });
-    for (var i = entity_spans.length - 1; i >= 0; i--) {
-      var span = entity_spans[i];
+    for (let i = entity_spans.length - 1; i >= 0; i--) {
+      const span = entity_spans[i];
       text = this._format_entity(text, span, i);
     }
     this.el.innerHTML = text;
   }
 
-  _format_entity(text: string, span: number[], span_index: number) {
-    var classes = this.model.get('classes');
-    var class_idx = classes.indexOf(span[2]);
-    var palette = this.model.get('palette');
+  _format_entity(text: string, span: number[], span_index: number): string {
+    const classes = this.model.get('classes');
+    const class_idx = classes.indexOf(span[2]);
+    const palette = this.model.get('palette');
     // note: can be undefined, defaults to CSS value (grey)
-    var colour = palette[class_idx];
+    const colour = palette[class_idx];
     text =
       text.slice(0, span[0]) +
       `<mark class="entity" data-span_index="${span_index}"` +
@@ -90,7 +98,7 @@ export class TextTaggerView extends DOMWidgetView {
     return text;
   }
 
-  on_click(event: Event) {
+  on_click(event: Event): void {
     // if (!event.target) {
     //   return
     // }
@@ -108,14 +116,14 @@ export class TextTaggerView extends DOMWidgetView {
       clicked.dataset.span_index
     ) {
       // Remove the clicked-on span:
-      let span_index: number = parseInt(clicked.dataset.span_index);
-      var entity_spans = this.model.get('entity_spans');
-      var new_entity_spans = [...entity_spans];
+      const span_index: number = parseInt(clicked.dataset.span_index);
+      const entity_spans = this.model.get('entity_spans');
+      const new_entity_spans = [...entity_spans];
       new_entity_spans.splice(span_index, 1);
       this.model.set('entity_spans', new_entity_spans);
     }
     // we are only iterested in text events:
-    let selection: Selection = window.getSelection() as Selection;
+    const selection: Selection = window.getSelection() as Selection;
     // if selected:
     if (!selection.isCollapsed) {
       this.on_select();
@@ -125,10 +133,10 @@ export class TextTaggerView extends DOMWidgetView {
     this._render_text();
   }
 
-  on_select() {
-    var txt = '';
+  on_select(): void {
+    let txt = '';
 
-    let selection: NonStandardSelection =
+    const selection: NonStandardSelection =
       window.getSelection() as NonStandardSelection;
 
     if (
@@ -136,14 +144,14 @@ export class TextTaggerView extends DOMWidgetView {
       this.el.contains(selection.focusNode)
     ) {
       snap_to_word(selection);
-      var offset = get_offset_relative_to(this.el);
+      const offset = get_offset_relative_to(this.el);
       txt = selection.toString();
       // var raw_text = this.model.get('text')
       // append this span as start idx, end idx, class
-      var entity_spans = this.model.get('entity_spans');
-      var new_entity_spans = [...entity_spans];
-      var selected_class = this.model.get('selected_class');
-      var span = [offset, offset + txt.length, selected_class];
+      const entity_spans = this.model.get('entity_spans');
+      const new_entity_spans = [...entity_spans];
+      const selected_class = this.model.get('selected_class');
+      const span = [offset, offset + txt.length, selected_class];
       new_entity_spans.push(span);
       this.model.set('entity_spans', new_entity_spans);
     }
@@ -152,14 +160,14 @@ export class TextTaggerView extends DOMWidgetView {
 
 function snap_to_word(selection: NonStandardSelection) {
   // Detect if selection is backwards
-  var range = document.createRange();
+  const range = document.createRange();
   range.setStart(selection.anchorNode as Node, selection.anchorOffset);
   range.setEnd(selection.focusNode as Node, selection.focusOffset);
-  var backwards = range.collapsed;
+  const backwards = range.collapsed;
   range.detach();
   // modify() works on the focus of the selection
-  let endNode: Node = selection.focusNode as Node;
-  let endOffset: number = selection.focusOffset;
+  const endNode: Node = selection.focusNode as Node;
+  const endOffset: number = selection.focusOffset;
   selection.collapse(selection.anchorNode, selection.anchorOffset);
   if (backwards) {
     selection.modify('move', 'backward', 'character');
@@ -180,7 +188,7 @@ function get_offset_relative_to(
   parentElement: Node,
   currentNode?: Node
 ): number {
-  var currentSelection,
+  let currentSelection,
     currentRange,
     offset = 0,
     prevSibling,
