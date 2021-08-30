@@ -31,7 +31,7 @@ version = get_version(pjoin(name, "_version.py"))
 
 # Representative files that should exist after a successful build
 jstargets = [
-    pjoin(HERE, name, "nbextension", "index.js"),
+    pjoin(HERE, "src", name, "nbextension", "index.js"),
     pjoin(HERE, "lib", "plugin.js"),
 ]
 
