@@ -24,7 +24,7 @@ jobs:
     - name: Check black formatting
       run: black --check ipyannotations/
     - name: Mypy type analysis
-      run: mypy --ignore-missing-imports src/
+      run: mypy --ignore-missing-imports ipyannotations/
   test:
     runs-on: ubuntu-latest
     strategy:
