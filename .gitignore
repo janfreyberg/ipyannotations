@@ -155,3 +155,6 @@ ipyannotations/labextension/*.tgz
 # Packed lab extensions
 ipyannotations/labextension
 ipyannotations/nbextension
+# compiled nbextension javascript
+src/ipyannotations/nbextension/index.js
+src/ipyannotations/nbextension/index.js.map
