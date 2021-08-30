@@ -48,7 +48,7 @@ jobs:
           npm install -g codecov
       - name: Test the extension
         run: |
-          python -m pip install --upgrade ".[test,examples,docs,dev]"
+          python -m pip install --upgrade --use-feature=in-tree-build ".[test,examples,docs,dev]"
           yarn run lint:check
           yarn run test
       - name: Test the build process
