@@ -1,9 +1,16 @@
+# Required
+version: 2
+
+# Build documentation in the docs/ directory with Sphinx
+sphinx:
+  configuration: docs/conf.py
+
 type: sphinx
 python:
-  version: 3.5
+  version: 3.9
   pip_install: true
   extra_requirements:
     - examples
-    - docs
+    - doc
 conda:
   file: docs/environment.yml
