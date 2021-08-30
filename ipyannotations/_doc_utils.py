@@ -27,7 +27,6 @@ def recursively_remove_from_dom(
 
 
 def patch_canvas(annotator, img_path):
-    img_path = os.path.join("docs", img_path)
     with open(img_path, "rb") as f:
         bytesval = f.read()
     img_widg = widgets.Image(value=bytesval)
