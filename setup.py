@@ -112,7 +112,7 @@ setup_args = dict(
             "pytest-cov",
             "hypothesis",
             "pytest-check",
-            "mypy",
+            "mypy>=0.910",
             "pytest-mock",
             "flake8",
             "black",
