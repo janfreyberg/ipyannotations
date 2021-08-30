@@ -45,10 +45,10 @@ widget
 ```{jupyter-execute}
 :hide-code:
 
+from ipyannotations._doc_utils import recursively_remove_from_dom, get_asset_path
 from ipyannotations import images
 widget = images.ClassLabeller(options=["monkey", "ape"])
-widget.display("source/img/baboon.png")
-from ipyannotations._doc_utils import recursively_remove_from_dom
+widget.display(get_asset_path("img/baboon.png"))
 widget = recursively_remove_from_dom(widget)
 widget
 ```
