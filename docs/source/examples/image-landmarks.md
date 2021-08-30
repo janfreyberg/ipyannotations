@@ -106,7 +106,10 @@ point_widget
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.images import PointAnnotator
 point_widget = PointAnnotator(options=["pigeon"])
-point_widget.display("source/img/vdnkh.jpg")
+if bool(os.getenv("READTHEDOCS")):
+    point_widget.display("docs/source/img/vdnkh.jpg")
+else:
+    point_widget.display("source/img/vdnkh.jpg")
 patch_canvas(point_widget, 'source/img/vdnkh-annotated.png')
 recursively_remove_from_dom(point_widget)
 ```
@@ -137,7 +140,10 @@ box_widget
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.images import BoxAnnotator
 box_widget = BoxAnnotator(options=["eye", "mouth", "nose", "cheek"])
-box_widget.display("source/img/baboon.png")
+if bool(os.getenv("READTHEDOCS")):
+    box_widget.display("docs/source/img/baboon.png")
+else:
+    box_widget.display("source/img/baboon.png")
 patch_canvas(box_widget, "source/img/baboon-boxes.png")
 recursively_remove_from_dom(box_widget)
 ```

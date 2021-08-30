@@ -31,7 +31,10 @@ from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 from ipyannotations.images import ImageCaption
 
 widget = ImageCaption()
-widget.display('source/img/vdnkh.jpg')
+if bool(os.getenv("READTHEDOCS")):
+    widget.display("docs/source/img/vdnkh.jpg")
+else:
+    widget.display('source/img/vdnkh.jpg')
 
 recursively_remove_from_dom(widget)
 ```
@@ -108,7 +111,12 @@ widget
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas
 import ipyannotations.generic
 from IPython.display import display, Audio
+import os
 
+if bool(os.getenv("READTHEDOCS")):
+    audiopath = 'docs/source/audio/Akwai_ibom_state.ogg'
+else:
+    audiopath = 'source/audio/Akwai_ibom_state.ogg'
 
 widget = ipyannotations.generic.FreetextEntry(
     display_function=lambda f: display(Audio(filename=f)),

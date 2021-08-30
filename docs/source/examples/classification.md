@@ -41,7 +41,10 @@ import ipyannotations.images
 from ipyannotations._doc_utils import recursively_remove_from_dom
 
 widget = ipyannotations.images.ClassLabeller(options=['baboon', 'orangutan'])
-widget.display('source/img/baboon.png')
+if bool(os.getenv("READTHEDOCS")):
+    widget.display('docs/source/img/baboon.png')
+else:
+    widget.display('source/img/baboon.png')
 recursively_remove_from_dom(widget)
 ```
 
@@ -121,7 +124,10 @@ from ipyannotations._doc_utils import recursively_remove_from_dom
 
 widget = ipyannotations.images.MulticlassLabeller(
     options=['baboon', 'mammal', 'toucan', 'bird'], allow_freetext=True)
-widget.display('source/img/baboon.png')
+if bool(os.getenv("READTHEDOCS")):
+    widget.display('docs/source/img/baboon.png')
+else:
+    widget.display('source/img/baboon.png')
 recursively_remove_from_dom(widget)
 ```
 
