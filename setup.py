@@ -117,6 +117,7 @@ setup_args = dict(
             "flake8",
             "black",
             "types-requests",
+            "testver>=0.3.1",
         ],
         "dev": [
             "black",
