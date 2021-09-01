@@ -5,7 +5,7 @@ from ipyannotations.generic import classification
 
 
 def test_submit_with_button(mocker):
-    widget = classification.ClassificationWidget(options=["a", "b"])
+    widget = classification.ClassLabeller(options=["a", "b"])
     submission_function: MagicMock = mocker.MagicMock()
     widget.on_submit(submission_function)
 
@@ -16,7 +16,7 @@ def test_submit_with_button(mocker):
 
 
 def test_submit_with_text_field(mocker):
-    widget = classification.ClassificationWidget(options=["a", "b"])
+    widget = classification.ClassLabeller(options=["a", "b"])
     submission_function = mocker.MagicMock()
     widget.on_submit(submission_function)
 
@@ -27,14 +27,14 @@ def test_submit_with_text_field(mocker):
 
 
 def test_changing_options_updates_buttons():
-    widget = classification.ClassificationWidget(options=["a", "b"])
+    widget = classification.ClassLabeller(options=["a", "b"])
     assert len(widget.control_elements.buttons.values()) == 2
     widget.options = ["a", "b", "c"]
     assert len(widget.control_elements.buttons.values()) == 3
 
 
 def test_number_keystrokes_trigger_submit(mocker):
-    widget = classification.ClassificationWidget()
+    widget = classification.ClassLabeller()
     widget.options = ["a", "b"]
     spy: MagicMock = mocker.MagicMock()
     widget.on_submit(spy)
@@ -56,7 +56,7 @@ def test_number_keystrokes_trigger_submit(mocker):
 
 
 def test_max_buttons_switches_to_dropdown():
-    widget = classification.ClassificationWidget(max_buttons=6)
+    widget = classification.ClassLabeller(max_buttons=6)
     widget.options = ["a", "b", "c", "d", "e", "f"]
     assert isinstance(widget.control_elements, buttongroup.ButtonGroup)
     widget.options = ["a", "b", "c", "d", "e", "f", "g", "h"]

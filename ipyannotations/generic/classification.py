@@ -11,9 +11,7 @@ from ..controls.dropdownbutton import DropdownButton
 from .generic_mixin import GenericWidgetMixin, default_display_function
 
 
-class ClassificationWidget(
-    GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox
-):
+class ClassLabeller(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
     """
     A classification widget.
 

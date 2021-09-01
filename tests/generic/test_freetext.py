@@ -15,7 +15,7 @@ def traverse_children(widget: widgets.Box):
 
 
 def test_freetext_submission_text():
-    widget = freetext.FreetextEntry()
+    widget = freetext.FreetextAnnotator()
     widget.freetext_widget.value = "Test text."
     assert widget.data == "Test text."
 
@@ -24,7 +24,7 @@ def test_freetext_submission_text():
 
 
 def test_shift_enter_submits():
-    widget = freetext.FreetextEntry()
+    widget = freetext.FreetextAnnotator()
     widget.freetext_widget.value = "Test text. "
     spy = MagicMock()
     widget.on_submit(spy)
@@ -36,7 +36,7 @@ def test_shift_enter_submits():
 
 
 def test_that_display_clears_text():
-    widget = freetext.FreetextEntry()
+    widget = freetext.FreetextAnnotator()
     widget.display("Test display.")
     widget.freetext_widget.value = "Test text. "
     widget.display("Test display text 2.")

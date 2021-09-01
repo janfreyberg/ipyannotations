@@ -146,7 +146,7 @@ def plotting_function(data):
     ax.plot(data)
     display(fig)
 
-widget = ipyannotations.generic.ClassificationWidget(
+widget = ipyannotations.generic.ClassLabeller(
     options=['periodic', 'non-periodic'], allow_freetext=False,
     display_function=plotting_function)
 widget.display(np.random.rand(100))
@@ -166,7 +166,7 @@ def plotting_function(data):
     ax.plot(data)
     display(fig)
 
-widget = ipyannotations.generic.ClassificationWidget(
+widget = ipyannotations.generic.ClassLabeller(
     options=['periodic', 'non-periodic'], allow_freetext=False,
     display_function=plotting_function)
 widget.display(np.random.rand(100))

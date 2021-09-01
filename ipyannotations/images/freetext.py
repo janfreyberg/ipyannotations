@@ -1,25 +1,24 @@
-import IPython.display
-
 from .. import generic
+from .display import image_display_function
 
 
 class FreetextAnnotator(generic.FreetextAnnotator):
-    """A widget for submitting free-text data annotations for text.
+    """A widget for submitting free-text data annotations for images.
 
     This widget presents a simple text box for data entry, and is designed for
-    text summarisation, question answering, or similar.
+    image captioning, visual descriptions or summarisation.
     """
 
     def __init__(
         self,
+        *args,
         textbox_placeholder: str = (
             "Please caption this image and press Shift+Enter to submit."
         ),
         num_textbox_rows: int = 5,
-        *args,
-        **kwargs
+        **kwargs,
     ):
-        """Create a free-text text annotation widget.
+        """Create a free-text image annotation widget.
 
         Parameters
         ----------
@@ -32,10 +31,8 @@ class FreetextAnnotator(generic.FreetextAnnotator):
 
         super().__init__(
             *args,
+            display_function=image_display_function,
             textbox_placeholder=textbox_placeholder,
             num_textbox_rows=num_textbox_rows,
-            display_function=lambda item: IPython.display.display(
-                IPython.display.Markdown(item)
-            ),
-            **kwargs
+            **kwargs,
         )

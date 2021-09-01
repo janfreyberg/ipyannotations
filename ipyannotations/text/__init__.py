@@ -5,13 +5,13 @@ from .classification import (
     SentimentLabeller,
     MulticlassLabeller,
 )
-from .freetext import FreeTextEntry
+from .freetext import FreetextAnnotator
 from .tagging import TextTagger
 
 __all__ = [
     "TextTagger",
     "SentimentLabeller",
     "ClassLabeller",
-    "FreeTextEntry",
+    "FreetextAnnotator",
     "MulticlassLabeller",
 ]

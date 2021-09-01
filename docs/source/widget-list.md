@@ -134,11 +134,11 @@ patch_canvas(widget, get_asset_path('img/baboon-boxes.png'))
 recursively_remove_from_dom(widget)
 ```
 
-### {class}`ipyannotations.images.ImageCaption`
+### {class}`ipyannotations.images.FreetextAnnotator`
 
 ```python
-from ipyannotations.images import ImageCaption
-widget = ImageCaption(
+from ipyannotations.images import FreetextAnnotator
+widget = FreetextAnnotator(
     textbox_placeholder="Please caption this image and press Shift+Enter to submit.",
     num_textbox_rows=5,
 )
@@ -149,8 +149,8 @@ widget
 ```{jupyter-execute}
 :hide-code:
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
-from ipyannotations.images import ImageCaption
-widget = ImageCaption(
+from ipyannotations.images import FreetextAnnotator
+widget = FreetextAnnotator(
     textbox_placeholder="Please caption this image and press Shift+Enter to submit.",
     num_textbox_rows=5,
 )
@@ -272,13 +272,13 @@ recursively_remove_from_dom(widget)
 
 ## Generic widgets
 
-### {class}`ipyannotations.generic.ClassificationWidget`
+### {class}`ipyannotations.generic.ClassLabeller`
 
 ```python
 import ipyannotations.generic
 import IPython.display
 
-widget = ipyannotations.generic.ClassificationWidget(
+widget = ipyannotations.generic.ClassLabeller(
     options=['a', 'b'],
     allow_freetext=True,
     display_function=IPython.display.display,
@@ -294,7 +294,7 @@ from ipyannotations._doc_utils import recursively_remove_from_dom, get_asset_pat
 import ipyannotations.generic
 import IPython.display
 
-widget = ipyannotations.generic.ClassificationWidget(
+widget = ipyannotations.generic.ClassLabeller(
     options=['a', 'b'],
     allow_freetext=True,
     display_function=IPython.display.display,
@@ -303,13 +303,13 @@ widget.display('This could be arbitrary data.')
 recursively_remove_from_dom(widget)
 ```
 
-### {class}`ipyannotations.generic.MultiClassificationWidget`
+### {class}`ipyannotations.generic.MulticlassLabeller`
 
 ```python
 import ipyannotations.generic
 import IPython.display
 
-widget = ipyannotations.generic.MultiClassificationWidget(
+widget = ipyannotations.generic.MulticlassLabeller(
     options=['a', 'b'],
     allow_freetext=True,
     display_function=IPython.display.display,
@@ -325,7 +325,7 @@ from ipyannotations._doc_utils import recursively_remove_from_dom, get_asset_pat
 import ipyannotations.generic
 import IPython.display
 
-widget = ipyannotations.generic.MultiClassificationWidget(
+widget = ipyannotations.generic.MulticlassLabeller(
     options=['a', 'b'],
     allow_freetext=True,
     display_function=IPython.display.display,
@@ -334,13 +334,13 @@ widget.display('This could be arbitrary data.')
 recursively_remove_from_dom(widget)
 ```
 
-### {class}`ipyannotations.generic.FreetextEntry`
+### {class}`ipyannotations.generic.FreetextAnnotator`
 
 ```python
 import ipyannotations.generic
 import IPython.display
 
-widget = ipyannotations.generic.FreetextEntry(
+widget = ipyannotations.generic.FreetextAnnotator(
     textbox_placeholder="Type a response and press Shift+Enter to submit.",
     num_textbox_rows=5,
     display_function=IPython.display.display,
@@ -356,7 +356,7 @@ from ipyannotations._doc_utils import recursively_remove_from_dom, get_asset_pat
 import ipyannotations.generic
 import IPython.display
 
-widget = ipyannotations.generic.FreetextEntry(
+widget = ipyannotations.generic.FreetextAnnotator(
     textbox_placeholder="Type a response and press Shift+Enter to submit.",
     num_textbox_rows=5,
     display_function=IPython.display.display,

@@ -14,12 +14,12 @@ This can be achieved with several freetext entry widgets.
 
 ## Image captioning
 
-The `ImageCaption` class supports freetext entry for image tasks:
+The `FreetextAnnotator` class supports freetext entry for image tasks:
 
 ```python
-from ipyannotations.images import ImageCaption
+from ipyannotations.images import FreetextAnnotator
 
-widget = ImageCaption()
+widget = FreetextAnnotator()
 widget.display('img/vdnkh.jpg')
 
 widget
@@ -28,9 +28,9 @@ widget
 ```{jupyter-execute}
 :hide-code:
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
-from ipyannotations.images import ImageCaption
+from ipyannotations.images import FreetextAnnotator
 
-widget = ImageCaption()
+widget = FreetextAnnotator()
 widget.display(get_asset_path('img/vdnkh.jpg'))
 
 recursively_remove_from_dom(widget)
@@ -38,12 +38,12 @@ recursively_remove_from_dom(widget)
 
 ## Freetext for text (translation, summarisation)
 
-The `FreeTextEntry` class supports freetext entry for summarisation:
+The `FreetextAnnotator` class supports freetext entry for summarisation:
 
 ```python
-from ipyannotations.text import FreeTextEntry
+from ipyannotations.text import FreetextAnnotator
 
-widget = FreeTextEntry(
+widget = FreetextAnnotator(
 textbox_placeholder='Please provide a one-sentence summary. Use Shift+Enter to submit.')
 widget.display(
     'Let $C$ be a smooth projective curve of genus $g≥2$ and let $N$ be the moduli '
@@ -63,9 +63,9 @@ widget
 ```{jupyter-execute}
 :hide-code:
 from ipyannotations._doc_utils import recursively_remove_from_dom, patch_canvas, get_asset_path
-from ipyannotations.text import FreeTextEntry
+from ipyannotations.text import FreetextAnnotator
 
-widget = FreeTextEntry(
+widget = FreetextAnnotator(
 textbox_placeholder='Please provide a one-sentence summary. Use Shift+Enter to submit.')
 widget.display(
     'Let $C$ be a smooth projective curve of genus $g≥2$ and let $N$ be the moduli '
@@ -90,11 +90,11 @@ As with classification, there is a generic captioning widget, which allows you
 to pass your own display function. An example would be audio transcription:
 
 ```python
-from ipyannotations.generic import FreetextEntry
+from ipyannotations.generic import FreetextAnnotator
 from IPython.display import display, Audio
 
 
-widget = ipyannotations.generic.FreetextEntry(
+widget = ipyannotations.generic.FreetextAnnotator(
     display_function=lambda f: display(Audio(filename=f)),
     textbox_placeholder='Please transcribe the audio sample. Use Shift+Enter to submit.',
 )
@@ -110,7 +110,7 @@ import ipyannotations.generic
 from IPython.display import display, Audio
 audiopath = get_asset_path('audio/Akwai_ibom_state.ogg')
 
-widget = ipyannotations.generic.FreetextEntry(
+widget = ipyannotations.generic.FreetextAnnotator(
     display_function=lambda f: display(Audio(filename=f)),
     textbox_placeholder='Please transcribe the audio sample. Use Shift+Enter to submit.',
 )

@@ -7,7 +7,9 @@ from ..base import LabellingWidgetMixin
 from .generic_mixin import GenericWidgetMixin, default_display_function
 
 
-class FreetextEntry(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
+class FreetextAnnotator(
+    GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox
+):
     """A widget for submitting free-text data annotations.
 
     This widget presents a simple text box for data entry, and is designed for

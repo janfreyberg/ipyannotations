@@ -21,6 +21,10 @@ def default_display_function(feature):
 
 
 class GenericWidgetMixin:
+    """
+    A mixin class for generic widgets, which handles UI elements and display.
+    """
+
     def __init__(  # noqa: D001
         self,
         display_function=default_display_function,

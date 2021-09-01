@@ -33,7 +33,7 @@
 ### Captions
 
 ```{eval-rst}
-.. autoclass:: ipyannotations.images.ImageCaption
+.. autoclass:: ipyannotations.images.FreetextAnnotator
     :members: display, data, on_submit, submit, on_undo, undo, skip, clear
 ```
 
@@ -63,7 +63,7 @@
 ### Captioning
 
 ```{eval-rst}
-.. autoclass:: ipyannotations.text.FreeTextEntry
+.. autoclass:: ipyannotations.text.FreetextAnnotator
     :members: display, data, on_submit, submit, on_undo, undo, skip, clear
 ```
 
@@ -71,12 +71,12 @@
 ## Generic widgets
 
 ```{eval-rst}
-.. autoclass:: ipyannotations.generic.ClassificationWidget
+.. autoclass:: ipyannotations.generic.ClassLabeller
     :members: display, data, on_submit, submit, on_undo, undo, skip, clear
 
-.. autoclass:: ipyannotations.generic.MultiClassificationWidget
+.. autoclass:: ipyannotations.generic.MulticlassLabeller
     :members: display, data, on_submit, submit, on_undo, undo, skip, clear
 
-.. autoclass:: ipyannotations.generic.FreetextEntry
+.. autoclass:: ipyannotations.generic.FreetextAnnotator
     :members: display, data, on_submit, submit, on_undo, undo, skip, clear
 ```

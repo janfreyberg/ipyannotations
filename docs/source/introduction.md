@@ -13,7 +13,7 @@ especially those working with data, such as scientists - are familiar with it.
 
 Additionally, many libraries actually provide great representations of their
 data structures in the notebook. For example, the
-[shapely](https://shapely.readthedocs.io/en/latest/) displays its shape
+[shapely](https://shapely.readthedocs.io/en/latest/) library displays its shape
 objects as images natively in the notebook. Building a data annotation tool
 around jupyter notebooks means much of this rich ecosystem can be used to
 annotate data with ipywidgets.
@@ -131,7 +131,7 @@ After following the {ref}`installation` instructions, take a look at the
 ## Alternatives
 
 There are plenty of existing labelling tools in python already, and they may
-suit your needs more depending on what you need.
+suit your needs more, so you should take a look.
 
 - [Label Studio](https://labelstud.io/) is an application that runs as an
   executable. It is a more full-fledged ecosystem, which also offers paid
@@ -141,8 +141,18 @@ suit your needs more depending on what you need.
 - [ipyannotate](https://github.com/ipyannotate/ipyannotate) is a jupyter widget
   specialised in text annotations
 
-There are various other data labelling tools, as well - if you know of one that
-would be useful to list here, please open a PR.
+There are various other specialised data labelling tools, as well - if you know
+of one that would be useful to list here, please open a PR.
+
+## Contributing
+
+I would appreciate any and all contributions. If you have suggestions for new
+widgets, or improved options for existing widgets, please open an issue on
+Github for discussion. I would also appreciate any bug reports, bug fixes, etc.
+
+Since I am building a small ecosystem around these labelling tools, I would
+also be excited to see new libraries that implement the same protocol as
+ipyannotations widgets. This would allow them to interact with [superintendent].
 
 % links
 

@@ -1,10 +1,10 @@
 from typing import Sequence
 
-from ..generic import ClassificationWidget, MultiClassificationWidget
+from .. import generic
 from .display import image_display_function
 
 
-class ClassLabeller(ClassificationWidget):
+class ClassLabeller(generic.ClassLabeller):
     def __init__(
         self,
         options: Sequence[str] = (),
@@ -40,7 +40,7 @@ class ClassLabeller(ClassificationWidget):
         self.display_function = image_display_function
 
 
-class MulticlassLabeller(MultiClassificationWidget):
+class MulticlassLabeller(generic.MulticlassLabeller):
     def __init__(
         self,
         options: Sequence[str] = (),

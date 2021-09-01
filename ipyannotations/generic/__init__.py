@@ -1,9 +1,9 @@
-from .classification import ClassificationWidget
-from .freetext import FreetextEntry
-from .multiclassification import MultiClassificationWidget
+from .classification import ClassLabeller
+from .freetext import FreetextAnnotator
+from .multiclassification import MulticlassLabeller
 
 __all__ = [
-    "ClassificationWidget",
-    "FreetextEntry",
-    "MultiClassificationWidget",
+    "ClassLabeller",
+    "FreetextAnnotator",
+    "MulticlassLabeller",
 ]

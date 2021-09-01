@@ -1,6 +1,13 @@
 # ipyannotations
 
-Create rich adata annotations in jupyter notebooks.
+Create rich data annotations in Jupyter notebooks with ipyannotations.
+
+ipyannotations provides interactive UI elements, based on ipywidgets, to allow
+developers and scientists to label data right in the notebook.
+
+ipyannotations supports many common data labelling tasks, such as image and text
+classification and annotation. It also supports custom data presentation by
+leveraging the Jupyter ecosystem.
 
 ## Quickstart
 

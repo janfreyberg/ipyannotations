@@ -11,14 +11,13 @@ from ..controls.togglebuttongroup import ToggleButtonGroup
 from .generic_mixin import GenericWidgetMixin, default_display_function
 
 
-class MultiClassificationWidget(
+class MulticlassLabeller(
     GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox
 ):
     """
-    A flexible data submission widget.
+    A multi-class data labelling widget.
 
-    Submitter allows you to specifiy options, which can be chosen either via
-    buttons or a dropdown, and a text field for "other" values.
+    Label an arbitrary data point with as many or as few labels as necessary.
     """
 
     allow_freetext = traitlets.Bool(True)
@@ -39,21 +38,18 @@ class MultiClassificationWidget(
         **kwargs,
     ):
         """
-        Create a widget that will render submission options.
-
-        Note that all parameters can also be changed through assignment after
-        you create the widget.
+        Create a multi-class labelling widget.
 
         Parameters
         ----------
         options : list, tuple, optional
-            The data submission options.
+            The class label options.
         max_buttons : int
             The number buttons you want to display. If len(options) >
             max_buttons, the options will be displayed in a dropdown instead.
         allow_freetext : bool, optional
             Whether the widget should contain a text box for users to type in
-            a value not in options.
+            a value not present in options.
         display_function : callable
             The function called on each datapoint to display it.
         """

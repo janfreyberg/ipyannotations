@@ -1,7 +1,7 @@
 """Image annotation widgets."""
 
 from .annotator import BoxAnnotator, PointAnnotator, PolygonAnnotator
-from .captions import ImageCaption
+from .freetext import FreetextAnnotator
 from .classification import ClassLabeller, MulticlassLabeller
 
 __all__ = [
@@ -10,5 +10,5 @@ __all__ = [
     "BoxAnnotator",
     "ClassLabeller",
     "MulticlassLabeller",
-    "ImageCaption",
+    "FreetextAnnotator",
 ]
