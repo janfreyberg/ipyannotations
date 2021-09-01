@@ -38,4 +38,4 @@ class FreetextAnnotator(generic.FreetextAnnotator):
                 IPython.display.Markdown(item)
             ),
             **kwargs
-        )
+        )  # type: ignore

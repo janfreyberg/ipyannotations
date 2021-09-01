@@ -5,8 +5,7 @@ import ipywidgets as widgets
 import traitlets
 
 from ..base import LabellingWidgetMixin
-from ..generic.classification import ClassLabeller
-from ..generic.multiclassification import MulticlassLabeller
+from .. import generic
 from ..generic.generic_mixin import GenericWidgetMixin
 
 
@@ -14,7 +13,7 @@ def _text_display_function(item: str):
     IPython.display.display(IPython.display.Markdown(item))
 
 
-class ClassLabeller(ClassLabeller):
+class ClassLabeller(generic.ClassLabeller):
     """A text classification widget.
 
     This widget lets you assign a single class to text.
@@ -50,7 +49,7 @@ class ClassLabeller(ClassLabeller):
         )  # type: ignore
 
 
-class MulticlassLabeller(MulticlassLabeller):
+class MulticlassLabeller(generic.MulticlassLabeller):
     def __init__(
         self,
         options: Sequence[str] = (),

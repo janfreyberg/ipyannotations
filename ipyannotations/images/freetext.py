@@ -35,4 +35,4 @@ class FreetextAnnotator(generic.FreetextAnnotator):
             textbox_placeholder=textbox_placeholder,
             num_textbox_rows=num_textbox_rows,
             **kwargs,
-        )
+        )  # type: ignore
