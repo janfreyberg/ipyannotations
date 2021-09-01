@@ -69,6 +69,8 @@ visible.
 installing
 introduction
 examples/index
+widget-list
+api
 ```
 
 ```{toctree}

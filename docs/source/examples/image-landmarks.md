@@ -79,6 +79,7 @@ on the `data` property of a widget class to see this text):
 
 ```{eval-rst}
 .. autoproperty:: ipyannotations.images.PolygonAnnotator.data
+    :noindex:
 ```
 
 ## Annotating key points, for counting or key-point regression
@@ -115,6 +116,7 @@ The data for this `PointAnnotator` widget looks like:
 
 ```{eval-rst}
 .. autoproperty:: ipyannotations.images.PointAnnotator.data
+    :noindex:
 ```
 
 ## Annotating bounding boxes
@@ -146,4 +148,5 @@ The data for the `BoxAnnotator` widget looks like:
 
 ```{eval-rst}
 .. autoproperty:: ipyannotations.images.BoxAnnotator.data
+    :noindex:
 ```
