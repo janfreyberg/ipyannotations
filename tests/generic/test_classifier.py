@@ -33,6 +33,19 @@ def test_changing_options_updates_buttons():
     assert len(widget.control_elements.buttons.values()) == 3
 
 
+def test_sorting_options():
+    widget = classification.ClassLabeller(options=["b", "a"])
+    displayed_opts = [
+        btn.description for btn in widget.control_elements.children
+    ]
+    assert displayed_opts == ["b", "a"]
+    widget._sort_options()
+    displayed_opts = [
+        btn.description for btn in widget.control_elements.children
+    ]
+    assert displayed_opts == ["a", "b"]
+
+
 def test_number_keystrokes_trigger_submit(mocker):
     widget = classification.ClassLabeller()
     widget.options = ["a", "b"]

@@ -2,7 +2,7 @@
 from ._version import __version__, version_info  # noqa: F401
 
 
-def _jupyter_labextension_paths():
+def _jupyter_labextension_paths():  # pragma: no cover
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
     to install the widget
     Returns
@@ -22,7 +22,7 @@ def _jupyter_labextension_paths():
     ]
 
 
-def _jupyter_nbextension_paths():
+def _jupyter_nbextension_paths():  # pragma: no cover
     """Called by Jupyter Notebook Server to detect if it is a valid nbextension
         and to install the widget
     Returns
