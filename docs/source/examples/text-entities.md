@@ -43,6 +43,9 @@ The default entity types are `PER` (person), `ORG` (organisation), `LOC`
 (location), and `MISC` (miscellaneous). These are chosen because they are
 relatively standard in the Named Entity Recognition research community.
 
+You can choose which entity type you are tagging at any point by toggling its
+button, or using the hotkeys 1 – 0, mapped in order.
+
 To set the classes you are interested in, you can pass them to the widget using
 the `classes` argument:
 

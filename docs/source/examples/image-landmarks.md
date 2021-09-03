@@ -20,7 +20,8 @@ All of the image annotation widgets share some parameters:
   of strings. The default is `None`.
 
 All image annotation widgets also share some common UI elements to make
-annotating easier, such as brightness / contrast adjustments.
+annotating easier, such as brightness / contrast adjustments. They also all
+respond to the hotkeys 1 – 0 to select the class of the item you are labelling.
 
 All image annotation widgets also have an "edit mode", which allows adjusting
 existing annotations by click-and-dragging any given point. All widgets also
