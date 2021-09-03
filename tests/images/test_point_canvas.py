@@ -73,10 +73,10 @@ def test_editing_mode(points: List[Point]):
     canvas = PointAnnotationCanvas()
     canvas.load_image(IMAGE)
     canvas.points = points
+    canvas.editing = True
 
     pre_move_points = [point.data for point in points]
 
-    canvas.editing = True
     # test that dragging is none by default
     assert canvas.dragging is None
 
@@ -103,6 +103,24 @@ def test_editing_mode(points: List[Point]):
     callback = canvas._undo_queue.pop()
     callback()
     assert canvas.data == pre_move_points
+
+
+@settings(deadline=None)
+@given(point=infer)
+def test_dragging_without_edit_mode(point: Point):
+
+    canvas = PointAnnotationCanvas()
+    canvas.load_image(IMAGE)
+    canvas.data = [point.data]
+
+    point_to_drag = point.coordinates
+    point_target = (50, 50)
+
+    canvas.on_click(*point_to_drag)
+    canvas.on_drag(*point_target)
+
+    # test point has not moved
+    assert canvas.data[0] == point.data
 
 
 @settings(deadline=None)

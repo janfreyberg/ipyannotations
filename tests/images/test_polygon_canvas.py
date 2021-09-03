@@ -98,6 +98,39 @@ def test_closing_current_polygon(polygon: Polygon):
 
 
 @settings(deadline=None)
+@given(polygon=infer)
+def test_closing_current_polygon_different_threshold(polygon: Polygon):
+
+    canvas = PolygonAnnotationCanvas()
+    canvas.load_image(IMAGE)
+
+    assume(all((0, 0) < point < canvas.size for point in polygon.points))
+    assume(not polygon.closed)
+    assume(len(polygon) > 2)
+
+    canvas.current_polygon = polygon
+    canvas.point_size = 20
+
+    poly_points = polygon.points.copy()
+    poly_start = poly_points[0]
+
+    closing_click = (
+        poly_start[0],
+        min([canvas.size[1], poly_start[1] + (canvas.point_size - 19)]),
+    )
+
+    canvas.on_click(*closing_click)
+
+    print(poly_points)
+    print(closing_click)
+
+    assert len(canvas.polygons) == 1
+    assert canvas.polygons[0].points[:-1] == poly_points
+    # test current polygon is reset
+    assert canvas.current_polygon.points == []
+
+
+@settings(deadline=None)
 @given(polygon=infer, polygons=infer)
 def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 
@@ -105,11 +138,11 @@ def test_editing_mode(polygon: Polygon, polygons: List[Polygon]):
 
     canvas = PolygonAnnotationCanvas()
     canvas.load_image(IMAGE)
+    canvas.editing = True
     canvas.current_polygon = polygon
 
     pre_move_points = polygon.points.copy()
 
-    canvas.editing = True
     # test that dragging is none by default
     assert canvas.dragging is None
 
