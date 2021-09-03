@@ -2,9 +2,21 @@
 # ipyannotations
 
 [![Build Status](https://travis-ci.org/janfreyberg/ipyannotations.svg?branch=master)](https://travis-ci.org/janfreyberg/ipyannotations)
-[![codecov](https://codecov.io/gh/janfreyberg/ipyannotations/branch/master/graph/badge.svg)](https://codecov.io/gh/janfreyberg/ipyannotations)
+[![Coverage Status](https://coveralls.io/repos/github/janfreyberg/ipyannotations/badge.svg?branch=master)](https://coveralls.io/github/janfreyberg/ipyannotations?branch=master)
+[![Build](https://github.com/janfreyberg/ipyannotations/actions/workflows/build.yml/badge.svg)](https://github.com/janfreyberg/ipyannotations/actions/workflows/build.yml)
+[![Unit tests and linting](https://github.com/janfreyberg/ipyannotations/actions/workflows/test.yml/badge.svg)](https://github.com/janfreyberg/ipyannotations/actions/workflows/test.yml)
+[![PyPI version](https://badge.fury.io/py/ipyannotations.svg)](https://badge.fury.io/py/ipyannotations)
 
 Create rich adata annotations in jupyter notebooks.
+
+ipyannotations provides interactive UI elements, based on ipywidgets, to allow
+developers and scientists to label data right in the notebook.
+
+ipyannotations supports many common data labelling tasks, such as image and text
+classification and annotation. It also supports custom data presentation by
+leveraging the Jupyter ecosystem.
+
+[![interface](https://user-images.githubusercontent.com/4092425/132008979-2fa43ec2-1add-4376-aba9-7836509b8e8f.png)](https://user-images.githubusercontent.com/4092425/132008979-2fa43ec2-1add-4376-aba9-7836509b8e8f.png)
 
 ## Installation
 
