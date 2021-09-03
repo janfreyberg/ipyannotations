@@ -59,7 +59,7 @@ class MulticlassLabeller(
             *args,
             **kwargs,
         )  # type: ignore
-        self.options: List[str] = [str(option) for option in options]
+        self.options = [str(option) for option in options]
         self.class_selector = ToggleButtonGroup(options=self.options)
         traitlets.link((self, "data"), (self.class_selector, "value"))
         traitlets.link((self, "options"), (self.class_selector, "options"))
@@ -140,5 +140,6 @@ class MulticlassLabeller(
         if self._undo_queue:
             last_undo_fn = self._undo_queue.pop()
             last_undo_fn()
-        for callback in self.undo_fns:
-            callback()
+        else:
+            for callback in self.undo_fns:
+                callback()
