@@ -47,7 +47,9 @@ be labelled or annotated:
    calls `display` on the next datapoint to be labelled.
 
 All of the above actions have corresponding UI elements, but these elements
-can be different for different widgets.
+can be different for different widgets. All widgets also respond to hotkeys,
+meaning you can submit data using `Enter`, undo an action using `Backspace`,
+and in many cases select options from within the widget using the 1-0 keys.
 
 An very simple example of this process might be something like:
 

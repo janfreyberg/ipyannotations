@@ -19,6 +19,10 @@ All classification widgets share some parameters and arguments, such as:
   have every option as a button. Setting this allows the widget to switch to a
   different method of class selection.
 
+All classification widgets also respond to hotkeys: you can use the numeric
+keys 1 – 0 to select an option, with keys mapped to the classes in order. You
+can also use "Backspace" to undo an option, and in the case of multi-class
+widgets, you can use "Enter" to submit.
 
 ## Image classification
 

@@ -18,6 +18,9 @@ class MulticlassLabeller(
     A multi-class data labelling widget.
 
     Label an arbitrary data point with as many or as few labels as necessary.
+    Toggle labels by either clicking on the corresponding button, or by using
+    the hotkeys 1-0 (mapped in order in which labels are on screen). Submit
+    by either clicking the "Submit" button, or by pressing the Enter key.
     """
 
     allow_freetext = traitlets.Bool(True)
@@ -99,8 +102,9 @@ class MulticlassLabeller(
             if self._freetext_timestamp > time.time() - 0.1:
                 return
         super()._handle_keystroke(event)
-        for i, option in zip(range(10), self.class_selector.options):
-            if event["key"] == f"{(i + 1) % 10}":
+        keys = [str(i) for i in range(1, 10)] + ["0"]
+        for key, option in zip(keys, self.class_selector.options):
+            if event.get("key") == key:
                 self.class_selector._toggle(option)
 
     def freetext_submission(self, sender: widgets.Text):

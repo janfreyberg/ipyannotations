@@ -16,7 +16,10 @@ class ClassLabeller(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
     A classification widget.
 
     This widget is designed to assign one class (a string label) to each data
-    point.
+    point. Choose a class by clicking the corresponding button, the value in
+    the corresponding dropdown (if there isn't space for all buttons), or by
+    using the hotkeys 1-0. Hotkeys are mapped in the order in which the classes
+    appear.
     """
 
     allow_freetext = traitlets.Bool(True)
@@ -126,6 +129,7 @@ class ClassLabeller(GenericWidgetMixin, LabellingWidgetMixin, widgets.VBox):
         if event.get("key") == "Enter":
             return
         super()._handle_keystroke(event)
-        for i, btn in enumerate(self.control_elements.buttons.values()):
-            if event.get("key") == f"{i + 1}":
+        keys = [str(i) for i in range(1, 10)] + ["0"]
+        for key, btn in zip(keys, self.control_elements.buttons.values()):
+            if event.get("key") == key:
                 self.submit(btn)

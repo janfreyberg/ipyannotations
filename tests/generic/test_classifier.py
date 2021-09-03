@@ -50,14 +50,15 @@ def test_sorting_options():
 
 def test_number_keystrokes_trigger_submit(mocker):
     widget = classification.ClassLabeller()
-    widget.options = ["a", "b"]
+    widget.options = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
     spy: MagicMock = mocker.MagicMock()
     widget.on_submit(spy)
 
-    test_event = {"key": "1", "type": "keyup"}
-    widget._handle_keystroke(test_event)
-    spy.assert_called_with("a")
-    spy.reset_mock()
+    for i, key in enumerate(list(range(1, 10)) + [0]):
+        test_event = {"key": str(key), "type": "keyup"}
+        widget._handle_keystroke(test_event)
+        spy.assert_called_with(widget.options[i])
+        spy.reset_mock()
 
     test_event = {"key": "2", "type": "keyup"}
     widget._handle_keystroke(test_event)

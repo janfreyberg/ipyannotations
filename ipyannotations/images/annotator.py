@@ -199,11 +199,10 @@ class Annotator(LabellingWidgetMixin, widgets.VBox):
 
     def _handle_keystroke(self, event):
         super()._handle_keystroke(event)
-        for i, option in enumerate(self.class_selector.options):
-            if event["key"] == f"{(i + 1) % 10}":
+        keys = [str(i) for i in range(1, 10)] + ["0"]
+        for key, option in zip(keys, self.class_selector.options):
+            if event.get("key") == key:
                 self.class_selector.value = option
-            if i == 10:
-                break  # pragma: no cover
 
 
 class PolygonAnnotator(Annotator):
@@ -226,6 +225,10 @@ class PolygonAnnotator(Annotator):
     using the sliders to make it easier to annotate. Sometimes you need to see
     what's behind already-created annotations, and for this purpose you can
     make them more see-through using the "Opacity" slider.
+
+    You can select the class of the polygon you are creating by choosing it
+    from the dropdown menu, or by using the hotkeys 1-0 (mapped in order in
+    which the classes appear in the dropdown).
 
     Parameters
     ----------
@@ -274,6 +277,10 @@ class PointAnnotator(Annotator):
     what's behind already-created annotations, and for this purpose you can
     make them more see-through using the "Opacity" slider.
 
+    You can select the class of the point you are creating by choosing it
+    from the dropdown menu, or by using the hotkeys 1-0 (mapped in order in
+    which the classes appear in the dropdown).
+
     Parameters
     ----------
     canvas_size : (int, int), optional
@@ -320,6 +327,10 @@ class BoxAnnotator(Annotator):
     using the sliders to make it easier to annotate. Sometimes you need to see
     what's behind already-created annotations, and for this purpose you can
     make them more see-through using the "Opacity" slider.
+
+    You can select the class of the box you are creating by choosing it
+    from the dropdown menu, or by using the hotkeys 1-0 (mapped in order in
+    which the classes appear in the dropdown).
 
     Parameters
     ----------
