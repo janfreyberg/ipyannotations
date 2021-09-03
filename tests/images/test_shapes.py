@@ -1,3 +1,4 @@
+import pytest
 from hypothesis import assume, example, given, infer, strategies
 
 from ipyannotations.images.canvases.shapes import BoundingBox, Point, Polygon
@@ -82,6 +83,14 @@ def test_getting_xy_lists_works(poly: Polygon):
     assert all(y == xy[1] for y, xy in zip(ylist, poly.points))
 
 
+@given(box=infer, point=infer)
+def test_point_does_not_accept_other_shapes(box: BoundingBox, point: Point):
+    with pytest.raises(ValueError):
+        Polygon.from_data(box.data)
+    with pytest.raises(ValueError):
+        Polygon.from_data(point.data)
+
+
 # -------------------------
 # Points
 
@@ -96,6 +105,14 @@ def test_point_move(p: Point, q: Point):
     #  test moving point from A to B
     p.move(*q.coordinates)
     assert p.coordinates == q.coordinates
+
+
+@given(box=infer, poly=infer)
+def test_point_does_not_accept_other_shapes(box: BoundingBox, poly: Polygon):
+    with pytest.raises(ValueError):
+        Point.from_data(box.data)
+    with pytest.raises(ValueError):
+        Point.from_data(poly.data)
 
 
 # -------------------------
@@ -128,3 +145,11 @@ def test_box_corner_property(p: BoundingBox):
     assert corners[0] <= corners[1]
     assert corners[0] <= corners[2]
     assert corners[0] <= corners[3]
+
+
+@given(point=infer, poly=infer)
+def test_box_does_not_accept_other_shapes(point: Point, poly: Polygon):
+    with pytest.raises(ValueError):
+        BoundingBox.from_data(point.data)
+    with pytest.raises(ValueError):
+        BoundingBox.from_data(poly.data)

@@ -83,6 +83,10 @@ class Polygon:
         type_ = data.pop("type")
         if type_ == "polygon":
             return cls(**data)
+        else:
+            raise ValueError(
+                "The key 'type' in the data you supplied is not 'polygon'"
+            )
 
 
 @dataclass
@@ -124,6 +128,10 @@ class Point:
         type_ = data.pop("type")
         if type_ == "point":
             return cls(**data)
+        else:
+            raise ValueError(
+                "The key 'type' in the data you supplied is not 'point'"
+            )
 
 
 @dataclass
