@@ -159,6 +159,7 @@ class SentimentLabeller(
         if event.get("key") == "Enter":
             return
         super()._handle_keystroke(event)
-        for i, btn in enumerate(self.buttons):
-            if event.get("key") == f"{i + 1}":
+        keys = [str(i) for i in range(1, 10)] + ["0"]
+        for key, btn in zip(keys, self.buttons):
+            if event.get("key") == key:
                 self.submit(btn)

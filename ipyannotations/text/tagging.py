@@ -183,8 +183,7 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
 
     def _handle_keystroke(self, event):
         super()._handle_keystroke(event)
-        for i, option in enumerate(self.class_selector.options):
-            if event["key"] == f"{(i + 1) % 10}":
+        keys = [str(i) for i in range(1, 10)] + ["0"]
+        for key, option in zip(keys, self.class_selector.options):
+            if event.get("key") == key:
                 self.class_selector.value = option
-            if i == 10:
-                break  # pragma: no cover
