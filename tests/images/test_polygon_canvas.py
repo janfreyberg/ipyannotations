@@ -1,4 +1,4 @@
-from math import isfinite
+from math import isfinite, pi
 from typing import List, Tuple, Union
 from unittest.mock import MagicMock, patch
 
@@ -54,6 +54,7 @@ def test_click_handling(point: Point, other_data: List[Polygon]):
 @given(data=infer)
 def test_drawing_invokes_canvas_line_to(data: List[Polygon]):
 
+    assume(len(data) >= 1)
     canvas = PolygonAnnotationCanvas()
     canvas.load_image(IMAGE)
 
@@ -64,6 +65,33 @@ def test_drawing_invokes_canvas_line_to(data: List[Polygon]):
         if len(polygon.points) > 1:
             for point in polygon.points[1:]:
                 mock_line_to.assert_any_call(*point)
+
+
+@settings(deadline=None)
+@given(data=infer)
+def test_drawing_invokes_canvas_fill_arc_in_edit_mode(data: List[Polygon]):
+
+    assume(len(data) > 1)
+    canvas = PolygonAnnotationCanvas()
+    canvas.load_image(IMAGE)
+    print(canvas.image_extent)
+    canvas.editing = True
+
+    with patch.object(ipycanvas.Canvas, "fill_arcs") as mock_fill_arcs:
+        canvas.data = [poly.data for poly in data]
+
+    for polygon in data:
+        for point in polygon.points:
+            assert canvas.image_to_canvas_coordinates(point) == point
+
+        if len(polygon.points) > 1:
+            mock_fill_arcs.assert_any_call(
+                polygon.xy_lists[0],
+                polygon.xy_lists[1],
+                canvas.point_size,
+                0,
+                2 * pi,
+            )
 
 
 @settings(deadline=None)
