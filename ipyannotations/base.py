@@ -80,7 +80,7 @@ class LabellingWidgetMixin:
         """
         if hasattr(self, "data"):
             value = self.data
-        else:
+        else:  # pragma: no cover
             raise NotImplementedError(
                 "Submission for this widget doesn't seem to be implemented."
             )

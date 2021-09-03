@@ -1,6 +1,7 @@
 import re
 
 from hypothesis import given, strategies
+import pytest
 
 from ipyannotations.images.canvases.color_utils import (
     hex_to_rgb,
@@ -34,6 +35,12 @@ def test_rgb_to_hex_and_back(color):
     hex_col = rgb_to_hex(color)
     assert HEX_REGEX.match(hex_col)
     assert hex_to_rgb(hex_col) == color
+
+
+def test_rgb_to_hex_failure():
+    color = (277, 128, 0)
+    with pytest.raises(ValueError):
+        hex_col = rgb_to_hex(color)
 
 
 @given(rgb_colors)

@@ -11,9 +11,15 @@ from PIL import Image
 from ipyannotations.images.canvases.abstract_canvas import (
     AbstractAnnotationCanvas,
 )
+import ipyannotations.images.canvases.image_utils
 from ipyannotations.images.canvases.image_utils import fit_image
 
-# ImageTypes =
+
+class TestCanvas(AbstractAnnotationCanvas):
+    """Test canvas to test the abstract canvas."""
+
+    def init_empty_data(self):
+        self.data = []
 
 
 @settings(deadline=None)
@@ -34,7 +40,7 @@ def test_that_loading_image_clears_data(
 
 @settings(deadline=None)
 @given(img=infer)
-def test_that_loading_image_from_path(img: Image.Image):
+def test_that_loading_image_from_path_succeeds(img: Image.Image):
 
     with tempfile.TemporaryDirectory(dir=".") as tmp:
         tmp = pathlib.Path(tmp)
@@ -91,4 +97,21 @@ def test_that_points_clicked_get_translated_correctly(
         round_trip_y, click_y, atol=1
     )
 
-    # assert (0, 0) <= canvas.image_to_canvas_coordinates((0, 0)) <= canvas.size
+
+@settings(deadline=None)
+@given(img=infer)
+def test_that_images_are_adjusted(img: widgets.Image):
+    with patch(
+        "ipyannotations.images.canvases.abstract_canvas.adjust", autospec=True
+    ) as mock_adjust:
+        mock_adjust.return_value = img
+        canvas = TestCanvas()
+        canvas.image_brightness = 1.1
+        canvas.image_contrast = 1.1
+        canvas.load_image(img)
+
+        mock_adjust.assert_called_once_with(
+            img,
+            contrast_factor=1.1,
+            brightness_factor=1.1,
+        )

@@ -203,7 +203,7 @@ class Annotator(LabellingWidgetMixin, widgets.VBox):
             if event["key"] == f"{(i + 1) % 10}":
                 self.class_selector.value = option
             if i == 10:
-                break
+                break  # pragma: no cover
 
 
 class PolygonAnnotator(Annotator):
