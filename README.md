@@ -1,8 +1,7 @@
 
 # ipyannotations
 
-[![Build Status](https://travis-ci.org/janfreyberg/ipyannotations.svg?branch=master)](https://travis-ci.org/janfreyberg/ipyannotations)
-[![Coverage Status](https://coveralls.io/repos/github/janfreyberg/ipyannotations/badge.svg?branch=master)](https://coveralls.io/github/janfreyberg/ipyannotations?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/janfreyberg/ipyannotations/badge.svg?branch=main)](https://coveralls.io/github/janfreyberg/ipyannotations?branch=main)
 [![Build](https://github.com/janfreyberg/ipyannotations/actions/workflows/build.yml/badge.svg)](https://github.com/janfreyberg/ipyannotations/actions/workflows/build.yml)
 [![Unit tests and linting](https://github.com/janfreyberg/ipyannotations/actions/workflows/test.yml/badge.svg)](https://github.com/janfreyberg/ipyannotations/actions/workflows/test.yml)
 [![PyPI version](https://badge.fury.io/py/ipyannotations.svg)](https://badge.fury.io/py/ipyannotations)
