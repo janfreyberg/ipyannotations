@@ -226,6 +226,10 @@ class PolygonAnnotator(Annotator):
     what's behind already-created annotations, and for this purpose you can
     make them more see-through using the "Opacity" slider.
 
+    You can select the class of the polygon you are creating by choosing it
+    from the dropdown menu, or by using the hotkeys 1-0 (mapped in order in
+    which the classes appear in the dropdown).
+
     Parameters
     ----------
     canvas_size : (int, int), optional
@@ -273,6 +277,10 @@ class PointAnnotator(Annotator):
     what's behind already-created annotations, and for this purpose you can
     make them more see-through using the "Opacity" slider.
 
+    You can select the class of the point you are creating by choosing it
+    from the dropdown menu, or by using the hotkeys 1-0 (mapped in order in
+    which the classes appear in the dropdown).
+
     Parameters
     ----------
     canvas_size : (int, int), optional
@@ -319,6 +327,10 @@ class BoxAnnotator(Annotator):
     using the sliders to make it easier to annotate. Sometimes you need to see
     what's behind already-created annotations, and for this purpose you can
     make them more see-through using the "Opacity" slider.
+
+    You can select the class of the box you are creating by choosing it
+    from the dropdown menu, or by using the hotkeys 1-0 (mapped in order in
+    which the classes appear in the dropdown).
 
     Parameters
     ----------

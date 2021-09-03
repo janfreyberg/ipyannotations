@@ -18,6 +18,9 @@ class MulticlassLabeller(
     A multi-class data labelling widget.
 
     Label an arbitrary data point with as many or as few labels as necessary.
+    Toggle labels by either clicking on the corresponding button, or by using
+    the hotkeys 1-0 (mapped in order in which labels are on screen). Submit
+    by either clicking the "Submit" button, or by pressing the Enter key.
     """
 
     allow_freetext = traitlets.Bool(True)

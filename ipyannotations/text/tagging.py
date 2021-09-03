@@ -63,8 +63,12 @@ class TextTaggerCore(widgets.DOMWidget):
         This is a front-end widget that displays its 'text' attribute. When a
         sub-string is highlighted, it will snap to the word boundaries, and
         mark it as a span of type `widget.selected_class`. All spans that are
-        highlighted are available under `widget.entity_spans`, which is
+        highlighted are available under `widget.entity_spans`, which is also
         assignable.
+
+        Select the type of entity to tag by clicking its corresponding button,
+        or by using the hotkeys 1-0. Hotkeys are mapped to entities in the
+        order in which they appear on screen.
 
         Parameters
         ----------
