@@ -26,6 +26,7 @@ class TextTaggerCore(widgets.DOMWidget):
         trait=traitlets.Unicode(), default_value=["MISC", "PER", "LOC", "ORG"]
     ).tag(sync=True)
     selected_class = traitlets.Unicode().tag(sync=True)
+    snap_to_word_boundary = traitlets.Bool().tag(sync=True)
     entity_spans = traitlets.List(
         trait=traitlets.Tuple(
             traitlets.Int(), traitlets.Int(), traitlets.Unicode()
@@ -54,6 +55,7 @@ class TextTaggerCore(widgets.DOMWidget):
         text="Lorem ipsum",
         classes=["MISC", "PER", "LOC", "ORG"],
         entity_spans=[],
+        snap_to_word_boundary=True,
         **kwargs,
     ):
         """Create a text tagging "core" widget.
@@ -75,7 +77,11 @@ class TextTaggerCore(widgets.DOMWidget):
             The currently highlighted spans, by default []
         """
         super().__init__(
-            text=text, classes=classes, entity_spans=entity_spans, **kwargs
+            text=text,
+            classes=classes,
+            entity_spans=entity_spans,
+            snap_to_word_boundary=snap_to_word_boundary,
+            **kwargs,
         )
         if not self.selected_class:
             self.selected_class = self.classes[0]
@@ -96,6 +102,7 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
         text="Lorem ipsum",
         data=[],
         button_width="5em",
+        snap_to_word_boundary=True,
     ):
         """A tagging widget to annotate tokens inside text.
 
@@ -110,10 +117,18 @@ class TextTagger(LabellingWidgetMixin, widgets.VBox):
             If you have entity annotations for this text already, by default []
         button_width : str, optional
             A valid HTML width string, by default "5em"
+        snap_to_word_boundary : bool
+            Whether or not the widget should expand selections to the word
+            boundaries. For most languages, this should be left True, but some
+            languages are based off single characters (e.g. traditional
+            mandarin).
         """
         super().__init__()
         self.text_widget = TextTaggerCore(
-            text=text, classes=classes, entity_spans=data
+            text=text,
+            classes=classes,
+            entity_spans=data,
+            snap_to_word_boundary=snap_to_word_boundary,
         )
         self.class_selector = widgets.ToggleButtons(
             options=classes,

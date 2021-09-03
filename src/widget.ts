@@ -39,6 +39,7 @@ export class TextTaggerModel extends DOMWidgetModel {
       selected_class: '',
       entity_spans: [],
       palette: [],
+      snap_to_word_boundary: true,
     };
   }
 
@@ -143,7 +144,10 @@ export class TextTaggerView extends DOMWidgetView {
       this.el.contains(selection.anchorNode) &&
       this.el.contains(selection.focusNode)
     ) {
-      snap_to_word(selection);
+      const snap_to_word_boundary = this.model.get('snap_to_word_boundary');
+      if (snap_to_word_boundary) {
+        snap_to_word(selection);
+      }
       const offset = get_offset_relative_to(this.el);
       txt = selection.toString();
       // var raw_text = this.model.get('text')

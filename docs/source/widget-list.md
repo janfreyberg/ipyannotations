@@ -249,6 +249,7 @@ import ipyannotations.text
 widget = ipyannotations.text.TextTagger(
     classes=["MISC", "PER", "LOC", "ORG"],
     button_width="5em",
+    snap_to_word_boundary=True,
 )
 widget.display("This is an *example sentence*. Try highlighting a word.")
 widget
@@ -264,6 +265,7 @@ from ipyannotations._doc_utils import recursively_remove_from_dom
 widget = ipyannotations.text.TextTagger(
     classes=["MISC", "PER", "LOC", "ORG"],
     button_width="5em",
+    snap_to_word_boundary=True,
 )
 widget.display("This is an example sentence. Try highlighting a word.")
 recursively_remove_from_dom(widget)

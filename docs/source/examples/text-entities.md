@@ -66,8 +66,36 @@ widget.data = [(8, 16, 'Insult'), (22, 32, 'Compliment')]
 recursively_remove_from_dom(widget)
 ```
 
-The widget will snap to word boundaries to make tagging faster. This means you
-can double-click on a word to tag it.
+The widget will snap to word boundaries by default. This means you can
+double-click on a word to tag it, hopefully making tagging faster. If you need
+to label entities at the character level, you can set `snap_to_word_boundary` to
+False:
+
+```python
+import ipyannotations.text
+
+widget = ipyannotations.text.TextTagger(
+    classes=["Insult", "Compliment"],
+    snap_to_word_boundary=False
+)
+widget.display("You are annoying, but I like you.")
+widget
+```
+
+```{jupyter-execute}
+:hide-code:
+
+import ipyannotations.text
+from ipyannotations._doc_utils import recursively_remove_from_dom
+
+widget = ipyannotations.text.TextTagger(
+    classes=["Insult", "Compliment"],
+    snap_to_word_boundary=False,
+)
+widget.display("You are annoying, but I like you.")
+widget.data = [(8, 16, 'Insult'), (22, 32, 'Compliment')]
+recursively_remove_from_dom(widget)
+```
 
 The format for the annotations takes the form of a three-tuple with types (int,
 int, str). The integers indicate the starting and ending character of the
