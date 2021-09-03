@@ -84,7 +84,7 @@ def test_getting_xy_lists_works(poly: Polygon):
 
 
 @given(box=infer, point=infer)
-def test_point_does_not_accept_other_shapes(box: BoundingBox, point: Point):
+def test_polygon_does_not_accept_other_shapes(box: BoundingBox, point: Point):
     with pytest.raises(ValueError):
         Polygon.from_data(box.data)
     with pytest.raises(ValueError):
