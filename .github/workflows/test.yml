@@ -1,7 +1,9 @@
-name: Unit tests and linting
+name: Tests
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
   pull_request:
   schedule:
     - cron: "0 15 * * 5"

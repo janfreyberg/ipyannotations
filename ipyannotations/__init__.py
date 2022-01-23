@@ -43,6 +43,6 @@ def _jupyter_nbextension_paths():  # pragma: no cover
             "section": "notebook",
             "src": "nbextension",
             "dest": "ipyannotations",
-            "require": "ipyannotations/extension",
+            "require": "ipyannotations/index",
         }
     ]

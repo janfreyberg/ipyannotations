@@ -46,6 +46,7 @@ class LabellingWidgetMixin:
             source=self,
             watched_events=["keyup"] if track_keystrokes else [],
             prevent_default_actions=True,
+            wait=10,
         )
         self.event_watcher.on_dom_event(self._handle_keystroke)
         self.children = self.children + (self.event_watcher,)

@@ -36,7 +36,7 @@ jstargets = [
 ]
 
 
-package_data_spec = {name: ["nbextension/**js*", "labextension/**"]}
+package_data_spec = {name: ["nbextension/**", "labextension/**"]}
 
 
 data_files_spec = [
