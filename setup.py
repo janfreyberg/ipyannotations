@@ -31,7 +31,7 @@ version = get_version(pjoin(name, "_version.py"))
 
 # Representative files that should exist after a successful build
 jstargets = [
-    pjoin(HERE, "src", name, "nbextension", "index.js"),
+    pjoin(HERE, name, "nbextension", "index.js"),
     pjoin(HERE, "lib", "plugin.js"),
 ]
 
@@ -61,7 +61,7 @@ cmdclass = create_cmdclass(
     data_files_spec=data_files_spec,
 )
 cmdclass["jsdeps"] = combine_commands(
-    install_npm(HERE, build_cmd="build:prod"),
+    install_npm(HERE, build_cmd="build:prod", npm=["yarn"]),
     ensure_targets(jstargets),
 )
 
