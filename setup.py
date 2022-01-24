@@ -124,6 +124,7 @@ setup_args = dict(
             "flake8",
             "pre-commit",
             "jupyterlab",
+            "notebook",
             "rope",
             "docargs",
             "jupyter_packaging",
