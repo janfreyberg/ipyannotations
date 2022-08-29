@@ -1,7 +1,7 @@
 """Widgets to assign multiple classes to data points."""
 
 import time
-from typing import List, Iterable
+from typing import Iterable
 
 import ipywidgets as widgets
 import traitlets

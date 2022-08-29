@@ -19,9 +19,9 @@ class TextTaggerCore(widgets.DOMWidget):
     _view_module = traitlets.Unicode(module_name).tag(sync=True)
     _view_module_version = traitlets.Unicode(module_version).tag(sync=True)
 
-    text = traitlets.Unicode(
-        "Lorem ipsum", help="The text to display."
-    ).tag(sync=True)
+    text = traitlets.Unicode("Lorem ipsum", help="The text to display.").tag(
+        sync=True
+    )
     classes = traitlets.List(
         trait=traitlets.Unicode(), default_value=["MISC", "PER", "LOC", "ORG"]
     ).tag(sync=True)
@@ -79,6 +79,9 @@ class TextTaggerCore(widgets.DOMWidget):
             ["MISC", "PER", "LOC", "ORG"].
         entity_spans : list, optional
             The currently highlighted spans, by default []
+        snap_to_word_boundary : bool
+            Whether to always snap to the word boundary, even when a
+            word is only partially selected.
         """
         super().__init__(
             text=text,
