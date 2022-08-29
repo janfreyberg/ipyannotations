@@ -95,7 +95,7 @@ setup_args = dict(
     python_requires=">=3.7",
     install_requires=[
         "ipywidgets>=7.0.0",
-        "ipycanvas",
+        "ipycanvas>=0.13.1",
         "palettable",
         "Pillow",
         "numpy",
@@ -133,7 +133,7 @@ setup_args = dict(
             # Any requirements for the examples to run
         ],
         "doc": [
-            "sphinx>=2.3",
+            "sphinx>=4.0",
             "sphinx_rtd_theme",
             "matplotlib",
             "nbsphinx",
