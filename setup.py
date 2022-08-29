@@ -31,12 +31,12 @@ version = get_version(pjoin(name, "_version.py"))
 
 # Representative files that should exist after a successful build
 jstargets = [
-    pjoin(HERE, "src", name, "nbextension", "index.js"),
+    pjoin(HERE, name, "nbextension", "index.js"),
     pjoin(HERE, "lib", "plugin.js"),
 ]
 
 
-package_data_spec = {name: ["nbextension/**js*", "labextension/**"]}
+package_data_spec = {name: ["nbextension/**", "labextension/**"]}
 
 
 data_files_spec = [
@@ -61,7 +61,7 @@ cmdclass = create_cmdclass(
     data_files_spec=data_files_spec,
 )
 cmdclass["jsdeps"] = combine_commands(
-    install_npm(HERE, build_cmd="build:prod"),
+    install_npm(HERE, build_cmd="build:prod", npm=["yarn"]),
     ensure_targets(jstargets),
 )
 
@@ -124,6 +124,7 @@ setup_args = dict(
             "flake8",
             "pre-commit",
             "jupyterlab",
+            "notebook",
             "rope",
             "docargs",
             "jupyter_packaging",

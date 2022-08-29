@@ -1,7 +1,7 @@
 """Widgets to assign multiple classes to data points."""
 
 import time
-from typing import List, Iterable
+from typing import Iterable
 
 import ipywidgets as widgets
 import traitlets
@@ -24,13 +24,11 @@ class MulticlassLabeller(
     """
 
     allow_freetext = traitlets.Bool(True)
-    options: List[str] = traitlets.List(
+    options = traitlets.List(
         trait=traitlets.Unicode(), default_value=list(), allow_none=True
     )
     max_buttons = traitlets.Integer(12)
-    data: List[str] = traitlets.List(
-        trait=traitlets.Unicode(), default_value=list()
-    )
+    data = traitlets.List(trait=traitlets.Unicode(), default_value=list())
 
     def __init__(
         self,

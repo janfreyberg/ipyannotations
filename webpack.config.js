@@ -27,7 +27,7 @@ module.exports = [
     entry: './src/extension.ts',
     output: {
       filename: 'index.js',
-      path: path.resolve(__dirname, 'src', 'ipyannotations', 'nbextension'),
+      path: path.resolve(__dirname, 'ipyannotations', 'nbextension'),
       libraryTarget: 'amd',
       publicPath: '',
     },

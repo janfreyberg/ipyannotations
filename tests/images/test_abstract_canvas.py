@@ -65,7 +65,7 @@ def test_that_fit_image_always_fits_image(img: widgets.Image):
 
     x0, y0, x1, y1, _, _ = fit_image(img, canvas)
 
-    assert (x1, y1) < canvas.size
+    assert (x1, y1) < (canvas.width, canvas.height)
 
 
 @given(

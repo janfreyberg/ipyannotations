@@ -1,4 +1,5 @@
 from typing import Sequence
+from functools import partial
 
 from .. import generic
 from .display import image_display_function
@@ -10,6 +11,7 @@ class ClassLabeller(generic.ClassLabeller):
         options: Sequence[str] = (),
         max_buttons: int = 12,
         allow_freetext: bool = True,
+        image_size=(500, 500),
         # hint_function: Optional[Callable] = None,
         # hints: Optional[Dict[str, Any]] = None,
         # update_hints: bool = True,
@@ -28,16 +30,20 @@ class ClassLabeller(generic.ClassLabeller):
         allow_freetext : bool, optional
             Whether a free-text entry box should be displayed,
             by default True
+        image_size : tuple(int, int)
+            The image size to be displayed, in pixels.
         """
 
         super().__init__(
             options=options,
             max_buttons=max_buttons,
             allow_freetext=allow_freetext,
+            display_function=partial(
+                image_display_function, fit_into=image_size
+            ),
             *args,
             **kwargs,
         )  # type: ignore
-        self.display_function = image_display_function
 
 
 class MulticlassLabeller(generic.MulticlassLabeller):
@@ -46,6 +52,7 @@ class MulticlassLabeller(generic.MulticlassLabeller):
         options: Sequence[str] = (),
         max_buttons: int = 12,
         allow_freetext: bool = True,
+        image_size=(500, 500),
         *args,
         **kwargs,
     ):
@@ -61,13 +68,17 @@ class MulticlassLabeller(generic.MulticlassLabeller):
         allow_freetext : bool, optional
             Whether to allow free-text submission in a text box,
             by default True
+        image_size : tuple(int, int)
+            The image size to be displayed, in pixels.
         """
 
         super().__init__(
             options=options,
             max_buttons=max_buttons,
             allow_freetext=allow_freetext,
+            display_function=partial(
+                image_display_function, fit_into=image_size
+            ),
             *args,
             **kwargs,
         )  # type: ignore
-        self.display_function = image_display_function

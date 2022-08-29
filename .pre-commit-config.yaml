@@ -8,13 +8,13 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: flake8
-        files: 'src/*.py'
+        files: 'ipyannotations/.*\.py'
 -   repo: https://github.com/ambv/black
-    rev: stable
+    rev: 22.6.0
     hooks:
     - id: black
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: ''  # Use the sha / tag you want to point at
+    rev: 'v0.971'  # Use the sha / tag you want to point at
     hooks:
     -   id: mypy
-        files: 'src/*.py'
+        files: 'ipyannotations/.*\.py'

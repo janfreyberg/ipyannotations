@@ -1,5 +1,3 @@
-from typing import List, Tuple
-
 import ipywidgets as widgets
 import traitlets
 
@@ -19,10 +17,10 @@ class TextTaggerCore(widgets.DOMWidget):
     _view_module = traitlets.Unicode(module_name).tag(sync=True)
     _view_module_version = traitlets.Unicode(module_version).tag(sync=True)
 
-    text: str = traitlets.Unicode(
-        "Lorem ipsum", help="The text to display."
-    ).tag(sync=True)
-    classes: List[str] = traitlets.List(
+    text = traitlets.Unicode("Lorem ipsum", help="The text to display.").tag(
+        sync=True
+    )
+    classes = traitlets.List(
         trait=traitlets.Unicode(), default_value=["MISC", "PER", "LOC", "ORG"]
     ).tag(sync=True)
     selected_class = traitlets.Unicode().tag(sync=True)
@@ -79,6 +77,9 @@ class TextTaggerCore(widgets.DOMWidget):
             ["MISC", "PER", "LOC", "ORG"].
         entity_spans : list, optional
             The currently highlighted spans, by default []
+        snap_to_word_boundary : bool
+            Whether to always snap to the word boundary, even when a
+            word is only partially selected.
         """
         super().__init__(
             text=text,
@@ -94,7 +95,7 @@ class TextTaggerCore(widgets.DOMWidget):
 class TextTagger(LabellingWidgetMixin, widgets.VBox):
     """A tagging widget to annotate tokens inside text."""
 
-    data: List[Tuple[int, int, str]] = traitlets.List(
+    data = traitlets.List(
         trait=traitlets.Tuple(
             traitlets.Int(), traitlets.Int(), traitlets.Unicode()
         )

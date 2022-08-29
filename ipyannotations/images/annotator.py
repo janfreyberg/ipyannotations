@@ -156,7 +156,7 @@ class Annotator(LabellingWidgetMixin, widgets.VBox):
         self.all_controls = widgets.HBox(
             children=(self.visualisation_controls, self.data_controls),
             layout={
-                "width": f"{self.canvas.size[0]}px",
+                "width": f"{self.canvas.width}px",
                 "justify_content": "space-between",
             },
         )
