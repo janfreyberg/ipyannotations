@@ -139,11 +139,10 @@ def fit_image(
         width and height.
     """
     img_width, img_height = Image.open(io.BytesIO(img.value)).size
-    canvas_width, canvas_height = canvas.size
 
     height_ratio, width_ratio = (
-        img_height / canvas_height,
-        img_width / canvas_width,
+        img_height / canvas.height,
+        img_width / canvas.width,
     )
     if height_ratio <= 1 and width_ratio <= 1:
         # we can fill and center the whole image
@@ -156,7 +155,7 @@ def fit_image(
         # width is the limiting factor:
         height = int(img_height / width_ratio)
         width = int(img_width / width_ratio)
-    x, y = (canvas_width // 2 - width // 2, canvas_height // 2 - height // 2)
+    x, y = (canvas.width // 2 - width // 2, canvas.height // 2 - height // 2)
     return x, y, width, height, img_width, img_height
 
 

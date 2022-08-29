@@ -28,9 +28,7 @@ class ToggleButtonGroup(widgets.HBox):
         [traitlets.Float(), traitlets.Integer(), traitlets.Unicode()],
         allow_none=True,
     )
-    value = traitlets.List(
-        trait=traitlets.Unicode(), default_value=list()
-    )
+    value = traitlets.List(trait=traitlets.Unicode(), default_value=list())
 
     def __init__(
         self,
