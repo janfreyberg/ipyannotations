@@ -1,5 +1,3 @@
-from typing import List, Tuple
-
 import ipywidgets as widgets
 import traitlets
 
