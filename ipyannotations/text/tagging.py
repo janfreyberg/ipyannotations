@@ -97,7 +97,7 @@ class TextTaggerCore(widgets.DOMWidget):
 class TextTagger(LabellingWidgetMixin, widgets.VBox):
     """A tagging widget to annotate tokens inside text."""
 
-    data: List[Tuple[int, int, str]] = traitlets.List(
+    data = traitlets.List(
         trait=traitlets.Tuple(
             traitlets.Int(), traitlets.Int(), traitlets.Unicode()
         )
