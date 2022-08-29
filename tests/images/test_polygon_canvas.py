@@ -102,7 +102,12 @@ def test_closing_current_polygon(polygon: Polygon):
     canvas.load_image(IMAGE)
     canvas.current_polygon = polygon
 
-    assume(all((0, 0) < point < canvas.size for point in polygon.points))
+    assume(
+        all(
+            (0, 0) < point < (canvas.width, canvas.height)
+            for point in polygon.points
+        )
+    )
     assume(not polygon.closed)
     assume(len(polygon) > 2)
 
@@ -111,7 +116,7 @@ def test_closing_current_polygon(polygon: Polygon):
 
     closing_click = (
         poly_start[0],
-        min([canvas.size[1], poly_start[1] + (canvas.point_size - 1)]),
+        min([canvas.height, poly_start[1] + (canvas.point_size - 1)]),
     )
 
     canvas.on_click(*closing_click)
@@ -132,7 +137,12 @@ def test_closing_current_polygon_different_threshold(polygon: Polygon):
     canvas = PolygonAnnotationCanvas()
     canvas.load_image(IMAGE)
 
-    assume(all((0, 0) < point < canvas.size for point in polygon.points))
+    assume(
+        all(
+            (0, 0) < point < (canvas.width, canvas.height)
+            for point in polygon.points
+        )
+    )
     assume(not polygon.closed)
     assume(len(polygon) > 2)
 
@@ -144,7 +154,7 @@ def test_closing_current_polygon_different_threshold(polygon: Polygon):
 
     closing_click = (
         poly_start[0],
-        min([canvas.size[1], poly_start[1] + (canvas.point_size - 19)]),
+        min([canvas.height, poly_start[1] + (canvas.point_size - 19)]),
     )
 
     canvas.on_click(*closing_click)
