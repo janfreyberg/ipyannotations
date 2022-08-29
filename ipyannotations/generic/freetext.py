@@ -16,7 +16,7 @@ class FreetextAnnotator(
     captioning, question answering, and similar tasks.
     """
 
-    data: str = traitlets.Unicode()
+    data = traitlets.Unicode()
 
     def __init__(
         self,

@@ -91,7 +91,7 @@ class SentimentLabeller(
     one of negative, neutral, or positive sentiment.
     """
 
-    data: str = traitlets.Unicode()
+    data = traitlets.Unicode()
 
     def __init__(self, *args, **kwargs):
         """Create a sentiment classification widget."""

@@ -19,10 +19,10 @@ class TextTaggerCore(widgets.DOMWidget):
     _view_module = traitlets.Unicode(module_name).tag(sync=True)
     _view_module_version = traitlets.Unicode(module_version).tag(sync=True)
 
-    text: str = traitlets.Unicode(
+    text = traitlets.Unicode(
         "Lorem ipsum", help="The text to display."
     ).tag(sync=True)
-    classes: List[str] = traitlets.List(
+    classes = traitlets.List(
         trait=traitlets.Unicode(), default_value=["MISC", "PER", "LOC", "ORG"]
     ).tag(sync=True)
     selected_class = traitlets.Unicode().tag(sync=True)
