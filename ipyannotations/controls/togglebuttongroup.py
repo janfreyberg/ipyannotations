@@ -18,17 +18,17 @@ class ToggleButtonGroup(widgets.HBox):
         between the buttons.)
     """
 
-    options: List[str] = traitlets.List(
+    options = traitlets.List(
         trait=traitlets.Unicode(), default_value=list(), allow_none=True
     )
-    submission_functions: List = traitlets.List(
+    submission_functions = traitlets.List(
         default_value=list(), allow_none=True
     )
     button_width = traitlets.Union(
         [traitlets.Float(), traitlets.Integer(), traitlets.Unicode()],
         allow_none=True,
     )
-    value: List[str] = traitlets.List(
+    value = traitlets.List(
         trait=traitlets.Unicode(), default_value=list()
     )
 
